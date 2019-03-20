@@ -24,6 +24,7 @@ var AFHController = require("./handlers/afh.js")
 var GerritController = require("./handlers/gerrit.js")
 var GDriveController = require("./handlers/gdrive.js")
 var SourceForgeController = require("./handlers/sourceforge.js")
+var GithubController = require("./handlers/github.js")
 
 // Routes
 tg.router.callbackQuery(new CallbackController())
@@ -66,4 +67,12 @@ tg.router.callbackQuery(new CallbackController())
                 $.message.text.indexOf("/download") !== -1
         }, 'sfFilterHandler'),
         new SourceForgeController()
+    )
+
+    .when(
+        new CustomFilterCommand($ => {
+            return $.message.text.indexOf("github.com") !== -1 &&
+                $.message.text.indexOf("/releases") !== -1 && $.message.text.indexOf("gapps") == -1
+        }, 'githubFilterHandler'),
+        new GithubController()
     )
