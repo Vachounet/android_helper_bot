@@ -104,6 +104,12 @@ tg.router
     )
 
     .when(
+        new TextCommand('/gapps', 'gappsHandler', ''),
+        new exports["gapps"]()
+    )
+
+
+    .when(
         new CustomFilterCommand($ => {
             return $.message.text.indexOf("https://rsdsecure-cloud.motorola.com/download/") !== -1
         }, 'rsdFilterHandler'),
