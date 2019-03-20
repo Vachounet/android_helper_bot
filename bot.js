@@ -18,115 +18,110 @@ var CallbackController = require("./handlers/callbackQuery.js")
 var InlineController = require("./handlers/inline.js")
 var OtherwiseController = require("./handlers/custom_commands.js")
 
-// Custom Filter Commands
-var RSDController = require("./handlers/rsd.js")
-var AFHController = require("./handlers/afh.js")
-var GerritController = require("./handlers/gerrit.js")
-var GDriveController = require("./handlers/gdrive.js")
-var SourceForgeController = require("./handlers/sourceforge.js")
-var GithubController = require("./handlers/github.js")
-var PlayStoreController = require("./handlers/playstore.js")
+var normalizedPath = require("path").join(__dirname, "handlers");
 
-// Custom Text Commands
-var ADBController = require("./handlers/adb.js")
-var AEXController = require("./handlers/aex.js")
-var AICPController = require("./handlers/aicp.js")
-var AOSIPController = require("./handlers/aosip.js")
-var APKMirrorController = require("./handlers/apkmirror.js")
-var ArrowController = require("./handlers/arrow.js")
-var BootlegController = require("./handlers/bootleg.js")
-var CarbonController = require("./handlers/carbon.js")
-var COSPController = require("./handlers/cosp.js")
-var CrDroidController = require("./handlers/crdroid.js")
-var DUController = require("./handlers/du.js")
+// Exports all handlers
+require('fs').readdirSync(__dirname + '/handlers/').forEach(function (file) {
+    if (file.match(/\.js$/) !== null && file !== 'index.js') {
+        var name = file.replace('.js', '');
+
+        exports[name] = require('./handlers/' + file);
+    }
+});
+
 
 // Routes
 tg.router
 
     .when(
         new TextCommand('/adb', 'adbHandler', 'Get latest SDK Platform Tools links'),
-        new ADBController()
+        new exports["adb"]()
     )
 
     .when(
         new TextCommand('/aex', 'aexBuildHandler', 'Search for latests AOSPExtended builds'),
-        new AEXController()
+        new exports["aex"]()
     )
 
     .when(
         new TextCommand('/fastboot', 'adbHandler', 'Get latest SDK Platform Tools links'),
-        new ADBController()
+        new exports["adb"]()
     )
 
     .when(
         new TextCommand('/afh search', 'afhSearchHandler', 'Search for files on AndroidFileHost'),
-        new AFHController()
+        new exports["afh"]()
     )
 
     .when(
         new TextCommand('/aicp', 'aicpBuildHandler', 'Search for latests AICP builds'),
-        new AICPController()
+        new exports["aicp"]()
     )
 
     .when(
         new TextCommand('/aosip', 'aosipBuildHandler', 'Search for latests AOSiP builds'),
-        new AOSIPController()
+        new exports["aosip"]()
     )
 
     .when(
         new TextCommand('/am search', 'searchHandler', 'Search for APKs on APKMirror'),
-        new APKMirrorController()
+        new exports["apkmirror"]()
     )
 
     .when(
         new TextCommand('/arrow', 'arrowBuildHandler', 'Search for latests ArrowOS builds'),
-        new ArrowController()
+        new exports["arrow"]()
     )
 
     .when(
         new TextCommand('/bootleg', 'bootlegBuildHandler', 'Search for latests Bootleggers builds'),
-        new BootlegController()
+        new exports["bootleg"]()
     )
 
     .when(
         new TextCommand('/carbon', 'carbonBuildHandler', 'Search for latests CarbonROM builds'),
-        new CarbonController()
+        new exports["carbon"]()
     )
 
     .when(
         new TextCommand('/cosp', 'cospBuildHandler', 'Search for latests COSP builds'),
-        new COSPController()
+        new exports["cosp"]()
     )
 
     .when(
         new TextCommand('/crdroid', 'crDroidBuildHandler', 'Search for latests crDroid builds'),
-        new CrDroidController()
+        new exports["crdroid"]()
+    )
+
+    .when(
+        new TextCommand('/dot', 'dotosBuildHandler', 'Search for latests DotOS builds'),
+        new exports["dotos"]()
     )
 
     .when(
         new TextCommand('/du', 'duBuildHandler', 'Search for latests DirtyUnicorns builds'),
-        new DUController()
+        new exports["du"]()
     )
 
     .when(
         new CustomFilterCommand($ => {
             return $.message.text.indexOf("https://rsdsecure-cloud.motorola.com/download/") !== -1
         }, 'rsdFilterHandler'),
-        new RSDController()
+        new exports["rsd"]()
     )
 
     .when(
         new CustomFilterCommand($ => {
             return $.message.text.indexOf("androidfilehost.com/?fid=") !== -1
         }, 'afhFilterHandler'),
-        new AFHController()
+        new exports["afh"]()
     )
 
     .when(
         new CustomFilterCommand($ => {
             return $.message.text.indexOf("/c/") !== -1
         }, 'gerritFilterHandler'),
-        new GerritController()
+        new exports["gerrit"]()
     )
 
     .when(
@@ -135,7 +130,7 @@ tg.router
                 ($.message.text.indexOf("view") !== -1 || $.message.text.indexOf("open?id=") !== -1 ||
                     $.message.text.indexOf("uc?id=") !== -1)
         }, 'gdriveFilterHandler'),
-        new GDriveController()
+        new exports["gdrive"]()
     )
 
     .when(
@@ -143,7 +138,7 @@ tg.router
             return $.message.text.indexOf("sourceforge.net") !== -1 &&
                 $.message.text.indexOf("/download") !== -1
         }, 'sfFilterHandler'),
-        new SourceForgeController()
+        new exports["sourceforge"]()
     )
 
     .when(
@@ -151,14 +146,14 @@ tg.router
             return $.message.text.indexOf("github.com") !== -1 &&
                 $.message.text.indexOf("/releases") !== -1 && $.message.text.indexOf("gapps") == -1
         }, 'githubFilterHandler'),
-        new GithubController()
+        new exports["github"]()
     )
 
     .when(
         new CustomFilterCommand($ => {
             return $.message.text.indexOf("play.google.com/store/apps/details?id=") !== -1
         }, 'playstoreFilterHandler'),
-        new PlayStoreController()
+        new exports["playstore"]()
     )
 
     .callbackQuery(new CallbackController())
