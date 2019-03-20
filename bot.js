@@ -37,6 +37,7 @@ var ArrowController = require("./handlers/arrow.js")
 var BootlegController = require("./handlers/bootleg.js")
 var CarbonController = require("./handlers/carbon.js")
 var COSPController = require("./handlers/cosp.js")
+var CrDroidController = require("./handlers/crdroid.js")
 
 // Routes
 tg.router
@@ -94,6 +95,11 @@ tg.router
     .when(
         new TextCommand('/cosp', 'cospBuildHandler', 'Search for latests COSP builds'),
         new COSPController()
+    )
+
+    .when(
+        new TextCommand('/crdroid', 'crDroidBuildHandler', 'Search for latests crDroid builds'),
+        new CrDroidController()
     )
 
     .when(
