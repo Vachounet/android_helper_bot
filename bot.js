@@ -31,6 +31,7 @@ var PlayStoreController = require("./handlers/playstore.js")
 var ADBController = require("./handlers/adb.js")
 var AEXController = require("./handlers/aex.js")
 var AICPController = require("./handlers/aicp.js")
+var AOSIPController = require("./handlers/aosip.js")
 
 // Routes
 tg.router
@@ -58,6 +59,11 @@ tg.router
     .when(
         new TextCommand('/aicp', 'aicpBuildHandler', 'Search for latests AICP builds'),
         new AICPController()
+    )
+
+    .when(
+        new TextCommand('/aosip', 'aosipBuildHandler', 'Search for latests AOSiP builds'),
+        new AOSIPController()
     )
 
     .when(
