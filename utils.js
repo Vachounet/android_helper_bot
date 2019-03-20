@@ -121,9 +121,15 @@ BotUtils.sendAFHMirrors = (fid, scope) => {
         });
 }
 
-BotUtils.sendSourceForgeLinks = (scope) => {
+BotUtils.sendSourceForgeLinks = (scope, link) => {
     var links = "";
-    var matches = scope.message.text.match(/\bhttps?:\/\/\S+/gi);
+    var matches;
+
+    if (!link) {
+        matches = scope.message.text.match(/\bhttps?:\/\/\S+/gi);
+    } else {
+        matches = link.match(/\bhttps?:\/\/\S+/gi);
+    }
 
     var filteredPath = matches[0].replace("/download", "");
     filteredPath = filteredPath.replace("/files", "");
@@ -134,26 +140,24 @@ BotUtils.sendSourceForgeLinks = (scope) => {
 
     filteredPath = filteredPath.replace(projectname, "");
 
-
     var mirrorsUrl = "https://sourceforge.net/settings/mirror_choices?projectname=" + projectname + "&filename=" + filteredPath;
-    console.log(mirrorsUrl)
+
     request.get(mirrorsUrl,
         function (error, response, body) {
             var dom = new JSDOM.JSDOM(body);
             var mirrors = dom.window.document.querySelectorAll("#mirrorList li");
-            console.log(mirrors.length)
+
             for (var i = 0; i < mirrors.length; i++) {
                 if (i % 2) {
                     var mirrorName = mirrors[i].id;
                     links += "[" + mirrors[i].textContent.trim().split("(")[1].split(")")[0] + "](https://" + mirrorName + ".dl.sourceforge.net" + filteredPath + ")  ";
                 }
             }
-            scope.sendMessage("*Mirrors*\n" + links, {
+            scope.sendMessage("*Mirrors for " + filteredPath.split("/")[filteredPath.split("/").length - 1] + "*\n" + links, {
                 parse_mode: "markdown",
                 reply_to_message_id: scope.message.messageId
             });
         });
-
 }
 
 RegExp.prototype.execAll = function (string) {

@@ -29,15 +29,19 @@ var PlayStoreController = require("./handlers/playstore.js")
 
 // Custom Text Commands
 var ADBController = require("./handlers/adb.js")
+var AEXController = require("./handlers/aex.js")
 
 // Routes
-tg.router.callbackQuery(new CallbackController())
-    .inlineQuery(new InlineController())
-    .otherwise(new OtherwiseController())
+tg.router
 
     .when(
         new TextCommand('/adb', 'adbHandler', 'Get latest SDK Platform Tools links'),
         new ADBController()
+    )
+
+    .when(
+        new TextCommand('/aex', 'aexBuildHandler', 'Search for latests AOSPExtended builds'),
+        new AEXController()
     )
 
     .when(
@@ -97,3 +101,7 @@ tg.router.callbackQuery(new CallbackController())
         }, 'playstoreFilterHandler'),
         new PlayStoreController()
     )
+
+    .callbackQuery(new CallbackController())
+    .inlineQuery(new InlineController())
+    .otherwise(new OtherwiseController())
