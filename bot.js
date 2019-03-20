@@ -7,7 +7,9 @@ const TelegramBaseController = Telegram.TelegramBaseController
 const TextCommand = Telegram.TextCommand
 
 // Export bot as global variable
-global.tg = new Telegram.Telegram(config.token)
+global.tg = new Telegram.Telegram(config.token, {
+    localization: [require('./localization/En.json')]
+})
 
 
 // Default Controllers
