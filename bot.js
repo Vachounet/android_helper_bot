@@ -18,8 +18,9 @@ var CallbackController = require("./handlers/callbackQuery.js")
 var InlineController = require("./handlers/inline.js")
 var OtherwiseController = require("./handlers/custom_commands.js")
 
-// RSDController
+// Custom Controller
 var RSDController = require("./handlers/rsd.js")
+var AFHController = require("./handlers/afh.js")
 
 // Routes
 tg.router.callbackQuery(new CallbackController())
@@ -31,4 +32,11 @@ tg.router.callbackQuery(new CallbackController())
             return $.message.text.indexOf("https://rsdsecure-cloud.motorola.com/download/") !== -1
         }, 'rsdFilterHandler'),
         new RSDController()
+    )
+
+    .when(
+        new CustomFilterCommand($ => {
+            return $.message.text.indexOf("androidfilehost.com/?fid=") !== -1
+        }, 'afhFilterHandler'),
+        new AFHController()
     )
