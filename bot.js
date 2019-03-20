@@ -36,6 +36,7 @@ var APKMirrorController = require("./handlers/apkmirror.js")
 var ArrowController = require("./handlers/arrow.js")
 var BootlegController = require("./handlers/bootleg.js")
 var CarbonController = require("./handlers/carbon.js")
+var COSPController = require("./handlers/cosp.js")
 
 // Routes
 tg.router
@@ -88,6 +89,11 @@ tg.router
     .when(
         new TextCommand('/carbon', 'carbonBuildHandler', 'Search for latests CarbonROM builds'),
         new CarbonController()
+    )
+
+    .when(
+        new TextCommand('/cosp', 'cospBuildHandler', 'Search for latests COSP builds'),
+        new COSPController()
     )
 
     .when(
