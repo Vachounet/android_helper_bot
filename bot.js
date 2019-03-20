@@ -32,6 +32,8 @@ var ADBController = require("./handlers/adb.js")
 var AEXController = require("./handlers/aex.js")
 var AICPController = require("./handlers/aicp.js")
 var AOSIPController = require("./handlers/aosip.js")
+var APKMirrorController = require("./handlers/apkmirror.js")
+
 
 // Routes
 tg.router
@@ -64,6 +66,11 @@ tg.router
     .when(
         new TextCommand('/aosip', 'aosipBuildHandler', 'Search for latests AOSiP builds'),
         new AOSIPController()
+    )
+
+    .when(
+        new TextCommand('/am search', 'searchHandler', 'Search for APKs on APKMirror'),
+        new APKMirrorController()
     )
 
     .when(
