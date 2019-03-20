@@ -116,6 +116,7 @@ BotUtils.sendAFHMirrors = (fid, scope) => {
             let msg = util.format(tg._localization.En.afhMirrors, json.MIRRORS[0].url.split("/")[json.MIRRORS[0].url.split("/").length - 1]);
             scope.sendMessage(msg + links, {
                 parse_mode: "markdown",
+                disable_web_page_preview: true,
                 reply_to_message_id: scope.message.messageId
             });
         });
@@ -155,6 +156,7 @@ BotUtils.sendSourceForgeLinks = (scope, link) => {
             }
             scope.sendMessage("*Mirrors for " + filteredPath.split("/")[filteredPath.split("/").length - 1] + "*\n" + links, {
                 parse_mode: "markdown",
+                disable_web_page_preview: true,
                 reply_to_message_id: scope.message.messageId
             });
         });
