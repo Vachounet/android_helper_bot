@@ -33,7 +33,7 @@ var AEXController = require("./handlers/aex.js")
 var AICPController = require("./handlers/aicp.js")
 var AOSIPController = require("./handlers/aosip.js")
 var APKMirrorController = require("./handlers/apkmirror.js")
-
+var ArrowController = require("./handlers/arrow.js")
 
 // Routes
 tg.router
@@ -71,6 +71,11 @@ tg.router
     .when(
         new TextCommand('/am search', 'searchHandler', 'Search for APKs on APKMirror'),
         new APKMirrorController()
+    )
+
+    .when(
+        new TextCommand('/arrow', 'arrowBuildHandler', 'Search for latests ArrowOS builds'),
+        new ArrowController()
     )
 
     .when(
