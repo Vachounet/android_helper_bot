@@ -1,6 +1,8 @@
 {
-  "lang": "En",
-  "phrases": {
-    "startMessage": "Hello !"
-  }
+    "lang": "En",
+    "phrases": {
+        "startMessage": "Hello !",
+        "rsdLinkExpired": "Linked expired on %s\nGenerated a new one :\n",
+        "rsdLinkWarning": "Warning, link will expire on %s"
+    }
 }
