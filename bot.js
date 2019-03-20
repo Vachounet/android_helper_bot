@@ -27,10 +27,23 @@ var SourceForgeController = require("./handlers/sourceforge.js")
 var GithubController = require("./handlers/github.js")
 var PlayStoreController = require("./handlers/playstore.js")
 
+// Custom Text Commands
+var ADBController = require("./handlers/adb.js")
+
 // Routes
 tg.router.callbackQuery(new CallbackController())
     .inlineQuery(new InlineController())
     .otherwise(new OtherwiseController())
+
+    .when(
+        new TextCommand('/adb', 'adbHandler', 'Get latest SDK Platform Tools links'),
+        new ADBController()
+    )
+
+    .when(
+        new TextCommand('/fastboot', 'adbHandler', 'Get latest SDK Platform Tools links'),
+        new ADBController()
+    )
 
     .when(
         new CustomFilterCommand($ => {

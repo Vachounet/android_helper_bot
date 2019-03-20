@@ -5,6 +5,7 @@
         "rsdLinkExpired": "Linked expired on %s\nGenerated a new one :\n",
         "rsdLinkWarning": "Warning, link will expire on %s",
         "afhMirrorsNotFound": "*Mirrors not found *",
-        "afhMirrors": "*Mirrors for %s *: \n "
+        "afhMirrors": "*Mirrors for %s *: \n ",
+        "sdkPlatformTools": "*SDK Platform Tools*\n"
     }
 }
