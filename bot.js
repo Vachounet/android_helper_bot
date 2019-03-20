@@ -9,3 +9,13 @@ const TextCommand = Telegram.TextCommand
 // Export bot as global variable
 global.tg = new Telegram.Telegram(config.token)
 
+
+// Default Controllers
+var CallbackController = require("./handlers/callbackQuery.js")
+var InlineController = require("./handlers/inline.js")
+var OtherwiseController = require("./handlers/custom_commands.js")
+
+// Routes
+tg.router.callbackQuery(new CallbackController())
+    .inlineQuery(new InlineController())
+    .otherwise(new OtherwiseController())
