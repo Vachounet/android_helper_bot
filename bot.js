@@ -34,7 +34,7 @@ var AICPController = require("./handlers/aicp.js")
 var AOSIPController = require("./handlers/aosip.js")
 var APKMirrorController = require("./handlers/apkmirror.js")
 var ArrowController = require("./handlers/arrow.js")
-
+var BootlegController = require("./handlers/bootleg.js")
 // Routes
 tg.router
 
@@ -76,6 +76,11 @@ tg.router
     .when(
         new TextCommand('/arrow', 'arrowBuildHandler', 'Search for latests ArrowOS builds'),
         new ArrowController()
+    )
+
+    .when(
+        new TextCommand('/bootleg', 'bootlegBuildHandler', 'Search for latests Bootleggers builds'),
+        new BootlegController()
     )
 
     .when(
