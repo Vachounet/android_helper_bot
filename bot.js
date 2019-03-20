@@ -22,6 +22,7 @@ var OtherwiseController = require("./handlers/custom_commands.js")
 var RSDController = require("./handlers/rsd.js")
 var AFHController = require("./handlers/afh.js")
 var GerritController = require("./handlers/gerrit.js")
+var GDriveController = require("./handlers/gdrive.js")
 
 // Routes
 tg.router.callbackQuery(new CallbackController())
@@ -47,4 +48,13 @@ tg.router.callbackQuery(new CallbackController())
             return $.message.text.indexOf("/c/") !== -1
         }, 'gerritFilterHandler'),
         new GerritController()
+    )
+
+    .when(
+        new CustomFilterCommand($ => {
+            return $.message.text.indexOf("drive.google.com") !== -1 &&
+                ($.message.text.indexOf("view") !== -1 || $.message.text.indexOf("open?id=") !== -1 ||
+                    $.message.text.indexOf("uc?id=") !== -1)
+        }, 'gdriveFilterHandler'),
+        new GDriveController()
     )
