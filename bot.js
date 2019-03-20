@@ -30,6 +30,7 @@ var PlayStoreController = require("./handlers/playstore.js")
 // Custom Text Commands
 var ADBController = require("./handlers/adb.js")
 var AEXController = require("./handlers/aex.js")
+var AICPController = require("./handlers/aicp.js")
 
 // Routes
 tg.router
@@ -52,6 +53,11 @@ tg.router
     .when(
         new TextCommand('/afh search', 'afhSearchHandler', 'Search for files on AndroidFileHost'),
         new AFHController()
+    )
+
+    .when(
+        new TextCommand('/aicp', 'aicpBuildHandler', 'Search for latests AICP builds'),
+        new AICPController()
     )
 
     .when(
