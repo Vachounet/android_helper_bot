@@ -38,6 +38,7 @@ var BootlegController = require("./handlers/bootleg.js")
 var CarbonController = require("./handlers/carbon.js")
 var COSPController = require("./handlers/cosp.js")
 var CrDroidController = require("./handlers/crdroid.js")
+var DUController = require("./handlers/du.js")
 
 // Routes
 tg.router
@@ -100,6 +101,11 @@ tg.router
     .when(
         new TextCommand('/crdroid', 'crDroidBuildHandler', 'Search for latests crDroid builds'),
         new CrDroidController()
+    )
+
+    .when(
+        new TextCommand('/du', 'duBuildHandler', 'Search for latests DirtyUnicorns builds'),
+        new DUController()
     )
 
     .when(
