@@ -108,6 +108,10 @@ tg.router
         new exports["gapps"]()
     )
 
+    .when(
+        new TextCommand('/gcam', 'gcamHandler', ''),
+        new exports["gcam"]()
+    )
 
     .when(
         new CustomFilterCommand($ => {
