@@ -21,6 +21,7 @@ var OtherwiseController = require("./handlers/custom_commands.js")
 // Custom Controller
 var RSDController = require("./handlers/rsd.js")
 var AFHController = require("./handlers/afh.js")
+var GerritController = require("./handlers/gerrit.js")
 
 // Routes
 tg.router.callbackQuery(new CallbackController())
@@ -39,4 +40,11 @@ tg.router.callbackQuery(new CallbackController())
             return $.message.text.indexOf("androidfilehost.com/?fid=") !== -1
         }, 'afhFilterHandler'),
         new AFHController()
+    )
+
+    .when(
+        new CustomFilterCommand($ => {
+            return $.message.text.indexOf("/c/") !== -1
+        }, 'gerritFilterHandler'),
+        new GerritController()
     )
