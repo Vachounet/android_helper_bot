@@ -1,5 +1,6 @@
 var request = require('request');
 const util = require('util');
+const JSDOM = require('jsdom');
 BotUtils = {}
 BotUtils.getUrlParameter = (search, name) => {
     name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
@@ -103,6 +104,41 @@ BotUtils.sendAFHMirrors = (fid, scope) => {
                 reply_to_message_id: scope.message.messageId
             });
         });
+}
+
+BotUtils.sendSourceForgeLinks = (scope) => {
+    var links = "";
+    var matches = scope.message.text.match(/\bhttps?:\/\/\S+/gi);
+
+    var filteredPath = matches[0].replace("/download", "");
+    filteredPath = filteredPath.replace("/files", "");
+    filteredPath = filteredPath.replace("/projects/", "");
+    filteredPath = filteredPath.replace("https://sourceforge.net", "");
+
+    var projectname = matches[0].split("/")[4]
+
+    filteredPath = filteredPath.replace(projectname, "");
+
+
+    var mirrorsUrl = "https://sourceforge.net/settings/mirror_choices?projectname=" + projectname + "&filename=" + filteredPath;
+    console.log(mirrorsUrl)
+    request.get(mirrorsUrl,
+        function (error, response, body) {
+            var dom = new JSDOM.JSDOM(body);
+            var mirrors = dom.window.document.querySelectorAll("#mirrorList li");
+            console.log(mirrors.length)
+            for (var i = 0; i < mirrors.length; i++) {
+                if (i % 2) {
+                    var mirrorName = mirrors[i].id;
+                    links += "[" + mirrors[i].textContent.trim().split("(")[1].split(")")[0] + "](https://" + mirrorName + ".dl.sourceforge.net" + filteredPath + ")  ";
+                }
+            }
+            scope.sendMessage("*Mirrors*\n" + links, {
+                parse_mode: "markdown",
+                reply_to_message_id: scope.message.messageId
+            });
+        });
+
 }
 
 RegExp.prototype.execAll = function (string) {

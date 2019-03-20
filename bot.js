@@ -23,6 +23,7 @@ var RSDController = require("./handlers/rsd.js")
 var AFHController = require("./handlers/afh.js")
 var GerritController = require("./handlers/gerrit.js")
 var GDriveController = require("./handlers/gdrive.js")
+var SourceForgeController = require("./handlers/sourceforge.js")
 
 // Routes
 tg.router.callbackQuery(new CallbackController())
@@ -57,4 +58,12 @@ tg.router.callbackQuery(new CallbackController())
                     $.message.text.indexOf("uc?id=") !== -1)
         }, 'gdriveFilterHandler'),
         new GDriveController()
+    )
+
+    .when(
+        new CustomFilterCommand($ => {
+            return $.message.text.indexOf("sourceforge.net") !== -1 &&
+                $.message.text.indexOf("/download") !== -1
+        }, 'sfFilterHandler'),
+        new SourceForgeController()
     )
