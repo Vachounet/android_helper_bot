@@ -276,6 +276,13 @@ tg.router
         new exports["playstore"]()
     )
 
+    .when(
+        new CustomFilterCommand($ => {
+            return $.message.text.indexOf("https://mega.nz/") !== -1
+        }, 'megaHandler'),
+        new exports["mega"]()
+    )
+
     .callbackQuery(new CallbackController())
     .inlineQuery(new InlineController())
     .otherwise(new OtherwiseController())

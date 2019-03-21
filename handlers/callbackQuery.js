@@ -3,6 +3,7 @@ const TelegramBaseCallbackQueryController = Telegram.TelegramBaseCallbackQueryCo
 
 const BotUtils = require("../utils.js")
 var request = require('request');
+var exec = require('child_process').exec;
 
 class CallbacksController extends TelegramBaseCallbackQueryController {
     /**
@@ -18,6 +19,9 @@ class CallbacksController extends TelegramBaseCallbackQueryController {
                     break;
                 case "help":
                     this.handleHelp($, params)
+                    break;
+                case "mega":
+                    this.handleMega($, params)
                     break;
             }
         }
@@ -207,6 +211,25 @@ class CallbacksController extends TelegramBaseCallbackQueryController {
             chat_id: $.message.chat.id,
             reply_markup: JSON.stringify(kb),
             message_id: $.message.messageId
+        });
+    }
+
+    handleMega($, params) {
+        console.log($.from.id)
+
+        exec(__dirname + "/../megadown 'https://mega.nz/#" + params[1] + "'", function callback(error, stdout, stderr) {
+            console.log(stdout)
+            var json = JSON.parse(stdout);
+            var kb = {
+                inline_keyboard: []
+            };
+
+            tg.api.sendMessage($.from.id, "*Download Link* :\n[" + json.file_name + "](" + json.url + ")", {
+                parse_mode: "markdown",
+                reply_markup: JSON.stringify(kb)
+            });
+
+
         });
     }
 
