@@ -129,6 +129,11 @@ tg.router
     )
 
     .when(
+        new TextCommand('/magisk', 'magiskHandler', ''),
+        new exports["magisk"]()
+    )
+
+    .when(
         new CustomFilterCommand($ => {
             return $.message.text.indexOf("https://rsdsecure-cloud.motorola.com/download/") !== -1
         }, 'rsdFilterHandler'),
