@@ -144,6 +144,21 @@ tg.router
     )
 
     .when(
+        new TextCommand('/pe', 'pexBuildHandler', ''),
+        new exports["pex"]()
+    )
+
+    .when(
+        new TextCommand('/pe-caf', 'pecafBuildHandler', ''),
+        new exports["pecaf"]()
+    )
+
+    .when(
+        new TextCommand('/pe-go', 'pegoBuildHandler', ''),
+        new exports["pego"]()
+    )
+
+    .when(
         new CustomFilterCommand($ => {
             return $.message.text.indexOf("https://rsdsecure-cloud.motorola.com/download/") !== -1
         }, 'rsdFilterHandler'),
