@@ -134,6 +134,11 @@ tg.router
     )
 
     .when(
+        new TextCommand('/microg', 'microgHandler', ''),
+        new exports["microg"]()
+    )
+
+    .when(
         new CustomFilterCommand($ => {
             return $.message.text.indexOf("https://rsdsecure-cloud.motorola.com/download/") !== -1
         }, 'rsdFilterHandler'),
