@@ -179,6 +179,11 @@ tg.router
     )
 
     .when(
+        new TextCommand('/syberia', 'syberiaBuildHandler', ''),
+        new exports["syberia"]()
+    )
+
+    .when(
         new CustomFilterCommand($ => {
             return $.message.text.indexOf("https://rsdsecure-cloud.motorola.com/download/") !== -1
         }, 'rsdFilterHandler'),
