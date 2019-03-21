@@ -210,6 +210,11 @@ tg.router
     )
 
     .when(
+        new TextCommand('/xtended', 'xtendedBuildHandler', ''),
+        new exports["xtended"]()
+    )
+
+    .when(
         new CustomFilterCommand($ => {
             return $.message.text.indexOf("https://rsdsecure-cloud.motorola.com/download/") !== -1
         }, 'rsdFilterHandler'),
