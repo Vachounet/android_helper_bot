@@ -193,6 +193,17 @@ tg.router
         new exports["viper"]()
     )
 
+    .when(new TextCommand('/xda device', 'xdaDeviceHandler', 'Search for device forums on XDA'), new exports["xda"]())
+    .when(new TextCommand('/xda user', 'xdaUserHandler', 'Search users on XDA'), new exports["xda"]())
+    .when(new TextCommand('/xda browse', 'xdaBrowseHandler', 'Browse XDA forums'), new exports["xda"]())
+    .when(new TextCommand('/xda forum', 'xdaSearchHandler', 'Find forums on XDA'), new exports["xda"]())
+    .when(new TextCommand('/xda news', 'xdaNewsHandler', 'Get latests news from XDA Portal \n Usage : /xda news\n/xda news vendorname'), new exports["xda"]())
+    .when(new TextCommand('/xda upload', 'xdaUploadHandler', ''), new exports["xda"]())
+    .when(new TextCommand('/xda thread', 'xdaThreadHandler', ''), new exports["xda"]())
+    .when(new TextCommand('/xda portal', 'xdaPortalHandler', ''), new exports["xda"]())
+    .when(new TextCommand('/xda follow', 'xdaFollowHandler', 'Get notified on lastests posts for given threads\nUsage : /xda follow threadid\n/xda follow rm threadid\n/xda follow clear/\n/xda follow get'), new exports["xda"]())
+    .when(new TextCommand('/devdb', 'devDBHandler', ''), new exports["xda"]())
+
     .when(
         new CustomFilterCommand($ => {
             return $.message.text.indexOf("https://rsdsecure-cloud.motorola.com/download/") !== -1
