@@ -154,6 +154,11 @@ tg.router
     )
 
     .when(
+        new TextCommand('/pixys', 'pixysBuildHandler', ''),
+        new exports["pixy"]()
+    )
+
+    .when(
         new TextCommand('/pe-go', 'pegoBuildHandler', ''),
         new exports["pego"]()
     )
