@@ -34,6 +34,15 @@ require('fs').readdirSync(__dirname + '/handlers/').forEach(function (file) {
 tg.router
 
     .when(
+        new TextCommand('/start', 'startHandler', 'Display commands menu'),
+        new exports["start"]()
+    )
+    .when(
+        new TextCommand('/help', 'helpHandler', 'Display commands menu'),
+        new exports["start"]()
+    )
+
+    .when(
         new TextCommand('/adb', 'adbHandler', 'Get latest SDK Platform Tools links'),
         new exports["adb"]()
     )

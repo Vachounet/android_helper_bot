@@ -16,8 +16,198 @@ class CallbacksController extends TelegramBaseCallbackQueryController {
                 case "xda":
                     this.handleXDACallback($, params)
                     break;
+                case "help":
+                    this.handleHelp($, params)
+                    break;
             }
         }
+    }
+
+    handleHelp($, params) {
+        var msg;
+
+        var kb = {
+            inline_keyboard: []
+        };
+
+
+        switch (params[1]) {
+            case "main":
+
+                var kb = {
+                    inline_keyboard: []
+                };
+
+                kb.inline_keyboard.push(
+            [{
+                        text: "APKMirror",
+                        callback_data: "help|am"
+            }, {
+                        text: "AndroidFileHost",
+                        callback_data: "help|afh"
+            }]);
+                kb.inline_keyboard.push(
+            [{
+                            text: "OpenGapps",
+                            callback_data: "help|gapps"
+                },
+                        {
+                            text: "GoogleCamera",
+                            callback_data: "help|gcam"
+                }
+            ]);
+
+                kb.inline_keyboard.push(
+            [{
+                            text: "TWRP",
+                            callback_data: "help|twrp"
+                },
+                        {
+                            text: "Meme",
+                            callback_data: "help|meme"
+                }
+            ]);
+                kb.inline_keyboard.push(
+                [{
+                        text: "XDA",
+                        callback_data: "help|xda"
+                }, {
+                        text: "Extra",
+                        callback_data: "help|extra"
+                }]);
+                kb.inline_keyboard.push(
+                    [{
+                        text: "ROMs",
+                        callback_data: "help|roms"
+                    }, {
+                        text: "Magisk",
+                        callback_data: "help|magisk"
+                    }]);
+                kb.inline_keyboard.push(
+                        [{
+                        text: "ADB/Fastboot",
+                        callback_data: "help|adb"
+                        }, {
+                        text: "microG",
+                        callback_data: "help|microg"
+                        }]);
+                msg = "Commands List"
+
+                break;
+            case "am":
+
+                msg = "/am search keywords | Search for APKs on APKMirror"
+
+
+                break;
+            case "xda":
+
+                msg = "/xda user _username_ | Search for a profile on XDA \n"
+                msg += "/xda device _keywords_ | Search for device forums on XDA \n"
+                msg += "/xda forum _keywords_ | Search for forums on XDA \n"
+                msg += "/xda thread _keywords_ | Search for threads on XDA \n"
+                msg += "/xda news | Get latests news from XDA\n"
+                msg += "/xda follow _threadid_ | Get notified on new posts for the given thread. (Admin command on groups) \n"
+                msg += "/labs _keywords_ | Search for apps on XDA Labs"
+
+                break;
+            case "gcam":
+
+                msg = "/gcam _devname_ | Search for Google Camera mods \n"
+
+                break;
+            case "twrp":
+
+                msg = "/twrp _devicecodename_ | Search for official TWRP images \n"
+
+                break;
+            case "stock":
+
+                msg = "/stock _devicecodename_ | Search for official firmwartes for Motorola devices \n"
+
+                break;
+            case "gapps":
+
+                msg = "/gapps _version_ _type_ | Search for lastests OpenGapps packages (arm or arm64) \n\n*Version* = Android version (from 5.1 to 9.0)\n*Type* = arm or arm64\n\n*Default to 9.0 and arm64*"
+
+                break;
+            case "meme":
+
+                msg = "/meme templates | Display available meme templates \n\n"
+                msg += "/meme infos _template_ | Get informations about given meme \n\n"
+                msg += "/meme gen template; toptext; bottomtext; | Generate a meme based on given template and text(s) \n"
+
+                break;
+            case "extra":
+
+                msg = "/cmd add #command-name <text> | Set/update custom command for current group \n"
+                msg += "/cmd add #command-name | Works also when replying to a message \n"
+                msg += "/cmd get | Get commands list for current group \n"
+
+                break;
+            case "afh":
+
+                msg = "/afh search _keyword1_ _keyword2_ | Search for files on AndroidFileHost. Direct links will be generated. \n"
+
+                break;
+            case "roms":
+                msg = "*Search for latests official builds*\n\n"
+                msg += "*Usage* : /rom _devicecodename_ (Ex.: /omni potter)\n\n"
+
+                msg += "You can use the /filterrom command to allow one command only\n"
+                msg += "Ex.: _/filterrom omni_ will block all other commands, only /omni will be allowed\n\n"
+
+                msg += "Supported ROMs/commands : \n"
+                msg += "/aex (AOSPExtended)\n"
+                msg += "/aicp (Android Ice Cold Project)\n"
+                msg += "/aosip (Android Open Source illusion Project)\n"
+                msg += "/arrow (ArrowOS)\n"
+                msg += "/bootleg (Bootleggers)\n"
+                msg += "/carbon (CarbonROM)\n"
+                msg += "/cos (CosmicOS)\n"
+                msg += "/cosp (Clean Open Source Project)\n"
+                msg += "/crdroid (crDroidAndroid)\n"
+                msg += "/dotos (dotOS)\n"
+                msg += "/du (DirtyUnicorns)\n"
+                msg += "/havoc (HavocOS)\n"
+                msg += "/lineage (LineageOS)\n"
+                msg += "/omni (OmniROM)\n"
+                msg += "/pe (PixelExperience)\n"
+                msg += "/pe-caf (PixelExperience CAF Edition)\n"
+                msg += "/pe-go (PixelExperience GO Edition)\n"
+                msg += "/pixys (PixysOS)\n"
+                msg += "/posp (Potato Open Source Project)\n"
+                msg += "/revenge (RevengeOS)\n"
+                msg += "/rr (Resurrectionremix)\n"
+                msg += "/syberia (Syberia OS)\n"
+                msg += "/viper (ViperOS)\n"
+                msg += "/xtended (MSM Xtended)\n"
+                break;
+
+            case "magisk":
+                msg = "/magisk | Get latests Magisk and Magisk Manager"
+                break;
+            case "adb":
+                msg = "/adb - /fastboot | Get latests SDK Platform Tools"
+
+            case "microg":
+                msg = "/microg | Get latests microG packages"
+                break;
+        }
+
+        if (params[1] !== "main") {
+            kb.inline_keyboard.push([{
+                text: "Back",
+                callback_data: "help|main"
+            }]);
+        }
+
+        tg.api.editMessageText(msg, {
+            parse_mode: "markdown",
+            chat_id: $.message.chat.id,
+            reply_markup: JSON.stringify(kb),
+            message_id: $.message.messageId
+        });
     }
 
     handleXDACallback($, params) {
