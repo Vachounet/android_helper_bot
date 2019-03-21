@@ -4,6 +4,7 @@ var request = require('request');
 
 let Parser = require('rss-parser');
 let parser = new Parser();
+const BotUtils = require('../utils')
 
 class XtendedController extends TelegramBaseController {
 
@@ -73,7 +74,7 @@ class XtendedController extends TelegramBaseController {
 
     get routes() {
         return {
-            'xtendedBuildHandler': 'searchBuild',
+            'xtendedBuildHandler': 'triggerCommand',
         }
     }
 }

@@ -51,7 +51,7 @@ class PEGOController extends TelegramBaseController {
 
     get routes() {
         return {
-            'pegoBuildHandler': 'searchBuild',
+            'pegoBuildHandler': 'triggerCommand',
         }
     }
 }

@@ -3,6 +3,7 @@ const TelegramBaseController = Telegram.TelegramBaseController;
 
 var request = require('request');
 const JSDOM = require('jsdom');
+const BotUtils = require('../utils')
 
 class RevengeController extends TelegramBaseController {
 
@@ -69,7 +70,7 @@ class RevengeController extends TelegramBaseController {
 
     get routes() {
         return {
-            'revengeBuildHandler': 'search',
+            'revengeBuildHandler': 'triggerCommand',
         }
     }
 }

@@ -5,6 +5,7 @@ var request = require('request');
 let Parser = require('rss-parser');
 let parser = new Parser();
 const JSDOM = require('jsdom');
+const BotUtils = require('../utils')
 
 class SyberiaController extends TelegramBaseController {
 
@@ -73,7 +74,7 @@ class SyberiaController extends TelegramBaseController {
 
     get routes() {
         return {
-            'syberiaBuildHandler': 'searchBuild',
+            'syberiaBuildHandler': 'triggerCommand',
         }
     }
 }

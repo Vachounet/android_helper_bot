@@ -3,6 +3,7 @@ const TelegramBaseController = Telegram.TelegramBaseController;
 var request = require('request');
 let Parser = require('rss-parser');
 let parser = new Parser();
+const BotUtils = require('../utils')
 
 class ArrowController extends TelegramBaseController {
 
@@ -72,7 +73,7 @@ class ArrowController extends TelegramBaseController {
 
     get routes() {
         return {
-            'arrowBuildHandler': 'searchBuild',
+            'arrowBuildHandler': 'triggerCommand',
         }
     }
 }

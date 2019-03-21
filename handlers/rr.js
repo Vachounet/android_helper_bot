@@ -3,6 +3,7 @@ const TelegramBaseController = Telegram.TelegramBaseController;
 var request = require('request');
 
 const JSDOM = require('jsdom');
+const BotUtils = require('../utils')
 
 class RRController extends TelegramBaseController {
 
@@ -68,7 +69,7 @@ class RRController extends TelegramBaseController {
 
     get routes() {
         return {
-            'rrBuildHandler': 'searchBuild',
+            'rrBuildHandler': 'triggerCommand',
         }
     }
 }

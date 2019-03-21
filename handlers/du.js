@@ -2,6 +2,7 @@ const Telegram = require('telegram-node-bot')
 const TelegramBaseController = Telegram.TelegramBaseController;
 const InputFile = Telegram.InputFile;
 var request = require('request');
+const BotUtils = require('../utils')
 
 class DUController extends TelegramBaseController {
 
@@ -40,7 +41,6 @@ class DUController extends TelegramBaseController {
                 if (body.indexOf("Slim") == -1) {
                     json = JSON.parse(body);
 
-                    //var mainTable = dom.window.document.querySelector("table");
                     lastUpdate = json[json.length - 1];
                 }
                 if (lastUpdate) {
@@ -52,28 +52,12 @@ class DUController extends TelegramBaseController {
                             text: lastUpdate.filename,
                             url: link
                         }]);
-                    // kb.inline_keyboard.push(
-                    //             [{
-                    //         text: "Changelog",
-                    //         url: link + ".html"
-                    //             }]);
                 }
                 request.get("https://download.dirtyunicorns.com/api/files/" + keywords + "/Rc",
                     function (error, response, body) {
                         json = JSON.parse(body);
 
-                        //var mainTable = dom.window.document.querySelector("table");
                         lastUpdate = json[json.length - 1];
-                        // if (lastUpdate) {
-
-                        //     link = "https://download.dirtyunicorns.com/api/download/" + keywords + "/Rc/" + lastUpdate.filename;
-
-                        //     kb.inline_keyboard.push(
-                        //         [{
-                        //             text: lastUpdate.filename,
-                        //             url: link
-                        //         }]);
-                        // }
                         if (kb.inline_keyboard.length > 0) {
                             $.sendMessage("🔍  *Latests DirtyUnicorns build for " + keywords + "*", {
                                 parse_mode: "markdown",
@@ -99,7 +83,7 @@ class DUController extends TelegramBaseController {
 
     get routes() {
         return {
-            'duBuildHandler': 'searchBuild',
+            'duBuildHandler': 'triggerCommand',
         }
     }
 }

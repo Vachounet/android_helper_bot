@@ -2,6 +2,7 @@ const Telegram = require('telegram-node-bot')
 const TelegramBaseController = Telegram.TelegramBaseController;
 
 var request = require('request');
+const BotUtils = require('../utils')
 
 class AOSIPController extends TelegramBaseController {
 
@@ -93,7 +94,7 @@ class AOSIPController extends TelegramBaseController {
 
     get routes() {
         return {
-            'aosipBuildHandler': 'search',
+            'aosipBuildHandler': 'triggerCommand',
         }
     }
 }

@@ -53,7 +53,7 @@ class PECAFController extends TelegramBaseController {
 
     get routes() {
         return {
-            'pecafBuildHandler': 'searchBuild',
+            'pecafBuildHandler': 'triggerCommand',
         }
     }
 }

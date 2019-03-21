@@ -1,6 +1,12 @@
 var request = require('request');
 const util = require('util');
 const JSDOM = require('jsdom');
+
+const config = require("./config")
+var mongojs = require('mongojs')
+var db = mongojs(config.db.name)
+var chats = db.collection('chats');
+
 BotUtils = {}
 
 BotUtils.humanFileSize = (bytes, si) => {
@@ -196,6 +202,25 @@ BotUtils.convertBBCodeToMarkdown = (bbCodeContent) => {
         });
 
     return bbCodeContent;
+
+}
+
+BotUtils.getRomFilter = (scope, cb) => {
+    chats.find({
+        chatID: {
+            $eq: scope.message.chat.id
+        }
+    }, function (err, docs) {
+        if ((docs || docs.length > 0) && docs[0].filter) {
+            console.log(docs[0].filter);
+            if (docs[0].filter !== "" && !scope.message.text.startsWith("/" + docs[0].filter))
+                return
+            else
+                cb(scope)
+        } else {
+            cb(scope)
+        }
+    });
 
 }
 

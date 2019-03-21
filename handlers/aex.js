@@ -5,6 +5,8 @@ var request = require('request');
 let Parser = require('rss-parser');
 let parser = new Parser();
 const JSDOM = require('jsdom');
+const BotUtils = require('../utils')
+
 class AEXController extends TelegramBaseController {
 
     triggerCommand($) {
@@ -72,7 +74,7 @@ class AEXController extends TelegramBaseController {
 
     get routes() {
         return {
-            'aexBuildHandler': 'searchBuild',
+            'aexBuildHandler': 'triggerCommand',
         }
     }
 }

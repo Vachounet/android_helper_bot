@@ -4,6 +4,7 @@ var request = require('request');
 let Parser = require('rss-parser');
 let parser = new Parser();
 const JSDOM = require('jsdom');
+const BotUtils = require('../utils')
 
 class BootlegController extends TelegramBaseController {
 
@@ -74,7 +75,7 @@ class BootlegController extends TelegramBaseController {
 
     get routes() {
         return {
-            'bootlegBuildHandler': 'searchBuild',
+            'bootlegBuildHandler': 'triggerCommand',
         }
     }
 }

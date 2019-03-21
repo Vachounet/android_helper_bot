@@ -52,7 +52,7 @@ class PEXController extends TelegramBaseController {
 
     get routes() {
         return {
-            'pexBuildHandler': 'searchBuild',
+            'pexBuildHandler': 'triggerCommand',
         }
     }
 }

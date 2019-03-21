@@ -3,6 +3,8 @@ const TelegramBaseController = Telegram.TelegramBaseController;
 
 var request = require('request');
 const JSDOM = require('jsdom')
+const BotUtils = require('../utils')
+
 class CarbonController extends TelegramBaseController {
 
     triggerCommand($) {
@@ -70,7 +72,7 @@ class CarbonController extends TelegramBaseController {
 
     get routes() {
         return {
-            'carbonBuildHandler': 'search',
+            'carbonBuildHandler': 'triggerCommand',
         }
     }
 }

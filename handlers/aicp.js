@@ -3,6 +3,7 @@ const TelegramBaseController = Telegram.TelegramBaseController;
 const InputFile = Telegram.InputFile;
 var request = require('request');
 const JSDOM = require('jsdom');
+const BotUtils = require('../utils')
 
 class AICPController extends TelegramBaseController {
 
@@ -75,7 +76,7 @@ class AICPController extends TelegramBaseController {
 
     get routes() {
         return {
-            'aicpBuildHandler': 'searchBuild',
+            'aicpBuildHandler': 'triggerCommand',
         }
     }
 }

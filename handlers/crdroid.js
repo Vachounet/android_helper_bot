@@ -3,6 +3,7 @@ const TelegramBaseController = Telegram.TelegramBaseController;
 const InputFile = Telegram.InputFile;
 var request = require('request');
 var parser = require('fast-xml-parser');
+const BotUtils = require('../utils')
 
 class CrDroidController extends TelegramBaseController {
 
@@ -203,7 +204,7 @@ class CrDroidController extends TelegramBaseController {
 
     get routes() {
         return {
-            'crDroidBuildHandler': 'searchBuild',
+            'crDroidBuildHandler': 'triggerCommand',
         }
     }
 }

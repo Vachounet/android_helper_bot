@@ -43,6 +43,11 @@ tg.router
     )
 
     .when(
+        new TextCommand('/filterrom', 'filterRomHandler', ''),
+        new exports["filterrom"]()
+    )
+
+    .when(
         new TextCommand('/adb', 'adbHandler', 'Get latest SDK Platform Tools links'),
         new exports["adb"]()
     )

@@ -2,6 +2,7 @@ const Telegram = require('telegram-node-bot')
 const TelegramBaseController = Telegram.TelegramBaseController;
 const InputFile = Telegram.InputFile;
 var request = require('request');
+const BotUtils = require('../utils')
 
 class LineageController extends TelegramBaseController {
 
@@ -55,7 +56,7 @@ class LineageController extends TelegramBaseController {
 
     get routes() {
         return {
-            'lineageBuildHandler': 'searchBuild',
+            'lineageBuildHandler': 'triggerCommand',
         }
     }
 }

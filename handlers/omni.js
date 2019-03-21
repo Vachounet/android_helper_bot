@@ -2,6 +2,7 @@ const Telegram = require('telegram-node-bot')
 const TelegramBaseController = Telegram.TelegramBaseController;
 
 var request = require('request');
+const BotUtils = require('../utils')
 
 class OmniController extends TelegramBaseController {
 
@@ -9,7 +10,7 @@ class OmniController extends TelegramBaseController {
         BotUtils.getRomFilter($, this.searchBuild)
     }
 
-    search($) {
+    searchBuild($) {
 
         var kb = {
             inline_keyboard: []
@@ -85,7 +86,7 @@ class OmniController extends TelegramBaseController {
 
     get routes() {
         return {
-            'omniBuildHandler': 'search',
+            'omniBuildHandler': 'triggerCommand',
         }
     }
 }
