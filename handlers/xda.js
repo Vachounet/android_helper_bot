@@ -1,11 +1,13 @@
 const Telegram = require('telegram-node-bot')
 const TelegramBaseController = Telegram.TelegramBaseController;
 var request = require('request');
-//var mongojs = require('mongojs')
-//var db = mongojs('test')
+const config = require("../config.js")
+var mongojs = require('mongojs')
+var db = mongojs(config.db.name)
+
+var followedForums = db.collection('followed_forums');
 const JSDOM = require('jsdom');
 
-//var followedForums = db.collection('followed_forums');
 var devices;
 var forums;
 
@@ -345,272 +347,271 @@ class XDAController extends TelegramBaseController {
 
     follow($) {
 
-        //        var keyword = $.message.text.replace("/xda follow ", "");
-        //
-        //        if (!keyword || keyword === "" || keyword === "/xda follow") {
-        //
-        //            $.sendMessage("Usage : /xda follow threadid | add a new thread\n/xda follow rm threadid |  remove a thread\n/xda follow clear | remove all threads/\n/xda follow get | lists followed threads", {
-        //                parse_mode: "markdown",
-        //                disable_web_page_preview: true,
-        //                reply_to_message_id: $.message.messageId
-        //            });
-        //            return;
-        //        }
-        //        if ($.message.chat.type === "private") {
-        //            // console.log($.message.chat)
-        //            if (keyword === "clear") {
-        //                followedForums.remove({
-        //                    chatID: {
-        //                        $eq: $.message.chat.id
-        //                    }
-        //                })
-        //                $.sendMessage("All threads removed", {
-        //                    parse_mode: "markdown",
-        //                    disable_web_page_preview: true,
-        //                    reply_to_message_id: $.message.messageId
-        //                });
-        //                return;
-        //            }
-        //
-        //            if (keyword.indexOf("rm ") !== -1) {
-        //
-        //                var tid = keyword.split("rm ")[1]
-        //
-        //                followedForums.find({
-        //                    threadID: {
-        //                        $eq: parseInt(tid),
-        //
-        //                    },
-        //                    chatID: {
-        //                        $eq: $.message.chat.id
-        //                    }
-        //                }, function (err, docs) {
-        //                    console.log(docs)
-        //                    if (docs && docs.length > 0) {
-        //                        followedForums.remove({
-        //                            _id: {
-        //                                $eq: docs[0]._id
-        //                            }
-        //                        })
-        //
-        //                        $.sendMessage("Thread removed", {
-        //                            parse_mode: "markdown",
-        //                            disable_web_page_preview: true,
-        //                            reply_to_message_id: $.message.messageId
-        //                        });
-        //                    }
-        //                })
-        //
-        //                return;
-        //            }
-        //
-        //            if (keyword === "get") {
-        //                followedForums.find({
-        //                    chatID: {
-        //                        $eq: $.message.chat.id
-        //                    }
-        //                }, function (err, docs) {
-        //                    var msg = "Followed threads:\n";
-        //                    docs.forEach(function (followed) {
-        //                        msg = msg + "- `" + followed.threadID + " - " + followed.threadTitle + "`\n";
-        //                    });
-        //
-        //                    $.sendMessage(msg, {
-        //                        parse_mode: "markdown",
-        //                        reply_to_message_id: $.message.messageId
-        //                    });
-        //                })
-        //
-        //                return;
-        //            }
-        //
-        //            followedForums.find({
-        //                threadID: {
-        //                    $eq: parseInt(keyword)
-        //                }
-        //            }, function (err, docs) {
-        //                if (!docs || docs.length == 0) {
-        //
-        //                    request.get("https://api.xda-developers.com/v3/posts?threadid=" + keyword,
-        //                        function (error, response, body) {
-        //                            var json = JSON.parse(body);
-        //                            followedForums.save({
-        //                                threadID: parseInt(keyword),
-        //                                chatID: $.message.chat.id,
-        //                                lastUpdate: parseInt(json.thread.lastpost.dateline),
-        //                                threadTitle: json.thread.title
-        //                            })
-        //                            var msg = "`" + json.thread.title + "` added";
-        //                            $.sendMessage(msg, {
-        //                                parse_mode: "markdown",
-        //                                disable_web_page_preview: true,
-        //                                reply_to_message_id: $.message.messageId
-        //                            });
-        //
-        //
-        //
-        //                        })
-        //
-        //                } else {
-        //                    request.get("https://api.xda-developers.com/v3/posts?threadid=" + keyword,
-        //                        function (error, response, body) {
-        //                            var json = JSON.parse(body);
-        //                            followedForums.update({
-        //                                _id: docs[0]._id
-        //                            }, {
-        //                                $set: {
-        //                                    threadTitle: json.thread.title
-        //                                }
-        //                            }, function () {
-        //                                $.sendMessage("Updated !", {
-        //                                    parse_mode: "markdown",
-        //                                    reply_to_message_id: $.message.messageId
-        //                                });
-        //                            })
-        //
-        //
-        //
-        //                        })
-        //                }
-        //            })
-        //
-        //
-        //            return;
-        //        }
-        //
-        //        $.getChatAdministrators($.message.chat.id).then(data => {
-        //            console.log("getChatAdministrators")
-        //            let msg = "";
-        //            var isAdmin = false;
-        //            if (data && data.length > 0) {
-        //                for (var i = 0; i < data.length; i++) {
-        //                    if (data[i].user && data[i].user.id === $.message.from.id)
-        //                        isAdmin = true;
-        //                }
-        //            }
-        //            if (isAdmin || $.message.chat.type === "private") {
-        //                if (keyword === "clear") {
-        //                    followedForums.remove({
-        //                        chatID: {
-        //                            $eq: $.message.chat.id
-        //                        }
-        //                    })
-        //                    $.sendMessage("All threads removed", {
-        //                        parse_mode: "markdown",
-        //                        disable_web_page_preview: true,
-        //                        reply_to_message_id: $.message.messageId
-        //                    });
-        //                    return;
-        //                }
-        //
-        //                if (keyword.indexOf("rm ") !== -1) {
-        //
-        //                    var tid = keyword.split("rm ")[1]
-        //
-        //                    followedForums.find({
-        //                        threadID: {
-        //                            $eq: parseInt(tid),
-        //
-        //                        },
-        //                        chatID: {
-        //                            $eq: $.message.chat.id
-        //                        }
-        //                    }, function (err, docs) {
-        //                        console.log(docs)
-        //                        if (docs && docs.length > 0) {
-        //                            followedForums.remove({
-        //                                _id: {
-        //                                    $eq: docs[0]._id
-        //                                }
-        //                            })
-        //
-        //                            $.sendMessage("Thread removed", {
-        //                                parse_mode: "markdown",
-        //                                disable_web_page_preview: true,
-        //                                reply_to_message_id: $.message.messageId
-        //                            });
-        //                        }
-        //                    })
-        //
-        //                    return;
-        //                }
-        //
-        //                if (keyword === "get") {
-        //                    followedForums.find({
-        //                        chatID: {
-        //                            $eq: $.message.chat.id
-        //                        }
-        //                    }, function (err, docs) {
-        //                        var msg = "Followed threads:\n";
-        //                        docs.forEach(function (followed) {
-        //                            msg = msg + "- `" + followed.threadID + " - " + followed.threadTitle + "`\n";
-        //                        });
-        //
-        //                        $.sendMessage(msg, {
-        //                            parse_mode: "markdown",
-        //                            reply_to_message_id: $.message.messageId
-        //                        });
-        //                    })
-        //
-        //                    return;
-        //                }
-        //
-        //                followedForums.find({
-        //                    threadID: {
-        //                        $eq: parseInt(keyword)
-        //                    }
-        //                }, function (err, docs) {
-        //                    if (!docs || docs.length == 0) {
-        //
-        //                        request.get("https://api.xda-developers.com/v3/posts?threadid=" + keyword,
-        //                            function (error, response, body) {
-        //                                var json = JSON.parse(body);
-        //                                followedForums.save({
-        //                                    threadID: parseInt(keyword),
-        //                                    chatID: $.message.chat.id,
-        //                                    lastUpdate: parseInt(json.thread.lastpost.dateline),
-        //                                    threadTitle: json.thread.title
-        //                                })
-        //                                var msg = "`" + json.thread.title + "` added";
-        //                                $.sendMessage(msg, {
-        //                                    parse_mode: "markdown",
-        //                                    disable_web_page_preview: true,
-        //                                    reply_to_message_id: $.message.messageId
-        //                                });
-        //
-        //
-        //
-        //                            })
-        //
-        //                    } else {
-        //                        request.get("https://api.xda-developers.com/v3/posts?threadid=" + keyword,
-        //                            function (error, response, body) {
-        //                                var json = JSON.parse(body);
-        //                                followedForums.update({
-        //                                    _id: docs[0]._id
-        //                                }, {
-        //                                    $set: {
-        //                                        threadTitle: json.thread.title
-        //                                    }
-        //                                }, function () {
-        //                                    $.sendMessage("Updated !", {
-        //                                        parse_mode: "markdown",
-        //                                        reply_to_message_id: $.message.messageId
-        //                                    });
-        //                                })
-        //
-        //
-        //
-        //                            })
-        //                    }
-        //                })
-        //            } else {
-        //                $.sendMessage("Only admins are allowed to use this command", {
-        //                    parse_mode: "markdown",
-        //                    reply_to_message_id: $.message.messageId
-        //                });
-        //            }
-        //        });
+        var keyword = $.message.text.replace("/xda follow ", "");
+
+        if (!keyword || keyword === "" || keyword === "/xda follow") {
+
+            $.sendMessage("Usage : /xda follow threadid | add a new thread\n/xda follow rm threadid |  remove a thread\n/xda follow clear | remove all threads/\n/xda follow get | lists followed threads", {
+                parse_mode: "markdown",
+                disable_web_page_preview: true,
+                reply_to_message_id: $.message.messageId
+            });
+            return;
+        }
+        if ($.message.chat.type === "private") {
+            if (keyword === "clear") {
+                followedForums.remove({
+                    chatID: {
+                        $eq: $.message.chat.id
+                    }
+                })
+                $.sendMessage("All threads removed", {
+                    parse_mode: "markdown",
+                    disable_web_page_preview: true,
+                    reply_to_message_id: $.message.messageId
+                });
+                return;
+            }
+
+            if (keyword.indexOf("rm ") !== -1) {
+
+                var tid = keyword.split("rm ")[1]
+
+                followedForums.find({
+                    threadID: {
+                        $eq: parseInt(tid),
+
+                    },
+                    chatID: {
+                        $eq: $.message.chat.id
+                    }
+                }, function (err, docs) {
+                    console.log(docs)
+                    if (docs && docs.length > 0) {
+                        followedForums.remove({
+                            _id: {
+                                $eq: docs[0]._id
+                            }
+                        })
+
+                        $.sendMessage("Thread removed", {
+                            parse_mode: "markdown",
+                            disable_web_page_preview: true,
+                            reply_to_message_id: $.message.messageId
+                        });
+                    }
+                })
+
+                return;
+            }
+
+            if (keyword === "get") {
+                followedForums.find({
+                    chatID: {
+                        $eq: $.message.chat.id
+                    }
+                }, function (err, docs) {
+                    var msg = "Followed threads:\n";
+                    docs.forEach(function (followed) {
+                        msg = msg + "- `" + followed.threadID + " - " + followed.threadTitle + "`\n";
+                    });
+
+                    $.sendMessage(msg, {
+                        parse_mode: "markdown",
+                        reply_to_message_id: $.message.messageId
+                    });
+                })
+
+                return;
+            }
+
+            followedForums.find({
+                threadID: {
+                    $eq: parseInt(keyword)
+                }
+            }, function (err, docs) {
+                if (!docs || docs.length == 0) {
+
+                    request.get("https://api.xda-developers.com/v3/posts?threadid=" + keyword,
+                        function (error, response, body) {
+                            var json = JSON.parse(body);
+                            followedForums.save({
+                                threadID: parseInt(keyword),
+                                chatID: $.message.chat.id,
+                                lastUpdate: parseInt(json.thread.lastpost.dateline),
+                                threadTitle: json.thread.title
+                            })
+                            var msg = "`" + json.thread.title + "` added";
+                            $.sendMessage(msg, {
+                                parse_mode: "markdown",
+                                disable_web_page_preview: true,
+                                reply_to_message_id: $.message.messageId
+                            });
+
+
+
+                        })
+
+                } else {
+                    request.get("https://api.xda-developers.com/v3/posts?threadid=" + keyword,
+                        function (error, response, body) {
+                            var json = JSON.parse(body);
+                            followedForums.update({
+                                _id: docs[0]._id
+                            }, {
+                                $set: {
+                                    threadTitle: json.thread.title
+                                }
+                            }, function () {
+                                $.sendMessage("Updated !", {
+                                    parse_mode: "markdown",
+                                    reply_to_message_id: $.message.messageId
+                                });
+                            })
+
+
+
+                        })
+                }
+            })
+
+
+            return;
+        }
+
+        $.getChatAdministrators($.message.chat.id).then(data => {
+            console.log("getChatAdministrators")
+            let msg = "";
+            var isAdmin = false;
+            if (data && data.length > 0) {
+                for (var i = 0; i < data.length; i++) {
+                    if (data[i].user && data[i].user.id === $.message.from.id)
+                        isAdmin = true;
+                }
+            }
+            if (isAdmin || $.message.chat.type === "private") {
+                if (keyword === "clear") {
+                    followedForums.remove({
+                        chatID: {
+                            $eq: $.message.chat.id
+                        }
+                    })
+                    $.sendMessage("All threads removed", {
+                        parse_mode: "markdown",
+                        disable_web_page_preview: true,
+                        reply_to_message_id: $.message.messageId
+                    });
+                    return;
+                }
+
+                if (keyword.indexOf("rm ") !== -1) {
+
+                    var tid = keyword.split("rm ")[1]
+
+                    followedForums.find({
+                        threadID: {
+                            $eq: parseInt(tid),
+
+                        },
+                        chatID: {
+                            $eq: $.message.chat.id
+                        }
+                    }, function (err, docs) {
+                        console.log(docs)
+                        if (docs && docs.length > 0) {
+                            followedForums.remove({
+                                _id: {
+                                    $eq: docs[0]._id
+                                }
+                            })
+
+                            $.sendMessage("Thread removed", {
+                                parse_mode: "markdown",
+                                disable_web_page_preview: true,
+                                reply_to_message_id: $.message.messageId
+                            });
+                        }
+                    })
+
+                    return;
+                }
+
+                if (keyword === "get") {
+                    followedForums.find({
+                        chatID: {
+                            $eq: $.message.chat.id
+                        }
+                    }, function (err, docs) {
+                        var msg = "Followed threads:\n";
+                        docs.forEach(function (followed) {
+                            msg = msg + "- `" + followed.threadID + " - " + followed.threadTitle + "`\n";
+                        });
+
+                        $.sendMessage(msg, {
+                            parse_mode: "markdown",
+                            reply_to_message_id: $.message.messageId
+                        });
+                    })
+
+                    return;
+                }
+
+                followedForums.find({
+                    threadID: {
+                        $eq: parseInt(keyword)
+                    }
+                }, function (err, docs) {
+                    if (!docs || docs.length == 0) {
+
+                        request.get("https://api.xda-developers.com/v3/posts?threadid=" + keyword,
+                            function (error, response, body) {
+                                var json = JSON.parse(body);
+                                followedForums.save({
+                                    threadID: parseInt(keyword),
+                                    chatID: $.message.chat.id,
+                                    lastUpdate: parseInt(json.thread.lastpost.dateline),
+                                    threadTitle: json.thread.title
+                                })
+                                var msg = "`" + json.thread.title + "` added";
+                                $.sendMessage(msg, {
+                                    parse_mode: "markdown",
+                                    disable_web_page_preview: true,
+                                    reply_to_message_id: $.message.messageId
+                                });
+
+
+
+                            })
+
+                    } else {
+                        request.get("https://api.xda-developers.com/v3/posts?threadid=" + keyword,
+                            function (error, response, body) {
+                                var json = JSON.parse(body);
+                                followedForums.update({
+                                    _id: docs[0]._id
+                                }, {
+                                    $set: {
+                                        threadTitle: json.thread.title
+                                    }
+                                }, function () {
+                                    $.sendMessage("Updated !", {
+                                        parse_mode: "markdown",
+                                        reply_to_message_id: $.message.messageId
+                                    });
+                                })
+
+
+
+                            })
+                    }
+                })
+            } else {
+                $.sendMessage("Only admins are allowed to use this command", {
+                    parse_mode: "markdown",
+                    reply_to_message_id: $.message.messageId
+                });
+            }
+        });
 
     }
 
