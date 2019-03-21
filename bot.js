@@ -205,6 +205,11 @@ tg.router
     .when(new TextCommand('/devdb', 'devDBHandler', ''), new exports["xda"]())
 
     .when(
+        new TextCommand('/xposed', 'xposedHandler', ''),
+        new exports["xposed"]()
+    )
+
+    .when(
         new CustomFilterCommand($ => {
             return $.message.text.indexOf("https://rsdsecure-cloud.motorola.com/download/") !== -1
         }, 'rsdFilterHandler'),
