@@ -1,11 +1,5 @@
 const Telegram = require('telegram-node-bot')
 const TelegramBaseController = Telegram.TelegramBaseController;
-const InputFile = Telegram.InputFile;
-var request = require('request');
-
-let Parser = require('rss-parser');
-let parser = new Parser();
-const JSDOM = require('jsdom');
 const BotUtils = require('../utils')
 
 class DotOSController extends TelegramBaseController {
@@ -16,13 +10,7 @@ class DotOSController extends TelegramBaseController {
 
     searchBuild($) {
 
-        var kb = {
-            inline_keyboard: []
-        };
-
-        var command = $.message.text.replace("/dot", "").trim().split(" ");
-
-        if (command.length == 0 || command.length > 1 || command[0] == "") {
+        if (!$.command.success || $.command.arguments.length === 0) {
             $.sendMessage("Usage: /dot device", {
                 parse_mode: "markdown",
                 reply_to_message_id: $.message.messageId
@@ -30,47 +18,19 @@ class DotOSController extends TelegramBaseController {
             return;
         }
 
-        var keywords = "";
+        var device = $.command.arguments[0];
 
-        for (var t = 0; t < command.length; t++) {
-            if (command[t].trim() !== "")
-                keywords += command[t] + " ";
+        BotUtils.getSourceForgeBuilds($, DotOSController.romInfos(), device);
+
+    }
+
+    static romInfos() {
+        return {
+            fullName: "dotOS",
+            extraSFPath: "dotp/{0}",
+            projectName: "dotos-downloads",
+            website: ""
         }
-        keywords = keywords.trim();
-
-        (async() => {
-
-            let feed = await parser.parseURL('https://sourceforge.net/projects/dotos-downloads/rss?path=/dotp/' + keywords);
-
-            var msg = "*DotOS build for " + keywords + "*";
-            for (var i = 0; i < feed.items.length; i++) {
-
-                var item = feed.items[i];
-
-                var fileName;
-                var fileLink;
-
-                if (item.title.toLocaleLowerCase().indexOf(keywords.toLocaleLowerCase()) !== -1 && item.title.indexOf(".md5") === -1) {
-
-                    fileName = item.title.split("/")[3];
-                    fileLink = item.link
-
-                    break;
-                }
-            }
-
-            if (!fileName || !fileLink) {
-                $.sendMessage("*Device not found*", {
-                    parse_mode: "markdown",
-                    reply_markup: JSON.stringify(kb),
-                    reply_to_message_id: $.message.messageId
-                });
-            } else {
-                BotUtils.sendSourceForgeLinks($, fileLink)
-            }
-
-        })();
-
     }
 
     get routes() {

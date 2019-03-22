@@ -7,6 +7,9 @@ var mongojs = require('mongojs')
 var db = mongojs(config.db.name)
 var chats = db.collection('chats');
 
+let Parser = require('rss-parser');
+let parser = new Parser();
+
 BotUtils = {}
 
 BotUtils.humanFileSize = (bytes, si) => {
@@ -128,7 +131,37 @@ BotUtils.sendAFHMirrors = (fid, scope) => {
         });
 }
 
-BotUtils.sendSourceForgeLinks = (scope, link) => {
+BotUtils.getSourceForgeBuilds = (scope, romInfos, device) => {
+    console.log('https://sourceforge.net/projects/' + romInfos.projectName + '/rss?path=/' + romInfos.extraSFPath.replace("{0}", device))
+    parser.parseURL('https://sourceforge.net/projects/' + romInfos.projectName + '/rss?path=/' + romInfos.extraSFPath.replace("{0}", device), function (error, feed) {
+        for (var i = 0; i < feed.items.length; i++) {
+
+            var item = feed.items[i];
+
+            var fileName;
+            var fileLink;
+
+            if (item.title.toLocaleLowerCase().indexOf(device.toLocaleLowerCase()) !== -1 && item.title.indexOf(".md5") === -1) {
+
+                fileName = item.title.split("/")[romInfos.extraSFPath.indexOf("/") !== -1 ? 3 : 2];
+                fileLink = item.link
+
+                break;
+            }
+        }
+
+        if (!fileName || !fileLink) {
+            scope.sendMessage("*Device not found*", {
+                parse_mode: "markdown",
+                reply_to_message_id: scope.message.messageId
+            });
+        } else {
+            BotUtils.sendSourceForgeLinks(scope, fileLink, romInfos)
+        }
+    });
+}
+
+BotUtils.sendSourceForgeLinks = (scope, link, romInfos) => {
     var links = "";
     var matches;
 
@@ -143,7 +176,7 @@ BotUtils.sendSourceForgeLinks = (scope, link) => {
     filteredPath = filteredPath.replace("/projects/", "");
     filteredPath = filteredPath.replace("https://sourceforge.net", "");
 
-    var projectname = matches[0].split("/")[4]
+    var projectname = !romInfos ? matches[0].split("/")[4] : romInfos.projectName;
 
     filteredPath = filteredPath.replace(projectname, "");
 

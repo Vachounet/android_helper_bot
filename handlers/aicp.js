@@ -17,9 +17,7 @@ class AICPController extends TelegramBaseController {
             inline_keyboard: []
         };
 
-        var command = $.message.text.replace("/aicp", "").trim().split(" ");
-
-        if (command.length == 0 || command.length > 1 || command[0] == "") {
+        if (!$.command.success || $.command.arguments.length === 0) {
             $.sendMessage("Usage: /aicp device", {
                 parse_mode: "markdown",
                 reply_to_message_id: $.message.messageId
@@ -27,13 +25,7 @@ class AICPController extends TelegramBaseController {
             return;
         }
 
-        var keywords = "";
-
-        for (var t = 0; t < command.length; t++) {
-            if (command[t].trim() !== "")
-                keywords += command[t] + " ";
-        }
-        keywords = keywords.trim();
+        var keywords = $.command.arguments[0];
 
         request.get("http://updates.aicp-rom.com/update.php?device=" + keywords,
             function (error, response, body) {
