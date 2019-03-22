@@ -16,15 +16,17 @@ class PECAFController extends TelegramBaseController {
             inline_keyboard: []
         };
 
-        var command = $.message.text.replace("/pe-caf", "").trim().split(" ");
+        console.log($.command)
 
-        var keywords = "";
-
-        for (var t = 0; t < command.length; t++) {
-            if (command[t].trim() !== "")
-                keywords += command[t] + " ";
+        if (!$.command.success || $.command.arguments.length === 0) {
+            $.sendMessage("Usage: /pecaf device", {
+                parse_mode: "markdown",
+                reply_to_message_id: $.message.messageId
+            });
+            return;
         }
-        keywords = keywords.trim();
+
+        var keywords = $.command.arguments[0]
 
         request.get("https://download.pixelexperience.org/ota/" + keywords + "/pie_caf",
             function (error, response, body) {
@@ -41,6 +43,7 @@ class PECAFController extends TelegramBaseController {
                         text: json.filename,
                         url: json.url
                                 }]);
+                console.log(kb)
                 $.sendMessage(msg, {
                     parse_mode: "markdown",
                     reply_markup: JSON.stringify(kb),

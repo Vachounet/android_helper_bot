@@ -17,15 +17,15 @@ class CarbonController extends TelegramBaseController {
             inline_keyboard: []
         };
 
-        var keyword = $.message.text.replace("/carbon", "").trim().split(" ");
-
-        if (keyword.length == 0 || keyword.length > 1 || keyword[0] == "") {
+        if (!$.command.success || $.command.arguments.length === 0) {
             $.sendMessage("Usage: /carbon device", {
                 parse_mode: "markdown",
                 reply_to_message_id: $.message.messageId
             });
             return;
         }
+
+        var keyword = $.command.arguments[0]
 
         request.get('https://get.carbonrom.org/device-' + keyword + '.html',
             function (error, response, body) {

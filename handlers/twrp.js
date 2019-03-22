@@ -11,8 +11,15 @@ class TWRPController extends TelegramBaseController {
             inline_keyboard: []
         };
 
+        if (!$.command.success || $.command.arguments.length === 0) {
+            $.sendMessage("Usage: /twrp device name", {
+                parse_mode: "markdown",
+                reply_to_message_id: $.message.messageId
+            });
+            return;
+        }
 
-        var keyword = $.message.text.replace("/twrp ", "").trim();
+        var keyword = $.command.arguments.join(" ");
 
         request.get("https://twrp.me/search.json", function (error, response, body) {
             var json = JSON.parse(body)

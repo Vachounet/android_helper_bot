@@ -16,16 +16,15 @@ class OmniController extends TelegramBaseController {
             inline_keyboard: []
         };
 
-
-        var keyword = $.message.text.replace("/omni", "").trim().split(" ");
-
-        if (keyword.length == 0 || keyword.length > 1 || keyword[0] == "") {
+        if (!$.command.success || $.command.arguments.length === 0) {
             $.sendMessage("Usage: /omni device", {
                 parse_mode: "markdown",
                 reply_to_message_id: $.message.messageId
             });
             return;
         }
+
+        var keyword = $.command.arguments[0]
 
         request.post(
             'https://dl.omnirom.org/' + keyword + '/', {

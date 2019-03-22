@@ -13,9 +13,7 @@ class CrDroidController extends TelegramBaseController {
 
     searchBuild($) {
 
-        var command = $.message.text.replace("/crdroid", "").trim().split(" ");
-
-        if (command.length == 0 || command.length > 1 || command[0] == "") {
+        if (!$.command.success || $.command.arguments.length === 0) {
             $.sendMessage("Usage: /crdroid device", {
                 parse_mode: "markdown",
                 reply_to_message_id: $.message.messageId
@@ -23,13 +21,7 @@ class CrDroidController extends TelegramBaseController {
             return;
         }
 
-        var keywords = "";
-
-        for (var t = 0; t < command.length; t++) {
-            if (command[t].trim() !== "")
-                keywords += command[t] + " ";
-        }
-        keywords = keywords.trim();
+        var keywords = $.command.arguments[0]
 
         request.get("https://raw.githubusercontent.com/crdroidandroid/android_vendor_crDroidOTA/9.0/update.xml",
             function (error, response, body) {

@@ -14,8 +14,15 @@ class XposedController extends TelegramBaseController {
             inline_keyboard: []
         };
 
+        if (!$.command.success || $.command.arguments.length === 0) {
+            $.sendMessage("Usage: /xposed _keywords_", {
+                parse_mode: "markdown",
+                reply_to_message_id: $.message.messageId
+            });
+            return;
+        }
 
-        var keyword = $.message.text.replace("/xposed ", "").trim();
+        var keyword = $.command.arguments.join(" ");
 
         request.post("https://repo.xposed.info/views/ajax", {
             form: {

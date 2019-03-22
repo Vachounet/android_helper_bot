@@ -6,23 +6,17 @@ const JSDOM = require('jsdom');
 class APKMirrorController extends TelegramBaseController {
 
     search($) {
-        var command = $.message.text.replace("/am search", "").split(" ");
+        $.command.arguments.shift()
 
-        var package_name = "";
+        var package_name = encodeURIComponent($.command.arguments.join(" "));
 
-        for (var t = 0; t < command.length; t++) {
-            if (command[t].trim() !== "")
-                package_name += command[t] + " ";
-        }
-
-        package_name = package_name.trim();
         var msg = "";
+
         var kb = {
             inline_keyboard: []
         };
-        try {
 
-            package_name = encodeURIComponent(package_name);
+        try {
 
             HTTP.get("https://www.apkmirror.com/?post_type=app_release&searchtype=apk&s=" + package_name, function (response) {
 

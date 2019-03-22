@@ -38,10 +38,16 @@ class AFHController extends TelegramBaseController {
 
     search($) {
 
-        var command = $.message.text.replace("/afh search ", "").trim().split(" ");
+        if (!$.command.success || $.command.arguments.length === 0) {
+
+            return;
+        }
+
         var page = 1;
 
-        this.launchRequest(command, page, $, this);
+        console.log($.command.arguments)
+
+        this.launchRequest($.command.arguments, page, $, this);
 
     }
 
@@ -51,7 +57,7 @@ class AFHController extends TelegramBaseController {
             inline_keyboard: []
         };
 
-        request.get("https://androidfilehost.com/?w=search&s=" + command[0] + "&type=files&page=" + page, {
+        request.get("https://androidfilehost.com/?w=search&s=" + command[1] + "&type=files&page=" + page, {
                 headers: {
                     "Host": "androidfilehost.com",
                     "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:58.0) Gecko/20100101 Firefox/58.0",
@@ -68,8 +74,8 @@ class AFHController extends TelegramBaseController {
 
                     console.log(links[i].textContent)
 
-                    if (links[i].textContent.toLowerCase().indexOf(command[0].toLowerCase()) !== -1 &&
-                        links[i].textContent.toLowerCase().indexOf(command[1].toLowerCase()) !== -1) {
+                    if (links[i].textContent.toLowerCase().indexOf(command[1].toLowerCase()) !== -1 &&
+                        links[i].textContent.toLowerCase().indexOf(command[2].toLowerCase()) !== -1) {
                         kb.inline_keyboard.push(
                                 [{
                                 text: links[i].textContent,

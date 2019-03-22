@@ -162,23 +162,24 @@ tg.router
     )
 
     .when(
-        new TextCommand('/pe', 'pexBuildHandler', ''),
-        new exports["pex"]()
-    )
-
-    .when(
-        new TextCommand('/pe-caf', 'pecafBuildHandler', ''),
+        new TextCommand('/pecaf', 'pecafBuildHandler', ''),
         new exports["pecaf"]()
     )
 
     .when(
-        new TextCommand('/pixys', 'pixysBuildHandler', ''),
-        new exports["pixy"]()
+        new TextCommand('/pego', 'pegoBuildHandler', ''),
+        new exports["pego"]()
     )
 
     .when(
-        new TextCommand('/pe-go', 'pegoBuildHandler', ''),
-        new exports["pego"]()
+        new TextCommand('/pe', 'pexBuildHandler', ''),
+        new exports["pex"]()
+    )
+
+
+    .when(
+        new TextCommand('/pixys', 'pixysBuildHandler', ''),
+        new exports["pixy"]()
     )
 
     .when(

@@ -9,24 +9,21 @@ class GAppsController extends TelegramBaseController {
 
     getLast($) {
 
-        var commands = $.message.text.replace("/gapps ", "").trim().split(" ");
+        var type = "arm64",
+            android_version = "9.0";
 
-        var android_version = commands[0];
-
-        if (!android_version || (android_version !== "5.0" && android_version !== "5.1" && android_version !== "6.0" && android_version !== "7.0" && android_version !== "7.1" && android_version !== "8.0" && android_version !== "8.1" & android_version !== "9.0")) {
-            android_version = "9.0"
+        if (!$.command.arguments[0]) {
+            type = "arm64";
+            android_version = "9.0";
+        } else if (isNaN($.command.arguments[0]) === false) {
+            android_version = $.command.arguments[0];
+            if ($.command.arguments[1])
+                type = $.command.arguments[1]
+        } else {
+            type = $.command.arguments[0]
+            if ($.command.arguments[1])
+                android_version = $.command.arguments[1];
         }
-
-        var type = commands[1];
-        if (!type || (type !== "arm" && type !== "arm64")) {
-            type = "arm64"
-        }
-
-        if (commands[0] && (commands[0] == "arm" || commands[0] == "arm64")) {
-            type = commands[0];
-        }
-
-        console.log(type)
 
         request.get("https://api.github.com/repos/opengapps/" + type + "/releases/latest", {
                 headers: {

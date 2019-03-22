@@ -7,16 +7,22 @@ class LabsController extends TelegramBaseController {
 
     search($) {
 
-        var keyword = $.message.text.replace("/labs ", "").trim();
+        if (!$.command.success || $.command.arguments.length === 0) {
+            $.sendMessage("Usage: /labs _keywords_", {
+                parse_mode: "markdown",
+                reply_to_message_id: $.message.messageId
+            });
+            return;
+        }
 
-        request.get("https://labs.xda-developers.com/api/1/search?q=" + encodeURIComponent(keyword), function (error, response, body) {
+        var keywords = $.command.arguments.join(" ")
+
+        request.get("https://labs.xda-developers.com/api/1/search?q=" + encodeURIComponent(keywords), function (error, response, body) {
             var json = JSON.parse(body);
             var results = json.results;
             var msg = "*Labs search results:*\n";
             for (var i = 0; i < results.length; i++) {
-                if (results[i] && results[i].title && results[i].title.toLowerCase().indexOf(keyword.toLowerCase()) != -1) {
-                    msg += "[" + results[i].title.trim() + " ](https://labs.xda-developers.com/store/app/" + results[i].package_name + ")   "
-                }
+                msg += "[" + results[i].title.trim() + " ](https://labs.xda-developers.com/store/app/" + results[i].package_name + ")   "
             }
 
             $.sendMessage(msg, {

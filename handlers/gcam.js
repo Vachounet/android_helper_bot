@@ -12,10 +12,7 @@ class GcamController extends TelegramBaseController {
             inline_keyboard: []
         };
 
-
-        var keyword = $.message.text.replace("/gcam", "").trim();
-
-        if (!keyword || keyword === "") {
+        if (!$.command.success || $.command.arguments.length === 0) {
 
             request.get("https://www.celsoazevedo.com/files/android/google-camera/developers/", function (error, response, body) {
                 var devs = new JSDOM.JSDOM(body);
@@ -40,14 +37,13 @@ class GcamController extends TelegramBaseController {
             return;
         }
 
-
         request.get("https://www.celsoazevedo.com/files/android/google-camera/", function (error, response, body) {
             var dom = new JSDOM.JSDOM(body);
 
 
             var msg = "🔍 *GCam Search Result(s):*";
 
-            var plop = dom.window.document.querySelectorAll(".listapks li [class*=\"" + keyword + "\"]");
+            var plop = dom.window.document.querySelectorAll(".listapks li [class*=\"" + $.command.arguments[0] + "\"]");
 
             if (!plop || plop.length === 0) {
                 $.sendMessage("🔍 *No results found matching your query* \n", {
