@@ -190,7 +190,7 @@ BotUtils.sendSourceForgeLinks = (scope, link, romInfos) => {
             for (var i = 0; i < mirrors.length; i++) {
                 if (i % 2) {
                     var mirrorName = mirrors[i].id;
-                    links += "[" + mirrors[i].textContent.trim().split("(")[1].split(")")[0] + "](https://" + mirrorName + ".dl.sourceforge.net" + filteredPath + ")  ";
+                    links += "[" + mirrors[i].textContent.trim().split("(")[1].split(")")[0] + "](https://" + mirrorName + ".dl.sourceforge.net/project/" + projectname + filteredPath + ")  ";
                 }
             }
             scope.sendMessage("*Mirrors for " + filteredPath.split("/")[filteredPath.split("/").length - 1] + "*\n" + links, {
