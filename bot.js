@@ -7,6 +7,7 @@ const TelegramBaseController = Telegram.TelegramBaseController
 const TextCommand = Telegram.TextCommand
 const CustomFilterCommand = Telegram.CustomFilterCommand
 
+var request = require('request');
 var mongojs = require('mongojs')
 var db = mongojs(config.db.name)
 var followedForums = db.collection('followed_forums');
@@ -312,7 +313,7 @@ tg.onMaster(() => {
                 if (docs || docs.length > 0) {
 
                     for (var i = 0; i < docs.length; i++) {
-                        OtherwiseController.getLastThreads(docs[i], true, OtherwiseController.onGetLastThreadSucceded);
+                        getLastThreads(docs[i], true, onGetLastThreadSucceded);
                     }
                 }
             });

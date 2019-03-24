@@ -78,7 +78,7 @@ class GDriveController extends TelegramBaseController {
                     },
                     function (error, response, body) {
 
-                        if (response.headers.location.indexOf("accounts.google.com") !== -1) {
+                        if (response.headers.location && response.headers.location.indexOf("accounts.google.com") !== -1) {
                             // Non public link
                             return;
                         }
