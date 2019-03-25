@@ -27,7 +27,7 @@ class AOSIPController extends TelegramBaseController {
         var keyword = $.command.arguments[0];
 
         request.post(
-            'https://get.aosiprom.com/' + keyword + '/?', {
+            'https://get.aosip.dev/' + keyword + '/?', {
                 json: {
                     "action": "get",
                     "items": {
@@ -37,9 +37,9 @@ class AOSIPController extends TelegramBaseController {
                 },
                 headers: {
                     "content-type": "application/json;charset=utf-8",
-                    "Host": "get.aosiprom.com",
+                    "Host": "get.aosip.dev",
                     "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:58.0) Gecko/20100101 Firefox/58.0",
-                    "Referer": "https://get.aosiprom.com/",
+                    "Referer": "https://get.aosip.dev/",
                     "Cookie": "PHPSESSID=t7ascuh78voqhea02vp54fjf2s"
                 }
             },
@@ -64,7 +64,7 @@ class AOSIPController extends TelegramBaseController {
                             kb.inline_keyboard.push(
                                 [{
                                     text: body.items[i].href.split("/")[body.items[i].href.split("/").length - 1],
-                                    url: "https://get.aosiprom.com" + body.items[i].href
+                                    url: "https://get.aosip.dev" + body.items[i].href
                                 }]);
                             break;
                         } else if (body.items[i].href.indexOf("/" + keyword + "/") !== -1 &&
@@ -72,7 +72,7 @@ class AOSIPController extends TelegramBaseController {
                             kb.inline_keyboard.push(
                                 [{
                                     text: body.items[i].href.split("/")[body.items[i].href.split("/").length - 1],
-                                    url: "https://get.aosiprom.com" + body.items[i].href
+                                    url: "https://get.aosip.dev" + body.items[i].href
                                 }]);
                             gsiCnt++
                         }
