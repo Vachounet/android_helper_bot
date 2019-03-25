@@ -12,7 +12,7 @@ class CallbacksController extends TelegramBaseCallbackQueryController {
     handle($) {
         if ($.data) {
             var params = $.data.split("|");
-
+            tg.api.answerCallbackQuery($.id);
             switch (params[0]) {
                 case "xda":
                     this.handleXDACallback($, params)
