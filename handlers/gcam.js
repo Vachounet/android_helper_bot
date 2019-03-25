@@ -76,6 +76,8 @@ class GcamController extends TelegramBaseController {
             }
 
             $.sendMessage(msg, {
+                disable_web_page_preview: true,
+                reply_to_message_id: $.message.messageId,
                 parse_mode: "markdown"
             });
         });
