@@ -46,6 +46,29 @@ class RRController extends TelegramBaseController {
                     return;
                 }
 
+                if (keywords === "gsi") {
+                    var kb = {
+                        inline_keyboard: []
+                    };
+                    for (var i = 1; i < 5; i++) {
+                        var deviceLI = dom.window.document.querySelectorAll("#directory-listing li")[dom.window.document.querySelectorAll("#directory-listing li").length - i];
+
+
+                        kb.inline_keyboard.push(
+                    [{
+                                text: deviceLI.getAttribute("data-name"),
+                                url: "https://get.resurrectionremix.com/" + deviceLI.getAttribute("data-href")
+                    }]);
+                    }
+                    var msg = "🔍 *ResurrectionRemix build for " + keywords + ": *\n";
+                    $.sendMessage(msg, {
+                        parse_mode: "markdown",
+                        reply_markup: JSON.stringify(kb),
+                        reply_to_message_id: $.message.messageId
+                    });
+                    return;
+                }
+
                 var deviceLI = dom.window.document.querySelectorAll("#directory-listing li")[dom.window.document.querySelectorAll("#directory-listing li").length - 1];
 
                 if (deviceLI.getAttribute("data-name").indexOf("md5") != -1) {
