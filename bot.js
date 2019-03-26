@@ -213,6 +213,11 @@ tg.router
         new exports["viper"]()
     )
 
+    .when(
+        new TextCommand('/gsi', 'gsiHandler', ''),
+        new exports["gsi"]()
+    )
+
     .when(new TextCommand('/xda device', 'xdaDeviceHandler', 'Search for device forums on XDA'), new exports["xda"]())
     .when(new TextCommand('/xda user', 'xdaUserHandler', 'Search users on XDA'), new exports["xda"]())
     .when(new TextCommand('/xda browse', 'xdaBrowseHandler', 'Browse XDA forums'), new exports["xda"]())
