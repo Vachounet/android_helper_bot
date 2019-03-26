@@ -134,29 +134,36 @@ BotUtils.sendAFHMirrors = (fid, scope) => {
 BotUtils.getSourceForgeBuilds = (scope, romInfos, device) => {
     console.log('https://sourceforge.net/projects/' + romInfos.projectName + '/rss?path=/' + romInfos.extraSFPath.replace("{0}", device))
     parser.parseURL('https://sourceforge.net/projects/' + romInfos.projectName + '/rss?path=/' + romInfos.extraSFPath.replace("{0}", device), function (error, feed) {
-        for (var i = 0; i < feed.items.length; i++) {
+        if (feed && feed.items && feed.items.length > 0) {
+            for (var i = 0; i < feed.items.length; i++) {
 
-            var item = feed.items[i];
+                var item = feed.items[i];
 
-            var fileName;
-            var fileLink;
+                var fileName;
+                var fileLink;
 
-            if (item.title.toLocaleLowerCase().indexOf(device.toLocaleLowerCase()) !== -1 && item.title.indexOf(".md5") === -1) {
+                if (item.title.toLocaleLowerCase().indexOf(device.toLocaleLowerCase()) !== -1 && item.title.indexOf(".md5") === -1) {
 
-                fileName = item.title.split("/")[romInfos.extraSFPath.indexOf("/") !== -1 ? 3 : 2];
-                fileLink = item.link
+                    fileName = item.title.split("/")[romInfos.extraSFPath.indexOf("/") !== -1 ? 3 : 2];
+                    fileLink = item.link
 
-                break;
+                    break;
+                }
             }
-        }
 
-        if (!fileName || !fileLink) {
-            scope.sendMessage("*Device not found*", {
+            if (!fileName || !fileLink) {
+                scope.sendMessage(tg._localization.En.deviceNotFound, {
+                    parse_mode: "markdown",
+                    reply_to_message_id: scope.message.messageId
+                });
+            } else {
+                BotUtils.sendSourceForgeLinks(scope, fileLink, romInfos)
+            }
+        } else {
+            scope.sendMessage(tg._localization.En.deviceNotFound, {
                 parse_mode: "markdown",
                 reply_to_message_id: scope.message.messageId
             });
-        } else {
-            BotUtils.sendSourceForgeLinks(scope, fileLink, romInfos)
         }
     });
 }

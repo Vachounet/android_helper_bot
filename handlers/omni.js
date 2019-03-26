@@ -49,15 +49,14 @@ class OmniController extends TelegramBaseController {
 
                 var json = JSON.parse(body);
 
-                json.items.sort(function (a, b) {
-                    if (new Date(a.time * 1000) < new Date(b.time * 1000))
-                        return 1;
-                    if (new Date(a.time * 1000) > new Date(b.time * 1000))
-                        return -1;
-                    return 0;
-                });
-
                 if (json && json.items && json.items.length > 0) {
+                    json.items.sort(function (a, b) {
+                        if (new Date(a.time * 1000) < new Date(b.time * 1000))
+                            return 1;
+                        if (new Date(a.time * 1000) > new Date(b.time * 1000))
+                            return -1;
+                        return 0;
+                    });
                     for (var i = 0; i < json.items.length; i++) {
                         if (json.items[i].absHref.indexOf("/" + keyword + "/") !== -1 &&
                             json.items[i].absHref.indexOf(".zip") !== -1 && json.items[i].absHref.indexOf(".md5") === -1) {
@@ -75,7 +74,7 @@ class OmniController extends TelegramBaseController {
                         reply_to_message_id: $.message.messageId
                     });
                 } else {
-                    $.sendMessage("No results", {
+                    $.sendMessage(tg._localization.En.deviceNotFound, {
                         parse_mode: "markdown",
                         reply_to_message_id: $.message.messageId
                     });

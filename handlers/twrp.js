@@ -42,7 +42,7 @@ class TWRPController extends TelegramBaseController {
                     reply_to_message_id: $.message.messageId
                 });
             } else {
-                $.sendMessage("Device not found", {
+                $.sendMessage(tg._localization.En.deviceNotFound, {
                     parse_mode: "markdown",
                     reply_to_message_id: $.message.messageId
                 });

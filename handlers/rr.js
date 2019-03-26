@@ -36,6 +36,16 @@ class RRController extends TelegramBaseController {
 
                 var dom = new JSDOM.JSDOM(body);
 
+                var isError = dom.window.document.querySelector(".alert-danger");
+
+                if (isError) {
+                    $.sendMessage(tg._localization.En.deviceNotFound, {
+                        parse_mode: "markdown",
+                        reply_to_message_id: $.message.messageId
+                    });
+                    return;
+                }
+
                 var deviceLI = dom.window.document.querySelectorAll("#directory-listing li")[dom.window.document.querySelectorAll("#directory-listing li").length - 1];
 
                 if (deviceLI.getAttribute("data-name").indexOf("md5") != -1) {

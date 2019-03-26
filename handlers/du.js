@@ -44,33 +44,34 @@ class DUController extends TelegramBaseController {
                             text: lastUpdate.filename,
                             url: link
                         }]);
-                }
-                request.get("https://download.dirtyunicorns.com/api/files/" + keywords + "/Rc",
-                    function (error, response, body) {
-                        json = JSON.parse(body);
 
-                        lastUpdate = json[json.length - 1];
-                        if (kb.inline_keyboard.length > 0) {
-                            $.sendMessage("🔍  *Latests DirtyUnicorns build for " + keywords + "*", {
-                                parse_mode: "markdown",
-                                reply_markup: JSON.stringify(kb),
-                                reply_to_message_id: $.message.messageId
-                            });
-                        } else {
-                            $.sendMessage("*Device not found *", {
-                                parse_mode: "markdown",
-                                reply_to_message_id: $.message.messageId
-                            });
-                        }
+                    request.get("https://download.dirtyunicorns.com/api/files/" + keywords + "/Rc",
+                        function (error, response, body) {
+                            json = JSON.parse(body);
 
+                            lastUpdate = json[json.length - 1];
+                            if (kb.inline_keyboard.length > 0) {
+                                $.sendMessage("🔍  *Latests DirtyUnicorns build for " + keywords + "*", {
+                                    parse_mode: "markdown",
+                                    reply_markup: JSON.stringify(kb),
+                                    reply_to_message_id: $.message.messageId
+                                });
+                            } else {
+                                $.sendMessage(tg._localization.En.deviceNotFound, {
+                                    parse_mode: "markdown",
+                                    reply_to_message_id: $.message.messageId
+                                });
+                            }
+
+                        });
+
+                } else {
+                    $.sendMessage(tg._localization.En.deviceNotFound, {
+                        parse_mode: "markdown",
+                        reply_to_message_id: $.message.messageId
                     });
-
-
-
-            }
-
-        );
-
+                }
+            });
     }
 
     get routes() {

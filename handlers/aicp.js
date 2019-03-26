@@ -31,9 +31,8 @@ class AICPController extends TelegramBaseController {
             function (error, response, body) {
                 var json = JSON.parse(body);
 
-                var lastUpdate = json.updates[0];
-                if (lastUpdate) {
-
+                if (json.updates && json.updates.length > 0) {
+                    var lastUpdate = json.updates[0];
                     var link = lastUpdate.url;
 
                     kb.inline_keyboard.push(
@@ -53,7 +52,7 @@ class AICPController extends TelegramBaseController {
                         reply_to_message_id: $.message.messageId
                     });
                 } else {
-                    $.sendMessage("*Device not found *", {
+                    $.sendMessage(tg._localization.En.deviceNotFound, {
                         parse_mode: "markdown",
                         reply_to_message_id: $.message.messageId
                     });

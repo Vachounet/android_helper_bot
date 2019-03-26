@@ -31,24 +31,32 @@ class PECAFController extends TelegramBaseController {
         request.get("https://download.pixelexperience.org/ota/" + keywords + "/pie_caf",
             function (error, response, body) {
                 var json = JSON.parse(body);
+                console.log(json)
 
-                var msg = "🔍 *PixelExperience build for " + keywords + "* \n";
-                msg += "*Changelog*: \n"
-                msg += "`" + json.changelog + "`\n"
-                msg += "*Build date*: " + json.build_date + "\n"
-                msg += "*File Size*: " + BotUtils.humanFileSize(json.filesize, true) + "\n"
+                if (json.filename !== "" && json.url !== "") {
+                    var msg = "🔍 *PixelExperience CAF build for " + keywords + "* \n";
+                    msg += "*Changelog*: \n"
+                    msg += "`" + json.changelog + "`\n"
+                    msg += "*Build date*: " + json.build_date + "\n"
+                    msg += "*File Size*: " + BotUtils.humanFileSize(json.filesize, true) + "\n"
 
-                kb.inline_keyboard.push(
+                    kb.inline_keyboard.push(
                                 [{
-                        text: json.filename,
-                        url: json.url
+                            text: json.filename,
+                            url: json.url
                                 }]);
-                console.log(kb)
-                $.sendMessage(msg, {
-                    parse_mode: "markdown",
-                    reply_markup: JSON.stringify(kb),
-                    reply_to_message_id: $.message.messageId
-                });
+
+                    $.sendMessage(msg, {
+                        parse_mode: "markdown",
+                        reply_markup: JSON.stringify(kb),
+                        reply_to_message_id: $.message.messageId
+                    });
+                } else {
+                    $.sendMessage(tg._localization.En.deviceNotFound, {
+                        parse_mode: "markdown",
+                        reply_to_message_id: $.message.messageId
+                    });
+                }
             });
     }
 

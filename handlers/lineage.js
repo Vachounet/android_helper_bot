@@ -31,25 +31,31 @@ class LineageController extends TelegramBaseController {
 
                 var builds = JSON.parse(body);
 
-                kb.inline_keyboard.push(
+                if (builds.response && builds.response.length > 0) {
+
+                    kb.inline_keyboard.push(
                                 [{
-                        text: builds.response[builds.response.length - 1].filename,
-                        url: builds.response[builds.response.length - 1].url
+                            text: builds.response[builds.response.length - 1].filename,
+                            url: builds.response[builds.response.length - 1].url
                                 }]);
-                kb.inline_keyboard.push(
+                    kb.inline_keyboard.push(
                                 [{
-                        text: "Changelog",
-                        url: "https://download.lineageos.org/" + keywords + "/changes"
+                            text: "Changelog",
+                            url: "https://download.lineageos.org/" + keywords + "/changes"
                                 }]);
 
-                $.sendMessage("*Last build for " + keywords + "*", {
-                    parse_mode: "markdown",
-                    reply_markup: JSON.stringify(kb),
-                    reply_to_message_id: $.message.messageId
-                });
-
+                    $.sendMessage("*Last build for " + keywords + "*", {
+                        parse_mode: "markdown",
+                        reply_markup: JSON.stringify(kb),
+                        reply_to_message_id: $.message.messageId
+                    });
+                } else {
+                    $.sendMessage(tg._localization.En.deviceNotFound, {
+                        parse_mode: "markdown",
+                        reply_to_message_id: $.message.messageId
+                    });
+                }
             });
-
     }
 
     get routes() {

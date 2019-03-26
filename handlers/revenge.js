@@ -38,7 +38,7 @@ class RevengeController extends TelegramBaseController {
                 var dom = new JSDOM.JSDOM(body);
 
                 var lastFile = dom.window.document.querySelectorAll("#filelist a")[dom.window.document.querySelectorAll("#filelist a").length - 2];
-                console.log(lastFile)
+
                 if (lastFile) {
                     var msg = "🔍 *RevengeOS Build for " + keyword + " *: \n";
 
@@ -54,7 +54,7 @@ class RevengeController extends TelegramBaseController {
                         reply_to_message_id: $.message.messageId
                     });
                 } else {
-                    $.sendMessage("*Device not found*", {
+                    $.sendMessage(tg._localization.En.deviceNotFound, {
                         parse_mode: "markdown",
                         reply_to_message_id: $.message.messageId
                     });

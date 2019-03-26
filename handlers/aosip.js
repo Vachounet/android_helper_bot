@@ -47,16 +47,16 @@ class AOSIPController extends TelegramBaseController {
 
                 var msg = "🔍 *AOSiP Build for " + keyword + " *: \n";
 
-                body.items.sort(function (a, b) {
-                    if (new Date(a.time * 1000) < new Date(b.time * 1000))
-                        return 1;
-                    if (new Date(a.time * 1000) > new Date(b.time * 1000))
-                        return -1;
-                    return 0;
-                });
-
-
                 if (body && body.items && body.items.length > 0) {
+
+                    body.items.sort(function (a, b) {
+                        if (new Date(a.time * 1000) < new Date(b.time * 1000))
+                            return 1;
+                        if (new Date(a.time * 1000) > new Date(b.time * 1000))
+                            return -1;
+                        return 0;
+                    });
+
                     var gsiCnt = 0;
                     for (var i = 0; i < body.items.length; i++) {
                         if (body.items[i].href.indexOf("/" + keyword + "/") !== -1 &&
@@ -83,7 +83,7 @@ class AOSIPController extends TelegramBaseController {
                         reply_to_message_id: $.message.messageId
                     });
                 } else {
-                    $.sendMessage("No results", {
+                    $.sendMessage(tg._localization.En.deviceNotFound, {
                         parse_mode: "markdown",
                         reply_to_message_id: $.message.messageId
                     });
