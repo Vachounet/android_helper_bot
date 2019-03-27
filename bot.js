@@ -260,6 +260,12 @@ tg.router
     )
 
     .when(
+        new TextCommand('/huawei', 'huaweiHandler', ''),
+        new exports["huawei"]()
+    )
+
+
+    .when(
         new CustomFilterCommand($ => {
             return $.message.text && $.message.text.indexOf("https://rsdsecure-cloud.motorola.com/download/") !== -1
         }, 'rsdFilterHandler'),
