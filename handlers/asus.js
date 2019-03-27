@@ -26,8 +26,17 @@ class AsusController extends TelegramBaseController {
                 var query = $.command.arguments.join(" ");
 
                 if (json.Result.Product && json.Result.Product.length > 0) {
+                    var pattern = '^'
 
-                    var device = json.Result.Product.filter(product => product.PDName.toLowerCase().indexOf(query.toLowerCase()) !== -1);
+                    $.command.arguments.forEach(function (element) {
+                        pattern += '(?=.*' + element + ')'
+                    })
+
+                    pattern += '.*$'
+
+                    var deviceMatch = new RegExp(pattern, 'gi')
+
+                    var device = json.Result.Product.filter(product => deviceMatch.test(product.PDName));
 
                     if (device && device.length > 0) {
                         console.log(device)
