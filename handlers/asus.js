@@ -47,10 +47,11 @@ class AsusController extends TelegramBaseController {
                                     })
 
                                     if (firmwares && firmwares.Files && firmwares.Files.length > 0) {
-                                        var msg = "*Firmware found*\n\n"
+                                        var msg = "*Firmware found for " + device[0].PDName + " *\n\n"
                                         var filesLength = firmwares.Files.length > 3 ? 3 : firmwares.Files.length
                                         for (var i = 0; i < filesLength; i++) {
-                                            msg += "[" + firmwares.Files[i].Title + "](" + firmwares.Files[i].DownloadUrl.Global + ")\n";
+                                            var linkTitle = firmwares.Files[i].DownloadUrl.Global.split("/")[firmwares.Files[i].DownloadUrl.Global.split("/").length - 1]
+                                            msg += "[" + linkTitle + "](" + firmwares.Files[i].DownloadUrl.Global + ")\n";
                                             msg += "*" + firmwares.Files[i].FileSize + " - Released date: " + firmwares.Files[i].ReleaseDate + "*\n\n"
                                         }
 
