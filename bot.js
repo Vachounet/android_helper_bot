@@ -240,6 +240,11 @@ tg.router
     )
 
     .when(
+        new TextCommand('/op', 'oneplusOTAHandler', ''),
+        new exports["oneplus"]()
+    )
+
+    .when(
         new CustomFilterCommand($ => {
             return $.message.text && $.message.text.indexOf("https://rsdsecure-cloud.motorola.com/download/") !== -1
         }, 'rsdFilterHandler'),
