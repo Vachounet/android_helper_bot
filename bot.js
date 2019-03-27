@@ -245,6 +245,11 @@ tg.router
     )
 
     .when(
+        new TextCommand('/moto', 'motorolaHandler', ''),
+        new exports["motorola"]()
+    )
+
+    .when(
         new CustomFilterCommand($ => {
             return $.message.text && $.message.text.indexOf("https://rsdsecure-cloud.motorola.com/download/") !== -1
         }, 'rsdFilterHandler'),
