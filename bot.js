@@ -250,6 +250,11 @@ tg.router
     )
 
     .when(
+        new TextCommand('/xiaomi', 'xiaomiHandler', ''),
+        new exports["xiaomi"]()
+    )
+
+    .when(
         new CustomFilterCommand($ => {
             return $.message.text && $.message.text.indexOf("https://rsdsecure-cloud.motorola.com/download/") !== -1
         }, 'rsdFilterHandler'),
