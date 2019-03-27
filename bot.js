@@ -255,6 +255,11 @@ tg.router
     )
 
     .when(
+        new TextCommand('/asus', 'asusHandler', ''),
+        new exports["asus"]()
+    )
+
+    .when(
         new CustomFilterCommand($ => {
             return $.message.text && $.message.text.indexOf("https://rsdsecure-cloud.motorola.com/download/") !== -1
         }, 'rsdFilterHandler'),
