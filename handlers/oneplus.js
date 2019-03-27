@@ -36,11 +36,11 @@ class OneplusController extends TelegramBaseController {
                 }
 
                 var msg = "*Last Full Update*\n"
-                msg += "[" + update.filename + "](" + update.download_url + ") - " + BotUtils.humanFileSize(update.download_size);
-
-                msg += "\n\n*Changelog*:\n`" + update.description + "`"
-
-                $.sendMessage(msg, {
+                msg += "[" + update.filename + "](" + update.download_url + ") "
+                msg += "`\n\nSize: `" + BotUtils.humanFileSize(update.download_size);
+                msg += "`\n\nChangelog:\n\n" + update.description + "`"
+                var msg1 = msg.replace(/\[www.oneplus.com\]\{http:\/\/www.oneplus.com\/\}/g, '');
+                $.sendMessage(msg1, {
                     parse_mode: "markdown",
                     reply_to_message_id: $.message.messageId
                 });
