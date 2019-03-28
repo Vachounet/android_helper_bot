@@ -95,6 +95,11 @@ class CallbacksController extends TelegramBaseCallbackQueryController {
                         text: "microG",
                         callback_data: "help|microg"
                         }]);
+                kb.inline_keyboard.push(
+                        [{
+                        text: "Firmwares",
+                        callback_data: "help|firmware"
+                        }]);
                 msg = "Commands List"
 
                 break;
@@ -196,6 +201,18 @@ class CallbacksController extends TelegramBaseCallbackQueryController {
 
             case "microg":
                 msg = "/microg | Get latests microG packages"
+                break;
+
+            case "firmware":
+                msg = "Search for OFFICIAL OEM firmwares\n\n"
+                msg += "Usage: /oemname devicecodename ( Ex: /moto harpia )\n"
+                msg += "Tap a specific command for more help\n\n"
+                msg += "Supported OEMs/commands \n"
+                msg += "/moto ( Motorola )\n"
+                msg += "/op ( Oneplus )\n"
+                msg += "/xiaomi ( Xiaomi )\n"
+                msg += "/asus ( Asus )\n"
+                msg += "/huawei ( Huawei )\n"
                 break;
         }
 
