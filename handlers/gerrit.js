@@ -21,6 +21,7 @@ class GerritController extends TelegramBaseController {
                 var msg = "*Subject*: `" + json.subject + "`";
                 msg += "\n*Project* : `" + json.project + "`";
                 msg += "\n*Branch* : `" + json.branch + "`";
+                msg += "\n*Status* : `" + json.status + "`";
                 if (json.topic) {
                     msg += "\n*Topic* : `" + json.topic + "`";
                 }
