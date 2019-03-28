@@ -220,7 +220,7 @@ BotUtils.sendSourceForgeLinks = (scope, link, romInfos) => {
 // Based on https://github.com/JonDum/BBCode-To-Markdown-Converter/blob/gh-pages/index.js
 BotUtils.convertBBCodeToMarkdown = (bbCodeContent) => {
 
-    if (!bbCodeContent || typeof value !== 'string')
+    if (!bbCodeContent || typeof bbCodeContent !== 'string')
         return;
 
     try {
@@ -231,7 +231,9 @@ BotUtils.convertBBCodeToMarkdown = (bbCodeContent) => {
             .replace(/\[\u\]((?:.|\n)+?)\[\/\u\]/gmi, '$1') //remove underline;
             .replace(/\[s\]((?:.|\n)+?)\[\/s\]/gmi, '~~ $1~~') //strikethrough; replace [s] $1 [/s] with ~~ $1 ~~
             .replace(/\[center\]((?:.|\n)+?)\[\/center\]/gmi, '$1') //remove center;
-            .replace(/\[quote\=.+?\]((?:.|\n)+?)\[\/quote\]/gmi, '$1') //remove [quote=] tags
+            .replace(/\[quote\=(.+?)\]((?:.|\n)+?)\[\/quote\]/gmi, function (match, p1, p2, offset, string) {
+                return "`" + p1.split(";")[0] + " said:\n" + p2 + "`\n"
+            })
             .replace(/\[size\=.+?\]((?:.|\n)+?)\[\/size\]/gmi, '## $1') //Size [size=] tags
             .replace(/\[color\=.+?\]((?:.|\n)+?)\[\/color\]/gmi, '$1') //remove [color] tags
             .replace(/\[list\=1\]((?:.|\n)+?)\[\/list\]/gmi, function (match, p1, offset, string) {
