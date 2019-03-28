@@ -14,7 +14,7 @@ class GerritController extends TelegramBaseController {
 
         var url = matches[0].split("/c/")[0].replace("/#", "");
 
-        request.get(url + "/changes/" + cid + "/",
+        request.get(url + "/changes/" + cid + "/detail",
             function (error, response, body) {
                 var json = JSON.parse(body.split("'")[1])
 
@@ -22,6 +22,7 @@ class GerritController extends TelegramBaseController {
                 msg += "\n*Project* : `" + json.project + "`";
                 msg += "\n*Branch* : `" + json.branch + "`";
                 msg += "\n*Status* : `" + json.status + "`";
+                msg += "\n*Owner* : `" + json.owner.name + "`";
                 if (json.topic) {
                     msg += "\n*Topic* : `" + json.topic + "`";
                 }
