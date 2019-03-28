@@ -61,6 +61,19 @@ class StartController extends TelegramBaseController {
                 text: "microG",
                 callback_data: "help|microg"
                         }]);
+        kb.inline_keyboard.push(
+                        [{
+                text: "Firmwares",
+                callback_data: "help|firmware"
+                        }, {
+                text: "GSI",
+                callback_data: "help|gsi"
+                        }]);
+        kb.inline_keyboard.push(
+                        [{
+                text: "Direct Link Generator",
+                callback_data: "help|directlinks"
+                        }]);
         if ($.message.from.id == $.message.chat.id) {
             tg.api.sendMessage($.message.from.id, "Menu", {
                 parse_mode: "markdown",

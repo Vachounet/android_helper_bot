@@ -95,6 +95,19 @@ class CallbacksController extends TelegramBaseCallbackQueryController {
                         text: "microG",
                         callback_data: "help|microg"
                         }]);
+                kb.inline_keyboard.push(
+                        [{
+                        text: "Firmwares",
+                        callback_data: "help|firmware"
+                        }, {
+                        text: "GSI",
+                        callback_data: "help|gsi"
+                        }]);
+                kb.inline_keyboard.push(
+                        [{
+                        text: "Direct Link Generator",
+                        callback_data: "help|directlinks"
+                        }]);
                 msg = "Commands List"
 
                 break;
@@ -197,6 +210,33 @@ class CallbacksController extends TelegramBaseCallbackQueryController {
             case "microg":
                 msg = "/microg | Get latests microG packages"
                 break;
+
+            case "firmware":
+                msg = "Search for OFFICIAL OEM firmwares\n\n"
+                msg += "Usage: /oemname devicecodename ( Ex: /moto harpia )\n"
+                msg += "Tap a specific command for more help\n\n"
+                msg += "Supported OEMs/commands \n"
+                msg += "/moto ( Motorola )\n"
+                msg += "/op ( Oneplus )\n"
+                msg += "/xiaomi ( Xiaomi )\n"
+                msg += "/asus ( Asus )\n"
+                msg += "/huawei ( Huawei )\n"
+                break;
+
+            case "gsi":
+                msg = "Search for Generic System Images\n\n"
+                msg += "Usage: /gsi ( Tap command for more info )\n"
+                break;
+
+           case "directlinks":
+                msg = "Generate direct links for different sources\n\n"
+                msg += "Usage: Paste downloadable links from supported source\n\n"
+                msg += "Currently Supported:\n\n"
+                msg += "`Google Drive\n`"
+                msg += "`Mega\n`"
+                msg += "`Android File Host a.k.a AFH\n`"
+                msg += "`Sourceforge\n`"
+                msg += "`Github Releases`"
         }
 
         if (params[1] !== "main") {
