@@ -31,7 +31,7 @@ class GSIController extends TelegramBaseController {
 
     erfanBuilds($) {
 
-        if (!$.command.success || $.command.arguments.length === 0) {
+        if (!$.command.arguments[1]) {
             $.sendMessage("Usage: /gsi erfan _type_\nTypes = oos, hos, pixel or miui", {
                 parse_mode: "markdown",
                 reply_to_message_id: $.message.messageId
