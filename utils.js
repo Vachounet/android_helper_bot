@@ -103,7 +103,16 @@ BotUtils.sendAFHMirrors = (fid, scope) => {
             }
         },
         function (error, response, body) {
-            var json = JSON.parse(body);
+
+            if (error)
+                return
+
+            var json;
+            try {
+                json = JSON.parse(body);
+            } catch (e) {
+                console.log("AFH: error - fid: " + fid)
+            }
 
             var links = "";
 
