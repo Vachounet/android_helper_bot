@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+
+    
+    <meta charset="UTF-8">
+
+<!-- Begin Jekyll SEO tag v2.5.0 -->
+<title>Android Helper Bot | Provides useful features for Android based Telegram groups, and users</title>
+<meta name="generator" content="Jekyll v3.7.4" />
+<meta property="og:title" content="Android Helper Bot" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Provides useful features for Android based Telegram groups, and users" />
+<meta property="og:description" content="Provides useful features for Android based Telegram groups, and users" />
+<link rel="canonical" href="http://localhost:4000/" />
+<meta property="og:url" content="http://localhost:4000/" />
+<meta property="og:site_name" content="Android Helper Bot" />
+<script type="application/ld+json">
+{"headline":"Android Helper Bot","@type":"WebSite","url":"http://localhost:4000/","name":"Android Helper Bot","description":"Provides useful features for Android based Telegram groups, and users","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#157878">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="stylesheet" href="/assets/css/style.css?v=c64fe78358504929bd3d657f1507f3ac2e174ee3">
+  </head>
+  <body>
+    <a id="skip-to-content" href="#content">Skip to the content.</a>
+
+    <header class="page-header" role="banner">
+      <h1 class="project-name">Android Helper Bot</h1>
+      <h2 class="project-tagline">Provides useful features for Android based Telegram groups, and users</h2>
+      <a href="https://t.me/androidhelpersupport" class="btn">Support group</a>
+      
+        <a href="https://github.com/Vachounet/android_helper_bot" class="btn">View on GitHub</a>
+      
+      
+        <a href="https://github.com/Vachounet/android_helper_bot/zipball/gh-pages" class="btn">Download .zip</a>
+        <a href="https://github.com/Vachounet/android_helper_bot/tarball/gh-pages" class="btn">Download .tar.gz</a>
+      
+      
+    </header>
+
+    <main id="content" class="main-content" role="main">
+      <h2 id="install">Install</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm install
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mv config.ex.js config.js
+</code></pre></div></div>
+
+<p>Update config.js accordingly (bot token and db infos)</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">botConfig</span> <span class="o">=</span> <span class="p">{</span>
+ <span class="na">db</span><span class="p">:</span> <span class="p">{</span>
+   <span class="na">host</span><span class="p">:</span> <span class="s1">'localhost'</span><span class="p">,</span>
+   <span class="na">port</span><span class="p">:</span> <span class="mi">27017</span><span class="p">,</span>
+   <span class="na">name</span><span class="p">:</span> <span class="s1">'test'</span>
+ <span class="p">},</span>
+ <span class="na">token</span><span class="p">:</span> <span class="s1">''</span><span class="p">,</span> <span class="c1">//Your bot token</span>
+<span class="p">};</span>
+
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">botConfig</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h2 id="features">Features</h2>
+
+<h3 id="direct-links-generator">Direct Links Generator</h3>
+
+<p>Generate direct links for different sources</p>
+
+<p><strong>Usage:</strong> Paste downloadable links from supported source</p>
+
+<p>Currently Supported:</p>
+
+<ul>
+  <li>Google Drive</li>
+  <li>Mega</li>
+  <li>Android File Host a.k.a AFH</li>
+  <li>Sourceforge</li>
+  <li>Github Releases</li>
+</ul>
+
+<h3 id="apkmirror">APKMirror</h3>
+
+<p>Search for apks on <a href="https://www.apkmirror.com/">APKMirror</a></p>
+
+<blockquote>
+  <p>/am search <em>keywords</em></p>
+</blockquote>
+
+<h3 id="androidfilehost">AndroidFileHost</h3>
+
+<p>Search for files on <a href="https://androidfilehost.com/">AndroidFileHost</a></p>
+
+<blockquote>
+  <p>/afh search <em>keywords</em></p>
+</blockquote>
+
+<p>The bot can also provide direct links for file URL. It will automatically send mirrors.</p>
+
+<blockquote>
+  <p>Ex.: https://androidfilehost.com/?fid=746010030569952951</p>
+</blockquote>
+
+<h3 id="opengapps">OpenGapps</h3>
+
+<p>Search for lastests OpenGapps packages (arm or arm64)
+Provides nano, pico, mini and micro packages</p>
+
+<blockquote>
+  <p>/gapps (get latests Android 9.0 arm64 packages)</p>
+
+  <p>/gapps arm (get latests Android 9.0 arm packages)</p>
+
+  <p>/gapps arm 8.0 (get latests Android 8.0 arm packages)</p>
+</blockquote>
+
+<h3 id="google-camera-mods">Google Camera Mods</h3>
+
+<p>Search for Google Camera Mods from <a href="https://www.celsoazevedo.com/files/android/google-camera/">celsoazevedo.com</a></p>
+
+<blockquote>
+  <p>/gcam (returns a list of available devs)</p>
+
+  <p>/gcam <em>devname</em> (get latests mods for given dev)</p>
+</blockquote>
+
+<h3 id="twrp">TWRP</h3>
+
+<p>Search for official TWRP builds from <a href="https://dl.twrp.me/">dl.twrp.me</a></p>
+
+<blockquote>
+  <p>/twrp <em>device</em></p>
+</blockquote>
+
+<h3 id="xda">XDA</h3>
+
+<p>Get user details</p>
+
+<blockquote>
+  <p>/xda user <em>username</em></p>
+</blockquote>
+
+<p>Get device forums</p>
+
+<blockquote>
+  <p>/xda device <em>devicename</em></p>
+</blockquote>
+
+<p>Search for forums</p>
+
+<blockquote>
+  <p>/xda forum <em>keywords</em></p>
+</blockquote>
+
+<p>Search for threads</p>
+
+<blockquote>
+  <p>/xda thread <em>keywords</em></p>
+</blockquote>
+
+<p>Get latests portal news</p>
+
+<blockquote>
+  <p>/xda news</p>
+
+  <p>/xda news <em>vendorname</em> (filter by vendor/OEM)</p>
+</blockquote>
+
+<p>Get notified on new posts for a given thread</p>
+
+<blockquote>
+  <p>/xda follow <em>threadid</em> (add a thread)</p>
+</blockquote>
+
+<blockquote>
+  <p>/xda follow rm <em>threadid</em> (remove thread)</p>
+</blockquote>
+
+<blockquote>
+  <p>/xda follow get (get list of followed threads)</p>
+</blockquote>
+
+<p>Search for apps on XDA Labs</p>
+
+<blockquote>
+  <p>/labs <em>keywords</em></p>
+</blockquote>
+
+<h3 id="roms">ROMs</h3>
+
+<p>Get official builds for various ROMs</p>
+
+<p>You can use the /filterrom command to allow one command only. Useful for ROMs groups.</p>
+<blockquote>
+  <p>Ex.: /filterrom omni will block all other commands, only /omni will be allowed</p>
+</blockquote>
+
+<p>Supported ROMs/commands :</p>
+<ul>
+  <li>/aex (AOSPExtended)</li>
+  <li>/aicp (Android Ice Cold Project)</li>
+  <li>/aosip (Android Open Source illusion Project)</li>
+  <li>/arrow (ArrowOS)</li>
+  <li>/bootleg (Bootleggers)</li>
+  <li>/carbon (CarbonROM)</li>
+  <li>/cos (CosmicOS)</li>
+  <li>/cosp (Clean Open Source Project)</li>
+  <li>/crdroid (crDroidAndroid)</li>
+  <li>/dotos (dotOS)</li>
+  <li>/du (DirtyUnicorns)</li>
+  <li>/havoc (HavocOS)</li>
+  <li>/lineage (LineageOS)</li>
+  <li>/omni (OmniROM)</li>
+  <li>/pe (PixelExperience)</li>
+  <li>/pecaf (PixelExperience CAF Edition)</li>
+  <li>/pego (PixelExperience GO Edition)</li>
+  <li>/pixys (PixysOS)</li>
+  <li>/posp (Potato Open Source Project)</li>
+  <li>/revenge (RevengeOS)</li>
+  <li>/rr (Resurrectionremix)</li>
+  <li>/syberia (Syberia OS)</li>
+  <li>/viper (ViperOS)</li>
+  <li>/xtended (MSM Xtended)</li>
+</ul>
+
+<blockquote>
+  <p>/<em>rom</em> <em>devicecodename</em></p>
+
+  <p>Ex.: /crdroid whyred</p>
+</blockquote>
+
+<h3 id="gsi">GSI</h3>
+
+<p>Search for Generic System Images from various devs</p>
+
+<p>Currently supported GSI : <a href="https://forum.xda-developers.com/project-treble/trebleenabled-device-development/experimental-phh-treble-t3709659">phh</a>, <a href="https://forum.xda-developers.com/project-treble/trebleenabled-device-development/pie-erfan-gsi-ports-t3906486">erfan</a> or <a href="https://descendant.me/">descendant</a></p>
+
+<blockquote>
+  <p>/gsi phh</p>
+
+  <p>/gsi erfan</p>
+</blockquote>
+
+<h3 id="magisk">Magisk</h3>
+
+<p>Get latests <a href="https://forum.xda-developers.com/apps/magisk">Magisk</a> packages (including flashble zip, uninstaller and MagiskManager APK)</p>
+
+<blockquote>
+  <p>/magisk</p>
+</blockquote>
+
+<h3 id="adbfastboot">ADB/Fastboot</h3>
+
+<p>Get latest <a href="https://developer.android.com/studio/releases/platform-tools">SDK Platform Tools</a> package (mac, linux and windows)</p>
+
+<blockquote>
+  <p>/adb
+or
+/fastboot</p>
+</blockquote>
+
+<h3 id="microg">microG</h3>
+
+<p>Get latests <a href="https://microg.org/">microG</a> packages</p>
+
+<h3 id="stock-firmwares">Stock Firmwares</h3>
+
+<p>Search for OFFICIAL OEM firmwares</p>
+
+<p>Supported OEMs/commands</p>
+<ul>
+  <li>/moto ( Motorola )</li>
+  <li>/op ( Oneplus )</li>
+  <li>/xiaomi ( Xiaomi )</li>
+  <li>/asus ( Asus )</li>
+  <li>/huawei ( Huawei )</li>
+</ul>
+
+<blockquote>
+  <p>Ex.: /moto harpia</p>
+
+  <p>/xiaomi whyred</p>
+</blockquote>
+
+
+
+      <footer class="site-footer">
+        
+          <span class="site-footer-owner"><a href="https://github.com/Vachounet/android_helper_bot">android_helper_bot</a> is maintained by <a href="https://github.com/Vachounet">Vachounet</a>.</span>
+        
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a>.</span>
+      </footer>
+    </main>
+  </body>
+</html>

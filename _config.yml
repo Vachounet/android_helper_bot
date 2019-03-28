@@ -1,1 +1,5 @@
 theme: jekyll-theme-cayman
+
+title: Android Helper Bot
+description: Provides useful features for Android based Telegram groups, and users
+show_downloads: true
