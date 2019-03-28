@@ -5,6 +5,7 @@ var mongojs = require('mongojs')
 var db = mongojs(config.db.name)
 var motoFirmwares = db.collection('moto')
 const request = require('request')
+var requestPromise = require("request-promise")
 
 class MotorolaController extends TelegramBaseController {
 
@@ -32,18 +33,22 @@ class MotorolaController extends TelegramBaseController {
             },
         }).sort({
             date: -1
-        }, function (err, docs) {
+        }, async function (err, docs) {
             if (docs && docs.length > 0) {
-                request.get("https://signedurl-svjhrfxmfa.now.sh/?url=https://rsdsecure-cloud.motorola.com/download/" + docs[0].name,
-                    function (error, response, body) {
-                        var msg = "*Latests build found* \n"
-                        msg += "[" + docs[0].name + "](" + body + ")";
-                        $.sendMessage(msg, {
-                            parse_mode: "markdown",
-                            reply_to_message_id: $.message.messageId
-                        });
+                var msg = "*Latests build found* \n"
+                for (var i = 0; i < docs.length; i++) {
+                    var signedURL = await getSignedURL("https://signedurl-svjhrfxmfa.now.sh/?url=https://rsdsecure-cloud.motorola.com/download/" + docs[i].name)
+                    console.log(signedURL)
+                    msg += "[" + docs[i].name + "](" + signedURL + ") \n";
+                    if (i > 1)
+                        break;
+                }
 
-                    });
+                $.sendMessage(msg, {
+                    parse_mode: "markdown",
+                    reply_to_message_id: $.message.messageId
+                });
+
             } else {
                 $.sendMessage("*No firmwares found*", {
                     parse_mode: "markdown",
@@ -58,6 +63,14 @@ class MotorolaController extends TelegramBaseController {
             'motorolaHandler': 'getFirmwares',
         }
     }
+}
+
+async function getSignedURL(url) {
+
+    // Return new promise
+    // Do async job
+    return await requestPromise.get(url)
+
 }
 
 module.exports = MotorolaController;
