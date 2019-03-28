@@ -53,6 +53,10 @@ class PlayStoreController extends TelegramBaseController {
                             function (error, response, body) {
                                 var dom = new JSDOM.JSDOM(body);
 
+                                if (!dom.window.document.querySelector("#download_link")) {
+                                    return;
+                                }
+
                                 var apkLink = dom.window.document.querySelector("#download_link").href;
 
                                 request.get(apkLink, {
