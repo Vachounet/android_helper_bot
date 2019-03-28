@@ -316,7 +316,7 @@ class XDAController extends TelegramBaseController {
                     }
                 }
 
-                request.get("https://9lktu1teg9.algolia.net/1/indexes/prod_THREADS?query=" + keyword + "&typoTolerance=strict&attributesToSnippet=threadTitle:15,firstPostText:55", {
+                request.get("https://9lktu1teg9.algolia.net/1/indexes/prod_THREADS?query=" + keyword + "&typoTolerance=strict&attributesToSnippet=deviceName:15,forumUrl:15,threadTitle:15,firstPostText:55", {
                         headers: {
                             "Content-Type": "application/json; charset=UTF-8",
                             "X-Algolia-Application-Id": "9LKTU1TEG9",
@@ -327,12 +327,16 @@ class XDAController extends TelegramBaseController {
                         var json = JSON.parse(body);
 
                         msg += "\n<b>Thread(s) Found</b> : \n";
-                        var cnt = json.hits.length > 5 ? 5 : json.hits.length;
-                        for (var i = 0; i < cnt; i++) {
+                        var cnt = 0;
+                        for (var i = 0; i < json.hits.length; i++) {
+                            console.log(json.hits[i].deviceName)
                             if (json.hits[i] && json.hits[i]._highlightResult && (json.hits[i]._highlightResult.threadTitle.matchLevel == "full" ||
-                                    json.hits[i]._highlightResult.firstPostText.matchLevel == "full")) {
+                                    json.hits[i]._highlightResult.firstPostText.matchLevel == "full" || (json.hits[i]._highlightResult.forumUrl && json.hits[i]._highlightResult.forumUrl.matchLevel == "full") ||
+                                    (json.hits[i]._highlightResult.forumUrl && json.hits[i]._highlightResult.deviceName.matchLevel == "full"))) {
                                 msg += "🗨️ <a href=\"https://forum.xda-developers.com" + json.hits[i].url + "\">" + json.hits[i].threadTitle + "</a> \n"
-
+                                cnt++;
+                                if (cnt > 4)
+                                    break;
                             }
                         }
 
