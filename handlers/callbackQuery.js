@@ -99,6 +99,9 @@ class CallbacksController extends TelegramBaseCallbackQueryController {
                         [{
                         text: "Firmwares",
                         callback_data: "help|firmware"
+                        }, {
+                        text: "GSI",
+                        callback_data: "help|gsi"
                         }]);
                 msg = "Commands List"
 
@@ -213,6 +216,11 @@ class CallbacksController extends TelegramBaseCallbackQueryController {
                 msg += "/xiaomi ( Xiaomi )\n"
                 msg += "/asus ( Asus )\n"
                 msg += "/huawei ( Huawei )\n"
+                break;
+
+            case "gsi":
+                msg = "Search for Generic System Images\n\n"
+                msg += "Usage: /gsi ( Tap command for more info )\n"
                 break;
         }
 
