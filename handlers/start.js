@@ -69,6 +69,11 @@ class StartController extends TelegramBaseController {
                 text: "GSI",
                 callback_data: "help|gsi"
                         }]);
+        kb.inline_keyboard.push(
+                        [{
+                text: "Direct Link Generator",
+                callback_data: "help|directlinks"
+                        }]);
         if ($.message.from.id == $.message.chat.id) {
             tg.api.sendMessage($.message.from.id, "Menu", {
                 parse_mode: "markdown",

@@ -103,6 +103,11 @@ class CallbacksController extends TelegramBaseCallbackQueryController {
                         text: "GSI",
                         callback_data: "help|gsi"
                         }]);
+                kb.inline_keyboard.push(
+                        [{
+                        text: "Direct Link Generator",
+                        callback_data: "help|directlinks"
+                        }]);
                 msg = "Commands List"
 
                 break;
@@ -222,6 +227,16 @@ class CallbacksController extends TelegramBaseCallbackQueryController {
                 msg = "Search for Generic System Images\n\n"
                 msg += "Usage: /gsi ( Tap command for more info )\n"
                 break;
+
+           case "directlinks":
+                msg = "Generate direct links for different sources\n\n"
+                msg += "Usage: Paste downloadable links from supported source\n\n"
+                msg += "Currently Supported:\n\n"
+                msg += "`Google Drive\n`"
+                msg += "`Mega\n`"
+                msg += "`Android File Host a.k.a AFH\n`"
+                msg += "`Sourceforge\n`"
+                msg += "`Github Releases`"
         }
 
         if (params[1] !== "main") {
