@@ -158,7 +158,8 @@ class GSIController extends TelegramBaseController {
                 var assets = json.assets;
 
                 for (var t = 0; t < assets.length; t++) {
-                    msg += "<a href=\"" + assets[t].browser_download_url + "\">" + assets[t].name + "</a> \n"
+                    if (assets[t].name !== "manifest.xml" && assets[t].name !== "patches.zip")
+                        msg += "<a href=\"" + assets[t].browser_download_url + "\">" + assets[t].name + "</a> \n"
 
                 }
 
