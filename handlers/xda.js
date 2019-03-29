@@ -3,7 +3,7 @@ const TelegramBaseController = Telegram.TelegramBaseController;
 var request = require('request');
 const config = require("../config.js")
 var mongojs = require('mongojs')
-var db = mongojs(config.db.name)
+var db = mongojs(config.db.name || process.env.DBNAME)
 
 var followedForums = db.collection('followed_forums');
 const JSDOM = require('jsdom');

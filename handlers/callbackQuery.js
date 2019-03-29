@@ -262,7 +262,7 @@ class CallbacksController extends TelegramBaseCallbackQueryController {
                 inline_keyboard: []
             };
 
-            tg.api.sendMessage($.from.id, "*Download Link* :\n[" + json.file_name + "](" + json.url + ")", {
+            tg.api.sendMessage($.message.from.id, "*Download Link* :\n[" + json.file_name + "](" + json.url + ")", {
                 parse_mode: "markdown",
                 reply_markup: JSON.stringify(kb)
             });

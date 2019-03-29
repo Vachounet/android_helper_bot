@@ -9,11 +9,13 @@ const CustomFilterCommand = Telegram.CustomFilterCommand
 
 var request = require('request');
 var mongojs = require('mongojs')
-var db = mongojs(config.db.name)
+var db = mongojs(config.db.name || process.env.DBNAME)
 var followedForums = db.collection('followed_forums');
 
+var botToken = config.token || process.env.BOT_TOKEN
+
 // Export bot as global variable
-global.tg = new Telegram.Telegram(config.token, {
+global.tg = new Telegram.Telegram(botToken, {
     localization: [require('./localization/En.json')]
 })
 

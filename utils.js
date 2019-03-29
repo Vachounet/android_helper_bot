@@ -5,7 +5,7 @@ const JSDOM = require('jsdom');
 
 const config = require("./config")
 var mongojs = require('mongojs')
-var db = mongojs(config.db.name)
+var db = mongojs(config.db.name || process.env.DBNAME)
 var chats = db.collection('chats');
 
 let Parser = require('rss-parser');
