@@ -33,11 +33,9 @@ class XposedController extends TelegramBaseController {
                 "view_path": "module_overview",
             },
             headers: {
-                // "content-type": "application/json;charset=utf-8",
                 "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:58.0) Gecko/20100101 Firefox/58.0",
             }
         }, async function (error, response, body) {
-            //console.log(body);
             var json = JSON.parse(body);
             var dom = new JSDOM.JSDOM(json[1].data);
 

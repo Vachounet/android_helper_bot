@@ -1,7 +1,7 @@
 const Telegram = require('telegram-node-bot')
 const TelegramBaseController = Telegram.TelegramBaseController;
 
-var request = require('request');
+var BotUtils = require("../utils.js")
 
 class LabsController extends TelegramBaseController {
 
@@ -17,8 +17,8 @@ class LabsController extends TelegramBaseController {
 
         var keywords = $.command.arguments.join(" ")
 
-        request.get("https://labs.xda-developers.com/api/1/search?q=" + encodeURIComponent(keywords), function (error, response, body) {
-            var json = JSON.parse(body);
+        BotUtils.getJSON("https://labs.xda-developers.com/api/1/search?q=" + encodeURIComponent(keywords), function (json, err) {
+
             var results = json.results;
             var msg = "*Labs search results:*\n";
             for (var i = 0; i < results.length; i++) {

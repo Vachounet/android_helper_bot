@@ -24,9 +24,8 @@ class PEGOController extends TelegramBaseController {
 
         var keywords = $.command.arguments[0];
 
-        request.get("https://download.pixelexperience.org/ota/" + keywords + "/pie_go",
-            function (error, response, body) {
-                var json = JSON.parse(body);
+        BotUtils.getJSON("https://download.pixelexperience.org/ota/" + keywords + "/pie_go",
+            function (json, err) {
 
                 if (json.filename !== "" && json.url !== "") {
                     var msg = "🔍 *PixelExperience GO build for " + keywords + "* \n";

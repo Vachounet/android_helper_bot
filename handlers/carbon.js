@@ -32,9 +32,9 @@ class CarbonController extends TelegramBaseController {
 
                 if (response.statusCode === 404) {
                     // Fallback to bb
-                    request.get("https://basketbuild.com/api4web/devs/CarbonROM/" + keyword,
-                        function (error, response, body) {
-                            var json = JSON.parse(body)
+                    BotUtils.getJSON("https://basketbuild.com/api4web/devs/CarbonROM/" + keyword,
+                        function (json, err) {
+
                             var files = json.files.sort(function (a, b) {
                                 a = a.fileTimestamp;
                                 b = b.fileTimestamp;

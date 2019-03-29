@@ -1,9 +1,5 @@
 const Telegram = require('telegram-node-bot')
 const TelegramBaseController = Telegram.TelegramBaseController;
-const config = require("../config.js")
-var mongojs = require('mongojs')
-var db = mongojs(config.db.name)
-var motoFirmwares = db.collection('moto')
 const request = require('request')
 var requestPromise = require('request-promise');
 var parser = require('fast-xml-parser');
@@ -42,9 +38,8 @@ class HuaweiController extends TelegramBaseController {
                     }
                 }
                 if (device) {
-                    request.get("https://pro-teammt.ru/projects/hwff/info/ff_get_data_android.php?model_json=" + device,
-                        async function (error, response, body) {
-                            var json = JSON.parse(body)
+                    BotUtils.getJSON("https://pro-teammt.ru/projects/hwff/info/ff_get_data_android.php?model_json=" + device,
+                        async function (json, err) {
 
                             if (json.firmwares && json.firmwares.length > 0) {
                                 var msg = "*Firmware found for " + device + " *\n\n"

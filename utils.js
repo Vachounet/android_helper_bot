@@ -1,4 +1,5 @@
 var request = require('request');
+var rp = require('request-promise');
 const util = require('util');
 const JSDOM = require('jsdom');
 
@@ -11,6 +12,43 @@ let Parser = require('rss-parser');
 let parser = new Parser();
 
 BotUtils = {}
+
+BotUtils.getJSON = (url, cb) => {
+    rp(url, {
+            json: true,
+            resolveWithFullResponse: true,
+            headers: {
+                "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:58.0) Gecko/20100101 Firefox/58.0",
+            }
+        }).then(function (response) {
+            if (response.statusCode !== 200)
+                return;
+
+            if (response.headers['content-type'].indexOf('application/json') === -1) {
+
+                if (response.headers['content-type'].indexOf("text/plain") !== -1 ||
+                    response.headers['content-type'].indexOf("text/html") !== -1) {
+                    try {
+                        if (typeof response.body === "object") {
+                            cb(response.body)
+                        } else {
+                            var json = JSON.parse(response.body);
+                            cb(json)
+                        }
+                    } catch (e) {
+                        //console.log(response.body)
+                    }
+                }
+                return;
+            }
+
+            cb(response.body)
+        })
+        .catch(function (err) {
+            console.log(err)
+            //cb(null, err)
+        });
+}
 
 BotUtils.humanFileSize = (bytes, si) => {
     var thresh = si ? 1000 : 1024;
@@ -141,7 +179,6 @@ BotUtils.sendAFHMirrors = (fid, scope) => {
 }
 
 BotUtils.getSourceForgeBuilds = (scope, romInfos, device) => {
-    console.log('https://sourceforge.net/projects/' + romInfos.projectName + '/rss?path=/' + romInfos.extraSFPath.replace("{0}", device))
     parser.parseURL('https://sourceforge.net/projects/' + romInfos.projectName + '/rss?path=/' + romInfos.extraSFPath.replace("{0}", device), function (error, feed) {
         if (feed && feed.items && feed.items.length > 0) {
             for (var i = 0; i < feed.items.length; i++) {
@@ -270,7 +307,6 @@ BotUtils.getRomFilter = (scope, cb) => {
         }
     }, function (err, docs) {
         if ((docs || docs.length > 0) && docs[0].filter) {
-            console.log(docs[0].filter);
             if (docs[0].filter !== "" && !scope.message.text.startsWith("/" + docs[0].filter))
                 return
             else

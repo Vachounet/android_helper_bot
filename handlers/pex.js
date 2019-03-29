@@ -29,9 +29,8 @@ class PEXController extends TelegramBaseController {
 
         var keywords = $.command.arguments[0]
 
-        request.get("https://download.pixelexperience.org/ota/" + keywords + "/pie",
-            function (error, response, body) {
-                var json = JSON.parse(body);
+        BotUtils.getJSON("https://download.pixelexperience.org/ota/" + keywords + "/pie",
+            function (json, err) {
 
                 if (json.filename !== "" && json.url !== "") {
                     var msg = "🔍 *PixelExperience build for " + keywords + "* \n";

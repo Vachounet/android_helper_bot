@@ -1,7 +1,6 @@
 const Telegram = require('telegram-node-bot')
 const TelegramBaseController = Telegram.TelegramBaseController;
 const BotUtils = require('../utils')
-const request = require('request')
 
 class OneplusController extends TelegramBaseController {
 
@@ -19,33 +18,25 @@ class OneplusController extends TelegramBaseController {
         var deviceID = this.getDeviceID(device);
         var updateType = $.command.arguments[1] ? 4 : 2
 
-        request.get("https://oxygenupdater.com/api/v2.3/mostRecentUpdateData/" + deviceID + "/" + updateType, {
-                headers: {
-                    "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:58.0) Gecko/20100101 Firefox/58.0",
-                }
-            },
-            function (error, response, body) {
-                var update = JSON.parse(body);
-
-                if (update.error) {
-                    $.sendMessage(update.error, {
-                        parse_mode: "markdown",
-                        reply_to_message_id: $.message.messageId
-                    });
-                    return
-                }
-
-                var msg = "*Last Full Update*\n"
-                msg += "[" + update.filename + "](" + update.download_url + ") "
-                msg += "`\n\nSize: `" + BotUtils.humanFileSize(update.download_size);
-                msg += "`\n\nChangelog:\n\n" + update.description + "`"
-                var msg1 = msg.replace(/\[www.oneplus.com\]\{http:\/\/www.oneplus.com\/\}/g, '');
-                $.sendMessage(msg1, {
+        BotUtils.getJSON("https://oxygenupdater.com/api/v2.3/mostRecentUpdateData/" + deviceID + "/" + updateType, function (json, err) {
+            if (json.error) {
+                $.sendMessage(update.error, {
                     parse_mode: "markdown",
                     reply_to_message_id: $.message.messageId
                 });
-            });
+                return
+            }
 
+            var msg = "*Last Full Update*\n"
+            msg += "[" + json.filename + "](" + json.download_url + ") "
+            msg += "`\n\nSize: `" + BotUtils.humanFileSize(json.download_size);
+            msg += "`\n\nChangelog:\n\n" + json.description + "`"
+            var msg1 = msg.replace(/\[www.oneplus.com\]\{http:\/\/www.oneplus.com\/\}/g, '');
+            $.sendMessage(msg1, {
+                parse_mode: "markdown",
+                reply_to_message_id: $.message.messageId
+            });
+        })
     }
 
     getDeviceID(name) {

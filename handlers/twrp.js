@@ -1,7 +1,7 @@
 const Telegram = require('telegram-node-bot')
 const TelegramBaseController = Telegram.TelegramBaseController;
 
-var request = require('request');
+var BotUtils = require("../utils.js")
 
 class TWRPController extends TelegramBaseController {
 
@@ -21,8 +21,16 @@ class TWRPController extends TelegramBaseController {
 
         var keyword = $.command.arguments.join(" ");
 
-        request.get("https://twrp.me/search.json", function (error, response, body) {
-            var json = JSON.parse(body)
+
+        BotUtils.getJSON("https://twrp.me/search.json", function (json, err) {
+
+            if (err) {
+                $.sendMessage(tg._localization.En.deviceNotFound, {
+                    parse_mode: "markdown",
+                    reply_to_message_id: $.message.messageId
+                });
+                return
+            }
 
             var msg = "";
             for (var i = 0; i < json.length; i++) {
@@ -47,7 +55,8 @@ class TWRPController extends TelegramBaseController {
                     reply_to_message_id: $.message.messageId
                 });
             }
-        });
+
+        })
     }
 
     get routes() {

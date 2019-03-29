@@ -17,13 +17,8 @@ class GithubController extends TelegramBaseController {
         var owner = matches[0].split("/")[3];
         var repo = matches[0].split("/")[4];
 
-        request.get("https://api.github.com/repos/" + owner + "/" + repo + "/releases", {
-                headers: {
-                    "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:58.0) Gecko/20100101 Firefox/58.0",
-                }
-            },
-            function (error, response, body) {
-                var json = JSON.parse(body);
+        BotUtils.getJSON("https://api.github.com/repos/" + owner + "/" + repo + "/releases",
+            function (json, err) {
 
                 var item;
 

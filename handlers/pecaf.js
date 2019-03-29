@@ -16,8 +16,6 @@ class PECAFController extends TelegramBaseController {
             inline_keyboard: []
         };
 
-        console.log($.command)
-
         if (!$.command.success || $.command.arguments.length === 0) {
             $.sendMessage("Usage: /pecaf device", {
                 parse_mode: "markdown",
@@ -28,10 +26,8 @@ class PECAFController extends TelegramBaseController {
 
         var keywords = $.command.arguments[0]
 
-        request.get("https://download.pixelexperience.org/ota/" + keywords + "/pie_caf",
-            function (error, response, body) {
-                var json = JSON.parse(body);
-                console.log(json)
+        BotUtils.getJSON("https://download.pixelexperience.org/ota/" + keywords + "/pie_caf",
+            function (json, err) {
 
                 if (json.filename !== "" && json.url !== "") {
                     var msg = "🔍 *PixelExperience CAF build for " + keywords + "* \n";

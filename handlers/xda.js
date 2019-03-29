@@ -7,6 +7,7 @@ var db = mongojs(config.db.name)
 
 var followedForums = db.collection('followed_forums');
 const JSDOM = require('jsdom');
+var BotUtils = require("../utils.js")
 
 var devices;
 var forums;
@@ -71,9 +72,9 @@ class XDAController extends TelegramBaseController {
             inline_keyboard: []
         };
 
-        request.get("https://api.xda-developers.com/v3/user/search?username=" + keywords,
-            function (error, response, body) {
-                var users = JSON.parse(body);
+        BotUtils.getJSON("https://api.xda-developers.com/v3/user/search?username=" + keywords,
+            function (users, err) {
+
                 if (!users.results || users.results.length === 0) {
                     $.sendMessage("*User not found* ", {
                         parse_mode: "markdown",
@@ -82,9 +83,8 @@ class XDAController extends TelegramBaseController {
                     return;
                 }
 
-                request.get("https://api.xda-developers.com/v3/user/userinfo?userid=" + users.results[0].userid,
-                    function (error, response, body) {
-                        var userinfo = JSON.parse(body);
+                BotUtils.getJSON("https://api.xda-developers.com/v3/user/userinfo?userid=" + users.results[0].userid,
+                    function (userinfo, err) {
 
                         var msg = "👤 *" + userinfo.username + " Infos* \n"
 
@@ -152,11 +152,6 @@ class XDAController extends TelegramBaseController {
                 reply_markup: JSON.stringify(kb),
                 reply_to_message_id: $.message.messageId
             });
-
-            $.waitForRequest
-                .then($ => {
-                    console.log($.message)
-                });
         } else {
             $.sendMessage("*No device(s) found* ", {
                 parse_mode: "markdown",
@@ -174,9 +169,9 @@ class XDAController extends TelegramBaseController {
         };
 
         if (!forums) {
-            request.get("https://api.xda-developers.com/v1/forums",
-                function (error, response, body) {
-                    forums = JSON.parse(body).results;
+            BotUtils.getJSON("https://api.xda-developers.com/v1/forums",
+                function (data, err) {
+                    forums = data.results;
 
                     for (var i = 0; i < forums.length; i++) {
                         if (forums[i].title.toLowerCase().indexOf(keywords.toLowerCase()) !== -1 ||
@@ -229,9 +224,8 @@ class XDAController extends TelegramBaseController {
             postID = postID.split("&")[0]
         }
 
-        request.get("https://api.xda-developers.com/v3/posts/bypostid?postid=" + postID,
-            function (error, response, body) {
-                var json = JSON.parse(body);
+        BotUtils.getJSON("https://api.xda-developers.com/v3/posts/bypostid?postid=" + postID,
+            function (json, err) {
 
                 var postInfos;
 
@@ -254,11 +248,11 @@ class XDAController extends TelegramBaseController {
 
         var keyword = $.message.text.replace("/xda news").trim().split(" ")[1];
 
-        request.get("https://www.xda-developers.com/data/portal-data-v2.json",
-            function (error, response, body) {
-                var json = JSON.parse(body)["xda-news"];
+        BotUtils.getJSON("https://www.xda-developers.com/data/portal-data-v2.json",
+            function (data, err) {
+                var json = data["xda-news"];
 
-                var vendors = JSON.parse(body)["vendor"];
+                var vendors = data["vendor"];
 
                 var postInfos;
 
@@ -329,7 +323,7 @@ class XDAController extends TelegramBaseController {
                         msg += "\n<b>Thread(s) Found</b> : \n";
                         var cnt = 0;
                         for (var i = 0; i < json.hits.length; i++) {
-                            console.log(json.hits[i].deviceName)
+
                             if (json.hits[i] && json.hits[i]._highlightResult && (json.hits[i]._highlightResult.threadTitle.matchLevel == "full" ||
                                     json.hits[i]._highlightResult.firstPostText.matchLevel == "full" || (json.hits[i]._highlightResult.forumUrl && json.hits[i]._highlightResult.forumUrl.matchLevel == "full") ||
                                     (json.hits[i]._highlightResult.forumUrl && json.hits[i]._highlightResult.deviceName.matchLevel == "full"))) {
@@ -390,7 +384,6 @@ class XDAController extends TelegramBaseController {
                         $eq: $.message.chat.id
                     }
                 }, function (err, docs) {
-                    console.log(docs)
                     if (docs && docs.length > 0) {
                         followedForums.remove({
                             _id: {
@@ -436,9 +429,9 @@ class XDAController extends TelegramBaseController {
             }, function (err, docs) {
                 if (!docs || docs.length == 0) {
 
-                    request.get("https://api.xda-developers.com/v3/posts?threadid=" + keyword,
-                        function (error, response, body) {
-                            var json = JSON.parse(body);
+                    BotUtils.getJSON("https://api.xda-developers.com/v3/posts?threadid=" + keyword,
+                        function (json, err) {
+
                             followedForums.save({
                                 threadID: parseInt(keyword),
                                 chatID: $.message.chat.id,
@@ -457,9 +450,9 @@ class XDAController extends TelegramBaseController {
                         })
 
                 } else {
-                    request.get("https://api.xda-developers.com/v3/posts?threadid=" + keyword,
-                        function (error, response, body) {
-                            var json = JSON.parse(body);
+                    BotUtils.getJSON("https://api.xda-developers.com/v3/posts?threadid=" + keyword,
+                        function (json, err) {
+
                             followedForums.update({
                                 _id: docs[0]._id
                             }, {
@@ -484,7 +477,6 @@ class XDAController extends TelegramBaseController {
         }
 
         $.getChatAdministrators($.message.chat.id).then(data => {
-            console.log("getChatAdministrators")
             let msg = "";
             var isAdmin = false;
             if (data && data.length > 0) {
@@ -521,7 +513,6 @@ class XDAController extends TelegramBaseController {
                             $eq: $.message.chat.id
                         }
                     }, function (err, docs) {
-                        console.log(docs)
                         if (docs && docs.length > 0) {
                             followedForums.remove({
                                 _id: {
@@ -567,9 +558,9 @@ class XDAController extends TelegramBaseController {
                 }, function (err, docs) {
                     if (!docs || docs.length == 0) {
 
-                        request.get("https://api.xda-developers.com/v3/posts?threadid=" + keyword,
-                            function (error, response, body) {
-                                var json = JSON.parse(body);
+                        BotUtils.getJSON("https://api.xda-developers.com/v3/posts?threadid=" + keyword,
+                            function (json, err) {
+
                                 followedForums.save({
                                     threadID: parseInt(keyword),
                                     chatID: $.message.chat.id,
@@ -588,9 +579,9 @@ class XDAController extends TelegramBaseController {
                             })
 
                     } else {
-                        request.get("https://api.xda-developers.com/v3/posts?threadid=" + keyword,
-                            function (error, response, body) {
-                                var json = JSON.parse(body);
+                        BotUtils.getJSON("https://api.xda-developers.com/v3/posts?threadid=" + keyword,
+                            function (json, err) {
+
                                 followedForums.update({
                                     _id: docs[0]._id
                                 }, {
@@ -623,11 +614,11 @@ class XDAController extends TelegramBaseController {
 
         var keyword = $.message.text.replace("/xda portal").trim().split(" ")[1];
 
-        request.get("https://www.xda-developers.com/?json=1",
-            function (error, response, body) {
-                var json = JSON.parse(body).posts;
+        BotUtils.getJSON("https://www.xda-developers.com/?json=1",
+            function (data, err) {
+                var json = data.posts;
 
-                var vendors = JSON.parse(body)["vendor"];
+                var vendors = data["vendor"];
 
                 var postInfos;
 
@@ -720,8 +711,6 @@ class XDAController extends TelegramBaseController {
             'devDBHandler': 'devDB',
         }
     }
-
-
 }
 
 

@@ -1,19 +1,13 @@
 const Telegram = require('telegram-node-bot')
 const TelegramBaseController = Telegram.TelegramBaseController;
-var request = require('request');
+var BotUtils = require("../utils.js")
 
 class MagiskController extends TelegramBaseController {
 
     getLast($) {
 
-        request.get("https://api.github.com/repos/topjohnwu/Magisk/releases", {
-                headers: {
-                    "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:58.0) Gecko/20100101 Firefox/58.0",
-                }
-            },
-            function (error, response, body) {
-
-                var json = JSON.parse(body);
+        BotUtils.getJSON("https://api.github.com/repos/topjohnwu/Magisk/releases",
+            function (json, err) {
 
                 var magisk = json[0];
                 var magiskManager = json[1];

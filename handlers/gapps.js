@@ -1,9 +1,7 @@
 const Telegram = require('telegram-node-bot')
 const TelegramBaseController = Telegram.TelegramBaseController;
 
-var request = require('request');
-
-const JSDOM = require('jsdom');
+var BotUtils = require("../utils.js")
 
 class GAppsController extends TelegramBaseController {
 
@@ -25,14 +23,8 @@ class GAppsController extends TelegramBaseController {
                 android_version = $.command.arguments[1];
         }
 
-        request.get("https://api.github.com/repos/opengapps/" + type + "/releases/latest", {
-                headers: {
-                    "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:58.0) Gecko/20100101 Firefox/58.0",
-                }
-            },
-            function (error, response, body) {
-
-                var json = JSON.parse(body);
+        BotUtils.getJSON("https://api.github.com/repos/opengapps/" + type + "/releases/latest",
+            function (json, err) {
 
                 var release = json;
 

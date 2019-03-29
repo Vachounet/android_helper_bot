@@ -228,7 +228,7 @@ class CallbacksController extends TelegramBaseCallbackQueryController {
                 msg += "Usage: /gsi ( Tap command for more info )\n"
                 break;
 
-           case "directlinks":
+            case "directlinks":
                 msg = "Generate direct links for different sources\n\n"
                 msg += "Usage: Paste downloadable links from supported source\n\n"
                 msg += "Currently Supported:\n\n"
@@ -255,10 +255,8 @@ class CallbacksController extends TelegramBaseCallbackQueryController {
     }
 
     handleMega($, params) {
-        console.log($.from.id)
 
         exec(__dirname + "/../megadown 'https://mega.nz/#" + params[1] + "'", function callback(error, stdout, stderr) {
-            console.log(stdout)
             var json = JSON.parse(stdout);
             var kb = {
                 inline_keyboard: []
@@ -278,9 +276,9 @@ class CallbacksController extends TelegramBaseCallbackQueryController {
             case "fid":
                 var fid = params[2];
 
-                request.get("https://api.xda-developers.com/v3/forums/children?forumid=" + fid,
-                    function (error, response, body) {
-                        var childForums = JSON.parse(body).results;
+                BotUtils.getJSON("https://api.xda-developers.com/v3/forums/children?forumid=" + fid,
+                    function (data, err) {
+                        var childForums = data.results;
                         var kb = {
                             inline_keyboard: []
                         };
@@ -306,9 +304,9 @@ class CallbacksController extends TelegramBaseCallbackQueryController {
             case "threads":
                 var fid = params[2];
 
-                request.get("https://api.xda-developers.com/v3/threads?forumid=" + fid,
-                    function (error, response, body) {
-                        var threads = JSON.parse(body).results;
+                BotUtils.getJSON("https://api.xda-developers.com/v3/threads?forumid=" + fid,
+                    function (data, error) {
+                        var threads = data.results;
                         var kb = {
                             inline_keyboard: []
                         };
@@ -351,9 +349,9 @@ class CallbacksController extends TelegramBaseCallbackQueryController {
                     page = page - 1
                 }
 
-                request.get("https://api.xda-developers.com/v3/posts?threadid=" + threadid + "&page=" + page,
-                    function (error, response, body) {
-                        var posts = JSON.parse(body);
+                BotUtils.getJSON("https://api.xda-developers.com/v3/posts?threadid=" + threadid + "&page=" + page,
+                    function (posts, err) {
+
                         var kb = {
                             inline_keyboard: []
                         };

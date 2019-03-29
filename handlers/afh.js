@@ -39,16 +39,11 @@ class AFHController extends TelegramBaseController {
     search($) {
 
         if (!$.command.success || $.command.arguments.length === 0) {
-
             return;
         }
 
         var page = 1;
-
-        console.log($.command.arguments)
-
         this.launchRequest($.command.arguments, page, $, this);
-
     }
 
     launchRequest(command, page, $, context) {
@@ -71,9 +66,6 @@ class AFHController extends TelegramBaseController {
                 var links = dom.window.document.querySelectorAll(".list-group-item .file-name a");
 
                 for (var i = 0; i < links.length; i++) {
-
-                    console.log(links[i].textContent)
-
                     if (links[i].textContent.toLowerCase().indexOf(command[1].toLowerCase()) !== -1 &&
                         links[i].textContent.toLowerCase().indexOf(command[2].toLowerCase()) !== -1) {
                         kb.inline_keyboard.push(
@@ -83,7 +75,6 @@ class AFHController extends TelegramBaseController {
                                 }]);
                         break;
                     }
-
                 }
 
                 if (kb.inline_keyboard.length > 0) {
@@ -114,7 +105,6 @@ class AFHController extends TelegramBaseController {
                             var links = "";
                             if (json.STATUS === "1") {
                                 if (json.MIRRORS && json.MIRRORS.length > 0) {
-                                    console.log(json.MIRRORS[0].url)
 
                                     for (var i = 0; i < json.MIRRORS.length; i++) {
                                         kb.inline_keyboard.push(

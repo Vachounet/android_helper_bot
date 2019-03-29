@@ -1,10 +1,7 @@
 const Telegram = require('telegram-node-bot')
 const TelegramBaseController = Telegram.TelegramBaseController;
-const config = require("../config.js")
-var mongojs = require('mongojs')
-var db = mongojs(config.db.name)
-var motoFirmwares = db.collection('moto')
-const request = require('request')
+
+var BotUtils = require("../utils.js")
 
 class AsusController extends TelegramBaseController {
 
@@ -18,11 +15,8 @@ class AsusController extends TelegramBaseController {
             return;
         }
 
-        request.get("https://www.asus.com/support/api/product.asmx/GetPDLevel?website=global&type=1&typeid=1&productflag=1",
-            function (error, response, body) {
-
-                var json = JSON.parse(body)
-
+        BotUtils.getJSON("https://www.asus.com/support/api/product.asmx/GetPDLevel?website=global&type=1&typeid=1&productflag=1",
+            function (json, err) {
                 var query = $.command.arguments.join(" ");
 
                 if (json.Result.Product && json.Result.Product.length > 0) {
@@ -39,12 +33,10 @@ class AsusController extends TelegramBaseController {
                     var device = json.Result.Product.filter(product => deviceMatch.test(product.PDName));
 
                     if (device && device.length > 0) {
-                        console.log(device)
+                        BotUtils.getJSON("https://www.asus.com/support/api/product.asmx/GetPDDrivers?cpu=&osid=32&website=global&pdhashedid=" + device[0].PDHashedId,
+                            function (json, err) {
 
-                        request.get("https://www.asus.com/support/api/product.asmx/GetPDDrivers?cpu=&osid=32&website=global&pdhashedid=" + device[0].PDHashedId,
-                            function (error, response, body) {
-
-                                var result = JSON.parse(body).Result
+                                var result = json.Result
                                 var firmwares;
 
                                 if (result && result.Obj && result.Obj.length > 0) {
@@ -63,8 +55,6 @@ class AsusController extends TelegramBaseController {
                                             msg += "[" + linkTitle + "](" + firmwares.Files[i].DownloadUrl.Global + ")\n";
                                             msg += "*" + firmwares.Files[i].FileSize + " - Released date: " + firmwares.Files[i].ReleaseDate + "*\n\n"
                                         }
-
-                                        console.log(msg)
 
                                         $.sendMessage(msg, {
                                             parse_mode: "markdown",

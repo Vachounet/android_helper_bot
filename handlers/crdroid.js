@@ -46,7 +46,6 @@ class CrDroidController extends TelegramBaseController {
                                     followRedirect: false
                                 },
                                 function (error, response, body) {
-                                    console.log(response.headers.location);
 
                                     var fid = response.headers.location.split("fid=")[1];
                                     var flid;
@@ -64,7 +63,6 @@ class CrDroidController extends TelegramBaseController {
                                                 }
                                             },
                                             function (error, response, body) {
-                                                console.log(body);
 
                                                 var json = JSON.parse(body);
                                                 var lastFile = json.DATA.files[json.DATA.files.length - 1];

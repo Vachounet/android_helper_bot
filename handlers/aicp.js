@@ -1,8 +1,6 @@
 const Telegram = require('telegram-node-bot')
 const TelegramBaseController = Telegram.TelegramBaseController;
 const InputFile = Telegram.InputFile;
-var request = require('request');
-const JSDOM = require('jsdom');
 const BotUtils = require('../utils')
 
 class AICPController extends TelegramBaseController {
@@ -27,9 +25,8 @@ class AICPController extends TelegramBaseController {
 
         var keywords = $.command.arguments[0];
 
-        request.get("http://updates.aicp-rom.com/update.php?device=" + keywords,
-            function (error, response, body) {
-                var json = JSON.parse(body);
+        BotUtils.getJSON("http://updates.aicp-rom.com/update.php?device=" + keywords,
+            function (json, err) {
 
                 if (json.updates && json.updates.length > 0) {
                     var lastUpdate = json.updates[0];

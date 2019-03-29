@@ -1,7 +1,6 @@
 const Telegram = require('telegram-node-bot')
 const TelegramBaseController = Telegram.TelegramBaseController;
 const InputFile = Telegram.InputFile;
-var request = require('request');
 const BotUtils = require('../utils')
 
 class LineageController extends TelegramBaseController {
@@ -26,10 +25,8 @@ class LineageController extends TelegramBaseController {
 
         var keywords = $.command.arguments[0]
 
-        request.get("https://download.lineageos.org/api/v1/" + keywords + "/nightly/16.0",
-            function (error, response, body) {
-
-                var builds = JSON.parse(body);
+        BotUtils.getJSON("https://download.lineageos.org/api/v1/" + keywords + "/nightly/16.0",
+            function (builds, err) {
 
                 if (builds.response && builds.response.length > 0) {
 

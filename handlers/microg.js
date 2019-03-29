@@ -2,6 +2,7 @@ const Telegram = require('telegram-node-bot')
 const TelegramBaseController = Telegram.TelegramBaseController;
 var request = require('request');
 var parser = require('fast-xml-parser');
+var BotUtils = require("../utils.js")
 
 class MicroGController extends TelegramBaseController {
 
@@ -25,18 +26,12 @@ class MicroGController extends TelegramBaseController {
                     if (pack && pack.apkname) {
                         msg += "<a href=\"https://microg.org/fdroid/repo/" + pack.apkname + "\">" + jsonObj.fdroid.application[i].name + " (" + pack.version + ")</a> \n"
                     } else {
-                        console.log(jsonObj.fdroid.application[i].package.apkname)
                         msg += "<a href=\"https://microg.org/fdroid/repo/" + jsonObj.fdroid.application[i].package.apkname + "\">" + jsonObj.fdroid.application[i].name + " (" + jsonObj.fdroid.application[i].package.version + ") </a> \n"
                     }
                 }
 
-                request.get("https://api.github.com/repos/microg/android_packages_apps_UnifiedNlp/releases/latest", {
-                        headers: {
-                            "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:58.0) Gecko/20100101 Firefox/58.0",
-                        }
-                    },
-                    function (error, response, body) {
-                        var json = JSON.parse(body)
+                BotUtils.getJSON("https://api.github.com/repos/microg/android_packages_apps_UnifiedNlp/releases/latest",
+                    function (json, err) {
 
                         msg += "\n<b>UnifiedNlp (" + json.name + ")</b>\n"
 
