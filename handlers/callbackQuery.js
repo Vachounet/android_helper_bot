@@ -10,9 +10,9 @@ class CallbacksController extends TelegramBaseCallbackQueryController {
      * @param {Scope} $
      */
     handle($) {
-        if ($.data) {
-            var params = $.data.split("|");
-            tg.api.answerCallbackQuery($.id);
+        if ($.update.callbackQuery.data) {
+            var params = $.update.callbackQuery.data.split("|");
+            tg.api.answerCallbackQuery($.update.callbackQuery.id);
             switch (params[0]) {
                 case "xda":
                     this.handleXDACallback($, params)
@@ -275,7 +275,7 @@ class CallbacksController extends TelegramBaseCallbackQueryController {
         switch (params[1]) {
             case "fid":
                 var fid = params[2];
-
+                $.setUserSession('threadID', fid)
                 BotUtils.getJSON("https://api.xda-developers.com/v3/forums/children?forumid=" + fid,
                     function (data, err) {
                         var childForums = data.results;
@@ -303,7 +303,7 @@ class CallbacksController extends TelegramBaseCallbackQueryController {
                 break;
             case "threads":
                 var fid = params[2];
-
+                $.setUserSession('threadID', fid)
                 BotUtils.getJSON("https://api.xda-developers.com/v3/threads?forumid=" + fid,
                     function (data, error) {
                         var threads = data.results;
@@ -319,11 +319,11 @@ class CallbacksController extends TelegramBaseCallbackQueryController {
                                     callback_data: "xda|posts|" + threads[i].threadid + "|" + threads[i].total_posts
                                 }]);
                         }
-                        kb.inline_keyboard.push(
-                            [{
-                                text: "Back",
-                                callback_data: $.data
-                            }]);
+                        //                        kb.inline_keyboard.push(
+                        //                            [{
+                        //                                text: "Back",
+                        //                                callback_data: $.update.callbackQuery.data
+                        //                            }]);
                         tg.api.editMessageText("*Choose a thread*", {
                             parse_mode: "markdown",
                             chat_id: $.message.chat.id,
@@ -352,34 +352,35 @@ class CallbacksController extends TelegramBaseCallbackQueryController {
                 BotUtils.getJSON("https://api.xda-developers.com/v3/posts?threadid=" + threadid + "&page=" + page,
                     function (posts, err) {
 
-                        var kb = {
-                            inline_keyboard: []
-                        };
+                        $.getUserSession('threadID').then(data => {
+                            var kb = {
+                                inline_keyboard: []
+                            };
 
-                        var currentPost = posts.results[parseInt(postIndex) - 1]
+                            var currentPost = posts.results[parseInt(postIndex) - 1]
 
-
-
-                        kb.inline_keyboard.push(
+                            kb.inline_keyboard.push(
                             [{
-                                    text: "<",
-                                    callback_data: "xda|posts|" + posts.thread.threadid + "|" + total_posts + "|" + (current_post - 1)
+                                        text: "<",
+                                        callback_data: "xda|posts|" + posts.thread.threadid + "|" + total_posts + "|" + (current_post - 1)
                                 },
-                                {
-                                    text: "Back",
-                                    callback_data: $.data
+                                    {
+                                        text: "Back",
+                                        callback_data: "xda|threads|" + data
                                 },
-                                {
-                                    text: ">",
-                                    callback_data: "xda|posts|" + posts.thread.threadid + "|" + total_posts + "|" + (current_post + 1)
+                                    {
+                                        text: ">",
+                                        callback_data: "xda|posts|" + posts.thread.threadid + "|" + total_posts + "|" + (current_post + 1)
                                 }
                             ]);
-                        tg.api.editMessageText("Post from *" + currentPost.username + "*  \n\n " + BotUtils.convertBBCodeToMarkdown(currentPost.pagetext) + "", {
-                            parse_mode: "markdown",
-                            chat_id: $.message.chat.id,
-                            reply_markup: JSON.stringify(kb),
-                            message_id: $.message.messageId
-                        });
+                            tg.api.editMessageText("Post from *" + currentPost.username + "*  \n\n " + BotUtils.convertBBCodeToMarkdown(currentPost.pagetext) + "", {
+                                parse_mode: "markdown",
+                                chat_id: $.message.chat.id,
+                                reply_markup: JSON.stringify(kb),
+                                message_id: $.message.messageId
+                            });
+                        })
+
 
                     });
         }
