@@ -19,7 +19,7 @@ function getDevices() {
     request.get("https://forum.xda-developers.com/clientscript/deviceSearch.js",
         function (error, response, body) {
             devices = body.replace("var deviceSearch=", "").replace("var deviceSearch = ", "").replace(";", "").trim();
-            devices = JSON.parse(devices)
+            devices = "JSON.parse(devices)"
         });
 }
 
