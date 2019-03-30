@@ -266,67 +266,6 @@ tg.router
         new exports["huawei"]()
     )
 
-
-    .when(
-        new CustomFilterCommand($ => {
-            return $.message.text && $.message.text.indexOf("https://rsdsecure-cloud.motorola.com/download/") !== -1
-        }, 'rsdFilterHandler'),
-        new exports["rsd"]()
-    )
-
-    .when(
-        new CustomFilterCommand($ => {
-            return $.message.text && $.message.text.indexOf("androidfilehost.com/?fid=") !== -1
-        }, 'afhFilterHandler'),
-        new exports["afh"]()
-    )
-
-    .when(
-        new CustomFilterCommand($ => {
-            return $.message.text && $.message.text.indexOf("/c/") !== -1
-        }, 'gerritFilterHandler'),
-        new exports["gerrit"]()
-    )
-
-    .when(
-        new CustomFilterCommand($ => {
-            return $.message.text && $.message.text.indexOf("drive.google.com") !== -1 &&
-                ($.message.text.indexOf("view") !== -1 || $.message.text.indexOf("open?id=") !== -1 ||
-                    $.message.text.indexOf("uc?id=") !== -1)
-        }, 'gdriveFilterHandler'),
-        new exports["gdrive"]()
-    )
-
-    .when(
-        new CustomFilterCommand($ => {
-            return $.message.text && $.message.text.indexOf("sourceforge.net") !== -1 &&
-                $.message.text.indexOf("/download") !== -1
-        }, 'sfFilterHandler'),
-        new exports["sourceforge"]()
-    )
-
-    .when(
-        new CustomFilterCommand($ => {
-            return $.message.text && $.message.text.indexOf("github.com") !== -1 &&
-                $.message.text.indexOf("/releases") !== -1 && $.message.text.indexOf("gapps") == -1
-        }, 'githubFilterHandler'),
-        new exports["github"]()
-    )
-
-    .when(
-        new CustomFilterCommand($ => {
-            return $.message.text && $.message.text.indexOf("play.google.com/store/apps/details?id=") !== -1
-        }, 'playstoreFilterHandler'),
-        new exports["playstore"]()
-    )
-
-    .when(
-        new CustomFilterCommand($ => {
-            return $.message.text && $.message.text.indexOf("https://mega.nz/") !== -1
-        }, 'megaHandler'),
-        new exports["mega"]()
-    )
-
     .callbackQuery(new CallbackController())
     .inlineQuery(new InlineController())
     .otherwise(new OtherwiseController())
