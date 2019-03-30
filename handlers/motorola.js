@@ -37,7 +37,8 @@ class MotorolaController extends TelegramBaseController {
             if (docs && docs.length > 0) {
                 var msg = "*Latests build found* \n"
                 for (var i = 0; i < docs.length; i++) {
-                    var signedURL = await getSignedURL("https://signedurl-svjhrfxmfa.now.sh/?url=https://rsdsecure-cloud.motorola.com/download/" + docs[i].fileName)
+                    let filename = docs[i].fileName + ".zip"
+                    var signedURL = await getSignedURL("https://signedurl-svjhrfxmfa.now.sh/?url=https://rsdsecure-cloud.motorola.com/download/" + filename)
                     msg += "[" + docs[i].fileName + "](" + signedURL + ") \n"
                     msg += "`Models : " + docs[i].phone.join(" ") + "`\n";
                     msg += "`Carriers : " + docs[i].carrier.join(" ") + "`\n\n";
