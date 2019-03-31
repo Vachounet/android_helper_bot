@@ -9,8 +9,8 @@ class MagiskController extends TelegramBaseController {
         BotUtils.getJSON("https://api.github.com/repos/topjohnwu/Magisk/releases",
             function (json, err) {
 
-                var magisk = json[0];
-                var magiskManager = json[1];
+                var magisk = json[0].name.indexOf("Manager") === -1 ? json[0] : json[1];
+                var magiskManager = json[0].name.indexOf("Manager") === -1 ? json[1] : json[0];
 
                 var msg = "<b>" + magisk.name + "</b> \n"
                 msg += "<a href=\"" + magisk.assets[1].browser_download_url + "\">" + magisk.assets[1].name + "</a> \n"
