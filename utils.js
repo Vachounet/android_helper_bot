@@ -239,16 +239,22 @@ BotUtils.sendSourceForgeLinks = (scope, link, romInfos) => {
         function (error, response, body) {
             var dom = new JSDOM.JSDOM(body);
             var mirrors = dom.window.document.querySelectorAll("#mirrorList li");
-
+            var kb = {
+                inline_keyboard: []
+            };
             for (var i = 0; i < mirrors.length; i++) {
                 if (i % 2) {
                     var mirrorName = mirrors[i].id;
-                    links += "[" + mirrors[i].textContent.trim().split("(")[1].split(")")[0] + "](https://" + mirrorName + ".dl.sourceforge.net/project/" + projectname + filteredPath + ")  ";
+                    kb.inline_keyboard.push([{
+                        text: mirrors[i].textContent.trim().split("(")[1].split(")")[0],
+                        url: "https://" + mirrorName + ".dl.sourceforge.net/project/" + projectname + filteredPath
+                    }]);
                 }
             }
-            scope.sendMessage("*Mirrors for " + filteredPath.split("/")[filteredPath.split("/").length - 1] + "*\n" + links, {
+            scope.sendMessage("*Mirrors for " + filteredPath.split("/")[filteredPath.split("/").length - 1] + "*\n", {
                 parse_mode: "markdown",
                 disable_web_page_preview: true,
+                reply_markup: JSON.stringify(kb),
                 reply_to_message_id: scope.message.messageId
             });
         });
