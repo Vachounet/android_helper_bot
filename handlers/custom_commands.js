@@ -229,7 +229,7 @@ class OtherwiseController extends TelegramBaseController {
     }
 
     static handleSF($, url) {
-        BotUtils.sendSourceForgeLinks(url)
+        BotUtils.sendSourceForgeLinks($, url)
     }
 
     static handleGDrive($, url) {
