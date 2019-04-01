@@ -22,10 +22,10 @@ class GcamController extends TelegramBaseController {
                 for (var i = 0; i < links.length; i++) {
                     if (links[i].classList[1].indexOf("others") !== -1)
                         break;
-                    msg += links[i].classList[1] + " ";
+                    msg += "`" + links[i].classList[1] + "` ";
                 }
 
-                $.sendMessage("I need a gcam dev name.\n `" + msg + "`", {
+                $.sendMessage("I need a gcam dev name.\n " + msg, {
                     parse_mode: "markdown",
                     reply_to_message_id: $.message.messageId
                 });
