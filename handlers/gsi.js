@@ -33,7 +33,7 @@ class GSIController extends TelegramBaseController {
     erfanBuilds($) {
 
         if (!$.command.arguments[1]) {
-            $.sendMessage("Usage: /gsi erfan _type_\nTypes = oos, hos, pixel or miui", {
+            $.sendMessage("Usage: /gsi erfan _type_\nTypes = oos, hos, pixel, miui nubia or funtouch", {
                 parse_mode: "markdown",
                 reply_to_message_id: $.message.messageId
             });
@@ -53,6 +53,12 @@ class GSIController extends TelegramBaseController {
                 break;
             case "pixel":
                 filter = "Pixel"
+                break;
+            case "funtouch":
+                filter = "FunTouchOS"
+                break;
+            case "nubia":
+                filter = "Nubia"
                 break;
         }
         request.post(
