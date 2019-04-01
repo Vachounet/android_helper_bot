@@ -27,10 +27,16 @@ class MotorolaController extends TelegramBaseController {
 
         pattern += '.*$'
 
-        motoFirmwares.find({
-            fileName: {
-                $regex: new RegExp(pattern, 'gi')
-            },
+        motoFirmwares.aggregate({
+            "$match": {
+                $or: [{
+                    "fileName": new RegExp(pattern, 'gi')
+                }, {
+                    "phone": new RegExp(pattern, 'gi')
+                    }, {
+                    "carrier ": new RegExp(pattern, 'gi')
+                    }]
+            }
         }).sort({
             fileName: -1
         }, async function (err, docs) {
