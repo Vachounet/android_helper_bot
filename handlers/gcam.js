@@ -16,13 +16,13 @@ class GcamController extends TelegramBaseController {
 
             request.get("https://www.celsoazevedo.com/files/android/google-camera/developers/", function (error, response, body) {
                 var devs = new JSDOM.JSDOM(body);
-                var links = devs.window.document.querySelectorAll(".devspost a");
+                var links = devs.window.document.querySelectorAll(".devspost a span");
 
                 var msg = "";
                 for (var i = 0; i < links.length; i++) {
-                    if (links[i].textContent.indexOf("Others") !== -1)
+                    if (links[i].classList[1].indexOf("others") !== -1)
                         break;
-                    msg += links[i].textContent + " ";
+                    msg += links[i].classList[1] + " ";
                 }
 
                 $.sendMessage("I need a gcam dev name.\n `" + msg + "`", {
