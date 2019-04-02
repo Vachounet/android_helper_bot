@@ -51,7 +51,7 @@ class OtherwiseController extends TelegramBaseController {
                                 url.indexOf("uc?id=") !== -1)) {
                             OtherwiseController.handleGDrive($, url)
                         } else if (url.indexOf("github.com") !== -1 &&
-                            url.index("/releases") !== -1 && url.indexOf("gapps") === -1) {
+                            url.indexOf("/releases") !== -1 && url.indexOf("gapps") === -1) {
                             OtherwiseController.handleGithub($, url)
                         } else if (url.indexOf("play.google.com/store/apps/details?id=") !== -1) {
                             OtherwiseController.handlePlayStore($, url)
