@@ -206,7 +206,7 @@ class CallbacksController extends TelegramBaseCallbackQueryController {
                 break;
             case "adb":
                 msg = "/adb - /fastboot | Get latests SDK Platform Tools"
-
+                break;
             case "microg":
                 msg = "/microg | Get latests microG packages"
                 break;
