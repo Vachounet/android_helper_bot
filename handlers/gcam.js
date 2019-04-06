@@ -16,13 +16,15 @@ class GcamController extends TelegramBaseController {
 
             request.get("https://www.celsoazevedo.com/files/android/google-camera/developers/", function (error, response, body) {
                 var devs = new JSDOM.JSDOM(body);
-                var links = devs.window.document.querySelectorAll(".devspost a span");
+                var links = devs.window.document.querySelectorAll(".devs a");
 
                 var msg = "";
                 for (var i = 0; i < links.length; i++) {
-                    if (links[i].classList[1].indexOf("others") !== -1)
-                        break;
-                    msg += "`" + links[i].classList[1] + "` ";
+
+                    let devName = links[i].href.split("/")[links[i].href.split("/").length - 2].split("-")[1]
+
+                    if (devName !== "others" && devName !== "suggested")
+                        msg += "`" + devName + "` ";
                 }
 
                 $.sendMessage("I need a gcam dev name.\n " + msg, {
@@ -37,13 +39,13 @@ class GcamController extends TelegramBaseController {
             return;
         }
 
-        request.get("https://www.celsoazevedo.com/files/android/google-camera/", function (error, response, body) {
+        request.get("https://www.celsoazevedo.com/files/android/google-camera/dev-" + $.command.arguments[0] + "/", function (error, response, body) {
             var dom = new JSDOM.JSDOM(body);
 
 
             var msg = "🔍 *GCam Search Result(s):*";
 
-            var plop = dom.window.document.querySelectorAll(".listapks li [class*=\"" + $.command.arguments[0] + "\"]");
+            var plop = dom.window.document.querySelectorAll(".listapks li");
 
             if (!plop || plop.length === 0) {
                 $.sendMessage("🔍 *No results found matching your query* \n", {
