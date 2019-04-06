@@ -57,9 +57,9 @@ class GcamController extends TelegramBaseController {
 
             var length = plop.length < 5 ? plop.length : 5;
             for (var i = 0; i < length; i++) {
-                var link = plop[i].parentNode.querySelectorAll("a");
+                var link = plop[i].querySelectorAll("a");
 
-                var apkNote = plop[i].parentNode.querySelector(".apknote");
+                var apkNote = plop[i].querySelector(".apknote");
 
                 var gcamName = link[0].textContent;
 
