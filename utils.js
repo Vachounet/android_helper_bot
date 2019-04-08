@@ -224,10 +224,13 @@ BotUtils.sendSourceForgeLinks = (scope, link, romInfos) => {
         matches = link.match(/\bhttps?:\/\/\S+/gi);
     }
 
-    var filteredPath = matches[0].replace("/download", "");
+    var filteredPath = matches[0].replace("https://download.sourceforge.net", "");
+    filteredPath = filteredPath.replace("https://downloads.sourceforge.net", "");
     filteredPath = filteredPath.replace("/files", "");
     filteredPath = filteredPath.replace("/projects/", "");
+    filteredPath = filteredPath.replace("/project/", "");
     filteredPath = filteredPath.replace("https://sourceforge.net", "");
+    filteredPath = filteredPath.replace("/download", "");
 
     var projectname = !romInfos ? matches[0].split("/")[4] : romInfos.projectName;
 
