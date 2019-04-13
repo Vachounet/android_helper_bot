@@ -86,7 +86,7 @@ class XDAController extends TelegramBaseController {
                 BotUtils.getJSON("https://api.xda-developers.com/v3/user/userinfo?userid=" + users.results[0].userid,
                     function (userinfo, err) {
 
-                        var msg = "👤 *" + userinfo.username + " Infos* \n"
+                        var msg = "👤 *" + userinfo.username + "*\n"
 
                         msg += "Title: _" + userinfo.usertitle + "_ \n"
 
