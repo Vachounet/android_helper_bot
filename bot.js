@@ -225,6 +225,21 @@ tg.router
         new exports["superior"]()
     )
 
+    .when(
+        new TextCommand('/aqua', 'aquaBuildHandler', ''),
+        new exports["aquari"]()
+    )
+
+    .when(
+        new TextCommand('/validus', 'validusBuildHandler', ''),
+        new exports["gzr"]()
+    )
+
+    .when(
+        new TextCommand('/gzosp', 'gzospBuildHandler', ''),
+        new exports["gzr"]()
+    )
+
     .when(new TextCommand('/xda device', 'xdaDeviceHandler', 'Search for device forums on XDA'), new exports["xda"]())
     .when(new TextCommand('/xda user', 'xdaUserHandler', 'Search users on XDA'), new exports["xda"]())
     .when(new TextCommand('/xda browse', 'xdaBrowseHandler', 'Browse XDA forums'), new exports["xda"]())
