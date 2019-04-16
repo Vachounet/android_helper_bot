@@ -377,27 +377,15 @@ tg.onMaster(() => {
             }
         }, function (error, response, body) {
 
-
-            var posts = JSON.parse(body);
-
-            if (data_only) {
-                callback(posts, data);
-                return;
+            var posts;
+            try {
+                posts = JSON.parse(body);
+            } catch (exception) {
+                console.log("Unable to parse latests posts from " + threadID)
             }
 
-            var kb = {
-                inline_keyboard: []
-            };
-
-            var msg = "Threads: \n";
-
-            for (var i = 0; i < 5; i++) {
-
-                kb.inline_keyboard.push(
-                    [{
-                        text: posts.results[i].title,
-                        url: "https://forum.xda-developers.com/" + posts.results[i].web_uri
-                    }]);
+            if (data_only && posts) {
+                callback(posts, data);
             }
         });
     }
