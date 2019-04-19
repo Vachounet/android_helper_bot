@@ -35,7 +35,7 @@ class XiaomiController extends TelegramBaseController {
             }
 
 
-            BotUtils.getJSON("https://raw.githubusercontent.com/XiaomiFirmwareUpdater/miui-updates-tracker/master/stable_recovery/stable_recovery.json", function (results, err) {
+            BotUtils.getJSON("https://raw.githubusercontent.com/XiaomiFirmwareUpdater/miui-updates-tracker/master/weekly_recovery/weekly_recovery.json", function (results, err) {
                 var weekly = results.filter(result => result.codename.indexOf(device) !== -1)
 
                 if (weekly.length > 0) {
