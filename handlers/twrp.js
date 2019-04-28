@@ -1,6 +1,8 @@
 const Telegram = require('telegram-node-bot')
 const TelegramBaseController = Telegram.TelegramBaseController;
+var request = require('request');
 
+const JSDOM = require('jsdom')
 var BotUtils = require("../utils.js")
 
 class TWRPController extends TelegramBaseController {
@@ -35,27 +37,36 @@ class TWRPController extends TelegramBaseController {
             var msg = "";
             for (var i = 0; i < json.length; i++) {
                 if (json[i].title.toLowerCase().indexOf(keyword.toLowerCase()) !== -1) {
-                    kb.inline_keyboard.push(
-                        [{
-                            text: json[i].desc,
-                            url: "https://dl.twrp.me/" + json[i].title.split("(")[1].replace(")", "")
-                        }]);
+                    var codeName = json[i].title.split("(")[1].split(")")[0]
+                    var desc = json[i].desc
+
+                    request.get("https://dl.twrp.me/" + codeName + "/",
+                        function (error, response, body) {
+                            var dom = new JSDOM.JSDOM(body);
+                            var lastVersion = dom.window.document.querySelector("table a");
+
+                            if (lastVersion) {
+                                var fileSize = dom.window.document.querySelectorAll("table span")[0].textContent;
+                                var rlzDate = dom.window.document.querySelectorAll("table span")[1].textContent;
+
+                                msg += "[" + lastVersion.textContent + "](https://dl.twrp.me/" + codeName + "/" + lastVersion.textContent + ")"
+                                msg += "\n" + fileSize.trim()
+                                msg += "\n" + rlzDate.trim()
+                                $.sendMessage("🔍 *TWRP Search Result(s):*\n\n" + msg, {
+                                    parse_mode: "markdown",
+                                    reply_to_message_id: $.message.messageId
+                                });
+
+                            } else {
+                                $.sendMessage(tg._localization.En.deviceNotFound, {
+                                    parse_mode: "markdown",
+                                    reply_to_message_id: $.message.messageId
+                                });
+                            }
+                        })
+                    break;
                 }
             }
-
-            if (kb.inline_keyboard.length > 0) {
-                $.sendMessage("🔍 *TWRP Search Result(s):*", {
-                    parse_mode: "markdown",
-                    reply_markup: JSON.stringify(kb),
-                    reply_to_message_id: $.message.messageId
-                });
-            } else {
-                $.sendMessage(tg._localization.En.deviceNotFound, {
-                    parse_mode: "markdown",
-                    reply_to_message_id: $.message.messageId
-                });
-            }
-
         })
     }
 
