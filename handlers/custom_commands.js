@@ -284,8 +284,8 @@ class OtherwiseController extends TelegramBaseController {
                             return;
                         }
 
-                        $.sendMessage("Direct Download : [" + fileName + "](" + response.headers.location + ")", {
-                            parse_mode: "markdown",
+                        $.sendMessage("Direct Download : <a href='" + response.headers.location + "'>" + fileName + "</a>", {
+                            parse_mode: "html",
                             reply_to_message_id: $.message.messageId
                         });
                     });
