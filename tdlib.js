@@ -84,9 +84,10 @@ tdlClient.on('update', async update => {
                     limit: 0,
                     synchronous: true
                 })
+                var fileName = result.local.path.split("/")[result.local.path.split("/").length - 1]
+                exec(__dirname + "/unpack/unpackimg.sh --nosudo \"" + result.local.path + "\"", function callback(error, stdout, stderr) {
 
-                exec(__dirname + "/unpack/unpackimg.sh --nosudo " + result.local.path, function callback(error, stdout, stderr) {
-                    var output = fs.createWriteStream(__dirname + "/unpack/" + update.last_message.content.document.file_name + ".zip");
+                    var output = fs.createWriteStream(__dirname + "/unpack/" + fileName + ".zip");
                     var archive = archiver('zip', {
                         zlib: {
                             level: 5
@@ -94,7 +95,7 @@ tdlClient.on('update', async update => {
                     });
 
                     archive.pipe(output);
-                    archive.directory(__dirname + "/unpack/" + update.last_message.content.document.file_name + "f", update.last_message.content.document.file_name);
+                    archive.directory(__dirname + "/unpack/" + fileName + "f", update.last_message.content.document.file_name);
 
                     archive.on('error', function (err) {
                         console.log(err);
@@ -108,7 +109,7 @@ tdlClient.on('update', async update => {
                                 _: 'inputMessageDocument',
                                 document: {
                                     _: 'inputFileLocal',
-                                    path: __dirname + "/unpack/" + update.last_message.content.document.file_name + ".zip"
+                                    path: __dirname + "/unpack/" + fileName + ".zip"
                                 }
                             }
                         })
