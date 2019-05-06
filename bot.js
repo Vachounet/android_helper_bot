@@ -6,6 +6,16 @@ const Telegram = require('telegram-node-bot')
 const TelegramBaseController = Telegram.TelegramBaseController
 const TextCommand = Telegram.TextCommand
 const CustomFilterCommand = Telegram.CustomFilterCommand
+const {
+    Client
+} = require('tdl')
+const {
+    TDLib
+} = require('tdl-tdlib-ffi')
+
+const tdlib = require("./tdlib")
+const tdLibLCient = new tdlib();
+tdLibLCient.init();
 
 var request = require('request');
 var mongojs = require('mongojs')
@@ -18,7 +28,6 @@ var botToken = config.token || process.env.BOT_TOKEN
 global.tg = new Telegram.Telegram(botToken, {
     localization: [require('./localization/En.json')]
 })
-
 
 // Default Controllers
 var CallbackController = require("./handlers/callbackQuery.js")
@@ -290,9 +299,8 @@ tg.router
     .inlineQuery(new InlineController())
     .otherwise(new OtherwiseController())
 
-
-
 tg.onMaster(() => {
+
     var syncStarted = false;
 
     startSync();

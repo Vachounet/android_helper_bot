@@ -22,8 +22,6 @@ class OtherwiseController extends TelegramBaseController {
 
     handle($) {
 
-
-        console.log($.message.chat.type)
         if ($.message.entities && $.message.entities.length > 0) {
             var links = $.message.entities.filter(entity => entity.type === "url" || entity.type === "text_link");
 
@@ -66,9 +64,6 @@ class OtherwiseController extends TelegramBaseController {
                 })
 
             }
-        } else if ($.message.document && $.message.chat.type === "private" &&
-            $.message.document.mimeType === "application/vnd.android.package-archive") {
-            OtherwiseController.handleAPK($)
         }
 
         this.parseUser($)
@@ -77,71 +72,6 @@ class OtherwiseController extends TelegramBaseController {
             this.parseChat($);
         }
     }
-
-    static handleAPK($) {
-        tg.api.getFile($.message.document.fileId).then(doc => {
-            request.get("https://api.telegram.org/file/bot" + botToken + "/" + doc.filePath, {
-                encoding: null,
-                gzip: false
-            }, function (err, response, body) {
-
-                var outputFolder = $.message.document.fileName.split(".apk")[0]
-
-                const data = new Uint8Array(Buffer.from(body));
-                fs.writeFile(__dirname + "/../apks/" + $.message.document.fileName, data, (err) => {
-                    if (err) console.log(err);
-                    exec("java -jar " + __dirname + "/../apks/apktool.jar d " + __dirname + "/../apks/" + $.message.document.fileName + " -o " + __dirname + "/../apks/" + outputFolder + " -kf", function callback(error, stdout, stderr) {
-                        fs.unlinkSync(__dirname + "/../apks/" + $.message.document.fileName)
-
-                        var output = fs.createWriteStream(__dirname + "/../apks/" + $.message.document.fileName + ".zip");
-                        var archive = archiver('zip', {
-                            zlib: {
-                                level: 5
-                            }
-                        });
-
-                        archive.pipe(output);
-                        archive.directory(__dirname + "/../apks/" + outputFolder, outputFolder);
-
-                        archive.on('error', function (err) {
-                            console.log(err);
-                        });
-
-                        output.on('close', function () {
-                            $.sendDocument({
-                                path: __dirname + "/../apks/" + $.message.document.fileName + ".zip"
-                            }, {
-                                caption: "Decompiled " + $.message.document.fileName
-                            }).then(function () {
-                                fs.unlinkSync(__dirname + "/../apks/" + $.message.document.fileName + ".zip")
-                                OtherwiseController.deleteFolderRecursive(__dirname + "/../apks/" + outputFolder)
-                            })
-                        });
-
-                        output.on('end', function () {
-                            console.log('Data has been drained');
-                        });
-
-                        archive.finalize();
-                    });
-                });
-            })
-        })
-    }
-
-    static deleteFolderRecursive(path) {
-        if (fs.existsSync(path)) {
-            fs.readdirSync(path).forEach(function (file, index) {
-                var curPath = path + "/" + file;
-                if (fs.lstatSync(curPath).isDirectory()) {
-                    OtherwiseController.deleteFolderRecursive(curPath);
-                } else {
-                    fs.unlinkSync(curPath);
-                }
-            });
-            fs.rmdirSync(path);
-        }
-    };
 
     static handleMega($, url) {
 

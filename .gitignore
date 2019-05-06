@@ -60,3 +60,7 @@ typings/
 # next.js build output
 .next
 /config.js
+
+# tdlib
+_td_database/
+_td_files/
