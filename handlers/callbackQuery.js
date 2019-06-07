@@ -190,6 +190,7 @@ class CallbacksController extends TelegramBaseCallbackQueryController {
                 msg += "/du (DirtyUnicorns)\n"
                 msg += "/gzosp (GZOSP)\n"
                 msg += "/havoc (HavocOS)\n"
+                msg += "/kraken (Kraken Open Tentacles Project)\n"
                 msg += "/lineage (LineageOS)\n"
                 msg += "/omni (OmniROM)\n"
                 msg += "/pe (PixelExperience)\n"
