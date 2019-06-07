@@ -188,7 +188,7 @@ BotUtils.getSourceForgeBuilds = (scope, romInfos, device) => {
                 var fileName;
                 var fileLink;
 
-                if (item.title.toLocaleLowerCase().indexOf(device.toLocaleLowerCase()) !== -1 && item.title.indexOf(".md5") === -1) {
+                if (item.title.toLocaleLowerCase().indexOf(device.toLocaleLowerCase()) !== -1 && item.title.indexOf(".zip") !== -1) {
 
                     fileName = item.title.split("/")[romInfos.extraSFPath.indexOf("/") !== -1 ? 3 : 2];
                     fileLink = item.link
