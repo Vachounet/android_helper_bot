@@ -3,7 +3,7 @@ const TelegramBaseController = Telegram.TelegramBaseController;
 
  const BotUtils = require('../utils')
 
- class CandyController extends TelegramBaseController {
+ class KrakenController extends TelegramBaseController {
 
      triggerCommand($) {
         BotUtils.getRomFilter($, this.searchBuild)
