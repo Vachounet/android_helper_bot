@@ -38,7 +38,7 @@ class MotorolaController extends TelegramBaseController {
                     }]
             }
         }).sort({
-            fileName: -1
+            addedOn: -1
         }, async function (err, docs) {
             if (docs && docs.length > 0) {
                 var msg = "*Latests build found* \n"
