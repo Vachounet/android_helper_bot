@@ -249,7 +249,7 @@ BotUtils.sendSourceForgeLinks = (scope, link, romInfos) => {
                     links += "[" + mirrors[i].textContent.trim().split("(")[1].split(")")[0] + "](https://" + mirrorName + ".dl.sourceforge.net/project/" + projectname + filteredPath + ")  ";
                 }
             }
-            scope.sendMessage("*Mirrors for *`" + filteredPath.split("/")[filteredPath.split("/").length - 1] + "\n\n`" + links, {
+            scope.sendMessage("*Mirrors for *`" + filteredPath.split("/")[filteredPath.split("/").length - 1] + "`\n\n" + links, {
                 parse_mode: "markdown",
                 disable_web_page_preview: true,
                 reply_to_message_id: scope.message.messageId
