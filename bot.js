@@ -305,6 +305,11 @@ tg.router
         new exports["huawei"]()
     )
 
+    .when(
+        new TextCommand('/repos', 'githubSearchHandler', ''),
+        new exports["github"]()
+    )
+
     .callbackQuery(new CallbackController())
     .inlineQuery(new InlineController())
     .otherwise(new OtherwiseController())

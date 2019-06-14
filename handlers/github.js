@@ -5,42 +5,30 @@ const request = require('request')
 
 class GithubController extends TelegramBaseController {
 
-    parseLink($) {
+    searchRepos($) {
 
-        var matches = $.message.text.match(/\bhttps?:\/\/\S+/gi);
-
-        var tag;
-        if (matches[0].indexOf("/tags/") !== -1) {
-            tag = matches[0].split("/tags/")[1];
+        if (!$.command.success || $.command.arguments.length === 0) {
+            $.sendMessage("Usage: /repos device potter\n/repos vendor potter", {
+                parse_mode: "markdown",
+                reply_to_message_id: $.message.messageId
+            });
+            return;
         }
 
-        var owner = matches[0].split("/")[3];
-        var repo = matches[0].split("/")[4];
-
-        BotUtils.getJSON("https://api.github.com/repos/" + owner + "/" + repo + "/releases",
+        BotUtils.getJSON("https://api.github.com/search/repositories?q=" + $.command.arguments.join(" ") + "&sort=updated&order=desc",
             function (json, err) {
 
-                var item;
-
-                if (tag) {
-                    for (var i = 0; i < json.length; i++) {
-                        if (json[i].tag_name === tag) {
-                            item = json[i];
-                        }
+                var msg = ""
+                var count = json.items.length < 5 ? json.items.length : 5
+                if (json.items && json.items.length > 0) {
+                    for (var i = 0; i < count; i++) {
+                        msg += "▪️ <a href='" + json.items[i].html_url + "'>" + json.items[i].full_name + "</a>\n"
                     }
-                } else
-                    item = json[0];
-
-                var msg = "*" + item.name + " release by " + item.author.login + " on " + item.published_at.split("T")[0] + " *: \n\n"
-
-                for (var i = 0; i < item.assets.length; i++) {
-                    msg += "Downloads: " + item.assets[i].download_count + " \n"
-                    msg += "FileSize: " + BotUtils.humanFileSize(item.assets[i].size, true) + " \n"
-                    //msg += "Note: \n " + item.body + " \n"
-                    msg += "[" + item.assets[i].name + "](" + item.assets[i].browser_download_url + ") \n\n"
                 }
+
                 $.sendMessage(msg, {
-                    parse_mode: "markdown",
+                    parse_mode: "html",
+                    disable_web_page_preview: true,
                     reply_to_message_id: $.message.messageId
                 });
             });
@@ -48,7 +36,7 @@ class GithubController extends TelegramBaseController {
 
     get routes() {
         return {
-            'githubFilterHandler': 'parseLink',
+            'githubSearchHandler': 'searchRepos',
         }
     }
 }
