@@ -310,6 +310,16 @@ tg.router
         new exports["github"]()
     )
 
+    .when(
+        new TextCommand('/colt', 'coltBuildHandler', ''),
+        new exports["colt"]()
+    )
+
+    .when(
+        new TextCommand('/evox', 'evoBuildHandler', ''),
+        new exports["evo"]()
+    )
+
     .callbackQuery(new CallbackController())
     .inlineQuery(new InlineController())
     .otherwise(new OtherwiseController())
