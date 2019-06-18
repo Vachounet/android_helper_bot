@@ -37,90 +37,21 @@ class CrDroidController extends TelegramBaseController {
                     }
 
                     if (device) {
-                        $.sendMessage("*Last build found : " + device.filename + "* - Generating mirrors", {
-                            parse_mode: "markdown",
-                            //reply_markup: JSON.stringify(kb),
-                            reply_to_message_id: $.message.messageId
-                        }).then(function (msg) {
+                        
                             request.get(device.download, {
                                     followRedirect: false
                                 },
                                 function (error, response, body) {
+                                
+                                var dlURL = "";
+					if (device.download.indexOf("sourceforge") === -1) {
+						dlURL = response.headers.location
+					} else {
+					dlURL = device.download
+					}
 
-                                    var fid = response.headers.location.split("fid=")[1];
-                                    var flid;
-                                    if (response.headers.location.indexOf("flid") !== -1) {
-                                        flid = response.headers.location.split("flid=")[1];
-
-                                        request.get("https://androidfilehost.com/api/?action=folder&flid=" + flid, {
-                                                followRedirect: false,
-                                                headers: {
-                                                    "X-Requested-With": "XMLHttpRequest",
-                                                    "Host": "androidfilehost.com",
-                                                    "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:58.0) Gecko/20100101 Firefox/58.0",
-                                                    "X-MOD-SBB-CTYPE": "xhr",
-                                                    "Referer": "https://androidfilehost.com/?w=files&flid=" + flid
-                                                }
-                                            },
-                                            function (error, response, body) {
-
-                                                var json = JSON.parse(body);
-                                                var lastFile = json.DATA.files[json.DATA.files.length - 1];
-                                                fid = lastFile.url.split("fid=")[1]
-
-                                                request.post("https://androidfilehost.com/libs/otf/mirrors.otf.php", {
-                                                        form: {
-                                                            "submit": "submit",
-                                                            "action": "getdownloadmirrors",
-                                                            "fid": fid
-
-                                                        },
-                                                        headers: {
-                                                            "X-Requested-With": "XMLHttpRequest",
-                                                            "Host": "androidfilehost.com",
-                                                            "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:58.0) Gecko/20100101 Firefox/58.0",
-                                                            "X-MOD-SBB-CTYPE": "xhr",
-                                                            "Referer": "https://androidfilehost.com/?fid=" + fid
-                                                        }
-                                                    },
-                                                    function (error, response, body) {
-                                                        var json = JSON.parse(body);
-
-                                                        var links = "";
-
-                                                        if (json.STATUS === "1") {
-                                                            if (json.MIRRORS && json.MIRRORS.length > 0) {
-
-                                                                for (var i = 0; i < json.MIRRORS.length; i++) {
-                                                                    kb.inline_keyboard.push(
-                                                                    [{
-                                                                            text: json.MIRRORS[i].name,
-                                                                            url: json.MIRRORS[i].url
-                                                                    }]);
-
-                                                                    links += "[" + json.MIRRORS[i].name + "](" + json.MIRRORS[i].url + ")  "
-
-                                                                }
-
-                                                            } else {
-                                                                $.sendMessage("*Mirrors not found *", {
-                                                                    parse_mode: "markdown",
-                                                                    reply_to_message_id: $.message.messageId
-                                                                });
-                                                                return;
-                                                            }
-                                                        }
-
-                                                        tg.api.editMessageText("*Mirrors for " + json.MIRRORS[0].url.split("/")[json.MIRRORS[0].url.split("/").length - 1] + " *: \n " + links, {
-                                                            parse_mode: "markdown",
-                                                            chat_id: msg._chat._id,
-                                                            //reply_markup: JSON.stringify(kb),
-                                                            message_id: msg._messageId
-                                                        });
-
-                                                    });
-
-                                            });
+                                    if (dlURL) {
+                                        BotUtils.sendSourceForgeLinks($, dlURL)
 
 
 
@@ -178,7 +109,7 @@ class CrDroidController extends TelegramBaseController {
 
                                             });
                                     }
-                                });
+                                
                         });
 
                     } else {
@@ -195,6 +126,15 @@ class CrDroidController extends TelegramBaseController {
 
         );
 
+    }
+
+    static romInfos() {
+        return {
+            fullName: "crDroidAndroid",
+            extraSFPath: "{0}/crdroid-p",
+            projectName: "crdroid",
+            website: ""
+        }
     }
 
     get routes() {
