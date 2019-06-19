@@ -125,57 +125,59 @@ BotUtils.getUserFromCmd = (original, command) => {
 }
 
 BotUtils.sendAFHMirrors = (fid, scope) => {
-    request.post("https://androidfilehost.com/libs/otf/mirrors.otf.php", {
-            form: {
-                "submit": "submit",
-                "action": "getdownloadmirrors",
-                "fid": fid
 
-            },
-            headers: {
-                "X-Requested-With": "XMLHttpRequest",
-                "Host": "androidfilehost.com",
-                "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:58.0) Gecko/20100101 Firefox/58.0",
-                "X-MOD-SBB-CTYPE": "xhr",
-                "Referer": "https://androidfilehost.com/?fid=" + fid
-            }
-        },
-        function (error, response, body) {
 
-            if (error)
-                return
+    var options = {
+        uri: 'https://androidfilehost.com/libs/otf/mirrors.otf.php',
+        formData: {
+            submit: 'submit',
+            action: 'getdownloadmirrors',
+            fid: fid
+        }
+    };
+    var headers = {
+        "X-Requested-With": "XMLHttpRequest",
+        "Host": "androidfilehost.com",
+        "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:58.0) Gecko/20100101 Firefox/58.0",
+        "X-MOD-SBB-CTYPE": "xhr",
+        "Referer": "https://androidfilehost.com/?fid=" + fid
+    }
 
-            var json;
-            try {
-                json = JSON.parse(body);
-            } catch (e) {
-                console.log("AFH: error - fid: " + fid)
-            }
+    var cloudscraper = require('cloudscraper').defaults({
+        headers: headers
+    });
+    cloudscraper.post(options).then(data => {
+        var json;
+        try {
+            json = JSON.parse(data);
+        } catch (e) {
+            console.log("AFH: error - fid: " + fid)
+        }
 
-            var links = "";
+        var links = "";
 
-            if (json.STATUS === "1") {
-                if (json.MIRRORS && json.MIRRORS.length > 0) {
+        if (json.STATUS === "1") {
+            if (json.MIRRORS && json.MIRRORS.length > 0) {
 
-                    for (var i = 0; i < json.MIRRORS.length; i++) {
-                        links += "[" + json.MIRRORS[i].name + "](" + json.MIRRORS[i].url + ")  "
-                    }
-
-                } else {
-                    scope.sendMessage(tg._localization.En.afhMirrorsNotFound, {
-                        parse_mode: "markdown",
-                        reply_to_message_id: scope.message.messageId
-                    });
-                    return;
+                for (var i = 0; i < json.MIRRORS.length; i++) {
+                    links += "[" + json.MIRRORS[i].name + "](" + json.MIRRORS[i].url + ")  "
                 }
+
+            } else {
+                scope.sendMessage(tg._localization.En.afhMirrorsNotFound, {
+                    parse_mode: "markdown",
+                    reply_to_message_id: scope.message.messageId
+                });
+                return;
             }
-            let msg = util.format(tg._localization.En.afhMirrors, json.MIRRORS[0].url.split("/")[json.MIRRORS[0].url.split("/").length - 1]);
-            scope.sendMessage(msg + links, {
-                parse_mode: "markdown",
-                disable_web_page_preview: true,
-                reply_to_message_id: scope.message.messageId
-            });
+        }
+        let msg = util.format(tg._localization.En.afhMirrors, json.MIRRORS[0].url.split("/")[json.MIRRORS[0].url.split("/").length - 1]);
+        scope.sendMessage(msg + links, {
+            parse_mode: "markdown",
+            disable_web_page_preview: true,
+            reply_to_message_id: scope.message.messageId
         });
+    }).catch(console.error);
 }
 
 BotUtils.getSourceForgeBuilds = (scope, romInfos, device) => {

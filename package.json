@@ -26,6 +26,7 @@
         "buffer-shims": "1.0.0",
         "caseless": "0.12.0",
         "cheerio": "1.0.0-rc.2",
+        "cloudscraper": "^4.1.2",
         "combined-stream": "1.0.7",
         "core-util-is": "1.0.2",
         "css-select": "1.2.0",
