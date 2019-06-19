@@ -320,6 +320,16 @@ tg.router
         new exports["evo"]()
     )
 
+    .when(
+        new TextCommand('/losg', 'licrogBuildHandler', ''),
+        new exports["licrog"]()
+    )
+
+    .when(
+        new TextCommand('/nanodroid', 'nanodroidHandler', ''),
+        new exports["nanodroid"]()
+    )
+
     .callbackQuery(new CallbackController())
     .inlineQuery(new InlineController())
     .otherwise(new OtherwiseController())
