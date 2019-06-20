@@ -330,6 +330,11 @@ tg.router
         new exports["nanodroid"]()
     )
 
+    .when(
+        new TextCommand('/caf', 'cafHandler', ''),
+        new exports["caf"]()
+    )
+
     .callbackQuery(new CallbackController())
     .inlineQuery(new InlineController())
     .otherwise(new OtherwiseController())
