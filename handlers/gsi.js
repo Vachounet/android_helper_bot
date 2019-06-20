@@ -33,7 +33,7 @@ class GSIController extends TelegramBaseController {
     erfanBuilds($) {
 
         if (!$.command.arguments[1]) {
-            $.sendMessage("Usage: /gsi erfan _type_\nTypes = oos, hos, pixel, miui nubia or funtouch", {
+            $.sendMessage("Usage: /gsi erfan _type_\nTypes = oos, hos, pixel, coloros, miui, nubia, zui, zenui or oneui", {
                 parse_mode: "markdown",
                 reply_to_message_id: $.message.messageId
             });
@@ -54,27 +54,33 @@ class GSIController extends TelegramBaseController {
             case "pixel":
                 filter = "Pixel"
                 break;
-            case "funtouch":
-                filter = "FunTouchOS"
+            case "coloros":
+                filter = "ColorOS"
                 break;
             case "nubia":
                 filter = "Nubia"
+            case "zui":
+                filter = "ZUI"
+            case "zenui":
+                filter = "ZenUI"
+            case "oneui":
+                filter = "OneUI"
                 break;
         }
         request.post(
-            'https://build.lolinet.com/file/GSI/?', {
+            'https://mirrors.lolinet.com/firmware/gsi/?', {
                 json: {
                     "action": "get",
                     "items": {
-                        "href": "/file/GSI/",
+                        "href": "/firmware/gsi/",
                         "what": 1
                     }
                 },
                 headers: {
                     "content-type": "application/json;charset=utf-8",
-                    "Host": "build.lolinet.com",
+                    "Host": "mirrors.lolinet.com",
                     "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:58.0) Gecko/20100101 Firefox/58.0",
-                    "Referer": "https://build.lolinet.com/file/GSI/",
+                    "Referer": "https://mirrors.lolinet.com/firmware/gsi/",
                     "Cookie": "PHPSESSID=t7ascuh78voqhea02vp54fjf2s"
                 }
             },
