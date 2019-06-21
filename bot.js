@@ -311,6 +311,11 @@ tg.router
     )
 
     .when(
+        new TextCommand('/commits', 'githubCommitsHandler', ''),
+        new exports["github"]()
+    )
+
+    .when(
         new TextCommand('/colt', 'coltBuildHandler', ''),
         new exports["colt"]()
     )

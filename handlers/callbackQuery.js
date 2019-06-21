@@ -67,8 +67,8 @@ class CallbacksController extends TelegramBaseCallbackQueryController {
                             callback_data: "help|twrp"
                 },
                         {
-                            text: "Meme",
-                            callback_data: "help|meme"
+                            text: "NanoDroid",
+                            callback_data: "help|nanodroid"
                 }
             ]);
                 kb.inline_keyboard.push(
@@ -76,8 +76,8 @@ class CallbacksController extends TelegramBaseCallbackQueryController {
                         text: "XDA",
                         callback_data: "help|xda"
                 }, {
-                        text: "Extra",
-                        callback_data: "help|extra"
+                        text: "GitHub",
+                        callback_data: "help|github"
                 }]);
                 kb.inline_keyboard.push(
                     [{
@@ -107,18 +107,17 @@ class CallbacksController extends TelegramBaseCallbackQueryController {
                         [{
                         text: "Direct Link Generator",
                         callback_data: "help|directlinks"
+                        }, {
+                        text: "CAF",
+                        callback_data: "help|caf"
                         }]);
                 msg = "Commands List"
 
                 break;
             case "am":
-
                 msg = "/am search keywords | Search for APKs on APKMirror"
-
-
                 break;
             case "xda":
-
                 msg = "/xda user _username_ | Search for a profile on XDA \n"
                 msg += "/xda device _keywords_ | Search for device forums on XDA \n"
                 msg += "/xda forum _keywords_ | Search for forums on XDA \n"
@@ -126,44 +125,22 @@ class CallbacksController extends TelegramBaseCallbackQueryController {
                 msg += "/xda news | Get latests news from XDA\n"
                 msg += "/xda follow _threadid_ | Get notified on new posts for the given thread. (Admin command on groups) \n"
                 msg += "/labs _keywords_ | Search for apps on XDA Labs"
-
                 break;
             case "gcam":
-
                 msg = "/gcam _devname_ | Search for Google Camera mods \n"
-
                 break;
             case "twrp":
-
                 msg = "/twrp _devicecodename_ | Search for official TWRP images \n"
-
                 break;
             case "stock":
-
                 msg = "/stock _devicecodename_ | Search for official firmwartes for Motorola devices \n"
 
                 break;
             case "gapps":
-
                 msg = "/gapps _version_ _type_ | Search for lastests OpenGapps packages (arm or arm64) \n\n*Version* = Android version (from 5.1 to 9.0)\n*Type* = arm or arm64\n\n*Default to 9.0 and arm64*"
 
                 break;
-            case "meme":
-
-                msg = "/meme templates | Display available meme templates \n\n"
-                msg += "/meme infos _template_ | Get informations about given meme \n\n"
-                msg += "/meme gen template; toptext; bottomtext; | Generate a meme based on given template and text(s) \n"
-
-                break;
-            case "extra":
-
-                msg = "/cmd add #command-name <text> | Set/update custom command for current group \n"
-                msg += "/cmd add #command-name | Works also when replying to a message \n"
-                msg += "/cmd get | Get commands list for current group \n"
-
-                break;
             case "afh":
-
                 msg = "/afh search _keyword1_ _keyword2_ | Search for files on AndroidFileHost. Direct links will be generated. \n"
 
                 break;
@@ -192,6 +169,7 @@ class CallbacksController extends TelegramBaseCallbackQueryController {
                 msg += "/havoc (HavocOS)\n"
                 msg += "/kraken (Kraken Open Tentacles Project)\n"
                 msg += "/lineage (LineageOS)\n"
+                msg += "/losg (LineageOS for microG)\n"
                 msg += "/omni (OmniROM)\n"
                 msg += "/pe (PixelExperience)\n"
                 msg += "/pecaf (PixelExperience CAF Edition)\n"
@@ -205,17 +183,25 @@ class CallbacksController extends TelegramBaseCallbackQueryController {
                 msg += "/viper (ViperOS)\n"
                 msg += "/xtended (MSM Xtended)\n"
                 break;
-
+            case "github":
+                msg = "/repos keywords | Search for repositories on GitHub\n\n"
+                msg += "/commits keywords | Search for commits on GitHub\n\n"
+                break;
             case "magisk":
                 msg = "/magisk | Get latests Magisk and Magisk Manager"
                 break;
             case "adb":
                 msg = "/adb - /fastboot | Get latests SDK Platform Tools"
                 break;
+            case "caf":
+                msg = "/caf keyword | Get latest tag based on given keyword\nEx.: /caf msm8996"
+                break;
             case "microg":
                 msg = "/microg | Get latests microG packages"
                 break;
-
+            case "nanodroid":
+                msg = "/nanodroid | Get latests NanoDroid Magisk Modules/extras"
+                break;
             case "firmware":
                 msg = "Search for OFFICIAL OEM firmwares\n\n"
                 msg += "Usage: /oemname devicecodename ( Ex: /moto harpia )\n"
@@ -239,6 +225,7 @@ class CallbacksController extends TelegramBaseCallbackQueryController {
                 msg += "Currently Supported:\n\n"
                 msg += "`Google Drive\n`"
                 msg += "`Mega\n`"
+                msg += "`APKMirror\n`"
                 msg += "`Android File Host a.k.a AFH\n`"
                 msg += "`Sourceforge\n`"
                 msg += "`Github Releases`"

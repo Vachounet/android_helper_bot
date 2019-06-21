@@ -33,8 +33,8 @@ class StartController extends TelegramBaseController {
                     callback_data: "help|twrp"
                 },
                 {
-                    text: "Meme",
-                    callback_data: "help|meme"
+                    text: "NanoDroid",
+                    callback_data: "help|nanodroid"
                 }
             ]);
         kb.inline_keyboard.push(
@@ -42,8 +42,8 @@ class StartController extends TelegramBaseController {
                 text: "XDA",
                 callback_data: "help|xda"
                 }, {
-                text: "Extra",
-                callback_data: "help|extra"
+                text: "GitHub",
+                callback_data: "help|github"
                 }]);
         kb.inline_keyboard.push(
                     [{
@@ -73,6 +73,9 @@ class StartController extends TelegramBaseController {
                         [{
                 text: "Direct Link Generator",
                 callback_data: "help|directlinks"
+                        }, {
+                text: "CAF",
+                callback_data: "help|caf"
                         }]);
         if ($.message.from.id == $.message.chat.id) {
             tg.api.sendMessage($.message.from.id, "Menu", {
