@@ -26,9 +26,17 @@ class GithubController extends TelegramBaseController {
                     }
                 }
 
+                var kb = {
+                    inline_keyboard: [[{
+                        text: "More results",
+                        url: "https://github.com/search?q=" + $.command.arguments.join(" ") + "&s=updated&o=desc"
+                }]]
+                };
+
                 $.sendMessage(msg, {
                     parse_mode: "html",
                     disable_web_page_preview: true,
+                    reply_markup: JSON.stringify(kb),
                     reply_to_message_id: $.message.messageId
                 });
             });
