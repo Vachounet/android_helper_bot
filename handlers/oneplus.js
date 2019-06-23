@@ -7,7 +7,7 @@ class OneplusController extends TelegramBaseController {
     getOTA($) {
 
         if (!$.command.success || $.command.arguments.length === 0) {
-            $.sendMessage("Usage: /op _device_\n*Supported devices* : x 1 2 3 3t 5 5t 6 6t", {
+            $.sendMessage("Usage: /op _device_\n*Supported devices* : x 1 2 3 3t 5 5t 6 6t 7 7p", {
                 parse_mode: "markdown",
                 reply_to_message_id: $.message.messageId
             });
@@ -69,6 +69,12 @@ class OneplusController extends TelegramBaseController {
                 break;
             case "6t":
                 deviceID = 10
+                break;
+            case "7":
+                deviceID = 13
+                break;
+            case "7p":
+                deviceID = 12
                 break;
         }
 
