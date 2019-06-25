@@ -59,10 +59,13 @@ class GSIController extends TelegramBaseController {
                 break;
             case "nubia":
                 filter = "Nubia"
+                break;
             case "zui":
                 filter = "ZUI"
+                break;
             case "zenui":
                 filter = "ZenUI"
+                break;
             case "oneui":
                 filter = "OneUI"
                 break;
