@@ -15,25 +15,23 @@ class AsusController extends TelegramBaseController {
             return;
         }
 
-        BotUtils.getJSON("https://www.asus.com/support/api/product.asmx/GetPDLevel?website=global&type=1&typeid=1&productflag=1",
+        var query = $.command.arguments.join(" ");
+
+        BotUtils.getJSON("https://www.asus.com/searchapi/api/v2/Suggestion/" + query + "/global/ProductsAll/10/false/",
             function (json, err) {
-                var query = $.command.arguments.join(" ");
+                if (json && json.Result.Obj && json.Result.Obj.length > 0) {
 
-                if (json.Result.Product && json.Result.Product.length > 0) {
-                    var pattern = '^'
+                    var device;
 
-                    $.command.arguments.forEach(function (element) {
-                        pattern += '(?=.*' + element + ')'
-                    })
+                    for (var i = 0; i < json.Result.Obj[0].Data.length; i++) {
+                        if (json.Result.Obj[0].Data[i].Url.indexOf("/Phone/") > -1) {
+                            device = json.Result.Obj[0].Data[i];
+                            break;
+                        }
+                    }
 
-                    pattern += '.*$'
-
-                    var deviceMatch = new RegExp(pattern, 'gi')
-
-                    var device = json.Result.Product.filter(product => deviceMatch.test(product.PDName));
-
-                    if (device && device.length > 0) {
-                        BotUtils.getJSON("https://www.asus.com/support/api/product.asmx/GetPDDrivers?cpu=&osid=32&website=global&pdhashedid=" + device[0].PDHashedId,
+                    if (device) {
+                        BotUtils.getJSON("https://www.asus.com/support/api/product.asmx/GetPDDrivers?cpu=&osid=32&website=global&pdhashedid=" + device.HId,
                             function (json, err) {
 
                                 var result = json.Result
@@ -48,7 +46,7 @@ class AsusController extends TelegramBaseController {
                                     })
 
                                     if (firmwares && firmwares.Files && firmwares.Files.length > 0) {
-                                        var msg = "*Firmware found for " + device[0].PDName + " *\n\n"
+                                        var msg = "*Firmware found for " + device.Name + " *\n\n"
                                         var filesLength = firmwares.Files.length > 3 ? 3 : firmwares.Files.length
                                         for (var i = 0; i < filesLength; i++) {
                                             var linkTitle = firmwares.Files[i].DownloadUrl.Global.split("/")[firmwares.Files[i].DownloadUrl.Global.split("/").length - 1]
@@ -75,10 +73,8 @@ class AsusController extends TelegramBaseController {
                             reply_to_message_id: $.message.messageId
                         });
                     }
-
                 }
             });
-
     }
 
     get routes() {
