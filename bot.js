@@ -15,7 +15,9 @@ const {
 
 const tdlib = require("./tdlib")
 const tdLibLCient = new tdlib();
-tdLibLCient.init();
+
+if (config.enableTdlib)
+    tdLibLCient.init();
 
 var request = require('request');
 var mongojs = require('mongojs')

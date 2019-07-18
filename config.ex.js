@@ -5,6 +5,9 @@ const botConfig = {
    name: 'test'
  },
  token: '',
+ api_id: 0000,
+ api_hash: '0000',
+ enableTdlib: false
 };
 
 module.exports = botConfig;
