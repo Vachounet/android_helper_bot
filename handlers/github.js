@@ -137,8 +137,23 @@ class GithubController extends TelegramBaseController {
         await this.checkDeviceDump("https://api.github.com/orgs/AndroidDumps/repos?page=" + currentPage, $);
     }
 
-    sendDumpMessage($, device) {
-        var message = "*Dump found* : \n[" + device.name + "](" + device.html_url + ")"
+    async sendDumpMessage($, device) {
+        var options = {
+            json: true,
+            resolveWithFullResponse: true,
+            headers: {
+                "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:58.0) Gecko/20100101 Firefox/58.0",
+                "Accept": "application/vnd.github.cloak-preview"
+            }
+        }
+
+        var branchesReq = await rp.get("https://api.github.com/repos/AndroidDumps/" + device.name + "/branches", options)
+        var branches = branchesReq.body;
+        var message = "*Existing dumps* : \n";
+        for (let branche of branches) {
+            message += "[" + branche.name + "](https://github.com/AndroidDumps/" + device.name + "/tree/" + branche.name + ") \n"
+        }
+
         $.sendMessage(message, {
             parse_mode: "markdown",
             disable_web_page_preview: true,
