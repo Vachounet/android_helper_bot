@@ -347,6 +347,11 @@ tg.router
         new exports["caf"]()
     )
 
+    .when(
+        new TextCommand('/getdump', 'dumpHandler', ''),
+        new exports["github"]()
+    )
+
     .callbackQuery(new CallbackController())
     .inlineQuery(new InlineController())
     .otherwise(new OtherwiseController())
