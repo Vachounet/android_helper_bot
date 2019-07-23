@@ -123,15 +123,21 @@ class DeviceInfosController extends TelegramBaseController {
 
                                     var titles = description.innerHTML.match(new RegExp('<b>(.*?)</b>', 'gmi'))
                                     var datas = description.innerHTML.match(new RegExp('</b>: (.*?)<br>', 'gmi'))
-                                    var message = ""
+                                    var message = "*" + dom.window.document.querySelector("header h1").textContent.trim() + "*\n\n"
                                     for (let title in titles) {
                                         if (titles[title] && datas[title])
                                             message += "*" + titles[title].replace('<b>', '').replace('</b>', '') + "* " + datas[title].replace('<br>', '').replace('</b>', '') + "\n"
                                     }
-                                    $.sendMessage(message, {
+
+                                    var imageUrl = dom.window.document.head.querySelector("meta[property='og:image']")
+
+                                    $.sendPhoto({
+                                        url: imageUrl.getAttribute("content")
+                                    }, {
                                         parse_mode: "markdown",
+                                        caption: message,
                                         reply_to_message_id: $.message.messageId
-                                    });
+                                    })
 
                                 })
                                 break;
