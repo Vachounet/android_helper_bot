@@ -3,6 +3,7 @@ const TelegramBaseController = Telegram.TelegramBaseController;
 var BotUtils = require("../utils.js")
 var request = require("request")
 var requestPromise = require("request-promise")
+const JSDOM = require('jsdom')
 
 class DeviceInfosController extends TelegramBaseController {
 
@@ -37,7 +38,7 @@ class DeviceInfosController extends TelegramBaseController {
 
     getDeviceFromCodename($) {
         if (!$.command.success || $.command.arguments.length === 0) {
-            $.sendMessage("Usage: /deviceinfos device", {
+            $.sendMessage("Usage: /codename brand device", {
                 parse_mode: "markdown",
                 reply_to_message_id: $.message.messageId
             });
@@ -52,7 +53,6 @@ class DeviceInfosController extends TelegramBaseController {
             }
 
             device = device.trim()
-            console.log(device)
         }
         BotUtils.getJSON("https://raw.githubusercontent.com/androidtrackers/certified-android-devices/master/devices.json",
             function (json, err) {
@@ -74,10 +74,81 @@ class DeviceInfosController extends TelegramBaseController {
 
     }
 
+    getDeviceSpecs($) {
+        if (!$.command.success || $.command.arguments.length === 0) {
+            $.sendMessage("Usage: /specs brand device", {
+                parse_mode: "markdown",
+                reply_to_message_id: $.message.messageId
+            });
+            return;
+        }
+        request.get("https://www.devicespecifications.com/en/brand-more", {
+            headers: {
+                "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:58.0) Gecko/20100101 Firefox/58.0",
+            }
+        }, function (error, response, body) {
+            var dom = new JSDOM.JSDOM(body);
+
+            var searchBrand = $.command.arguments[0]
+            var device = $.command.arguments[1];
+            if ($.command.arguments.length > 2) {
+                for (var i = 2; i < $.command.arguments.length; i++) {
+                    device += " " + $.command.arguments[i]
+                }
+                device = device.trim()
+            }
+
+            var brands = dom.window.document.querySelector(".brand-listing-container-news").querySelectorAll("a")
+            var brandCount = brands.length;
+            while (brandCount--) {
+                if (brands[brandCount].textContent.toLowerCase().trim().includes(searchBrand.toLowerCase())) {
+                    var devicesUrl = brands[brandCount].href;
+                    request.get(devicesUrl, {
+                        headers: {
+                            "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:58.0) Gecko/20100101 Firefox/58.0",
+                        }
+                    }, function (error, response, body) {
+                        dom = new JSDOM.JSDOM(body);
+                        var models = dom.window.document.querySelectorAll("div[id*='model_'] h3");
+                        for (var t = 0; t < models.length; t++) {
+                            if (models[t].textContent.toLowerCase().trim().includes(device.toLowerCase())) {
+                                var devicePage = models[t].children[0].href;
+                                request.get(devicePage, {
+                                    headers: {
+                                        "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:58.0) Gecko/20100101 Firefox/58.0",
+                                    }
+                                }, function (error, response, body) {
+                                    dom = new JSDOM.JSDOM(body);
+                                    var description = dom.window.document.querySelector("#model-brief-specifications");
+
+                                    var titles = description.innerHTML.match(new RegExp('<b>(.*?)</b>', 'gmi'))
+                                    var datas = description.innerHTML.match(new RegExp('</b>: (.*?)<br>', 'gmi'))
+                                    var message = ""
+                                    for (let title in titles) {
+                                        if (titles[title] && datas[title])
+                                            message += "*" + titles[title].replace('<b>', '').replace('</b>', '') + "* " + datas[title].replace('<br>', '').replace('</b>', '') + "\n"
+                                    }
+                                    $.sendMessage(message, {
+                                        parse_mode: "markdown",
+                                        reply_to_message_id: $.message.messageId
+                                    });
+
+                                })
+                                break;
+                            }
+                        }
+                    })
+                    break;
+                }
+            }
+        })
+    }
+
     get routes() {
         return {
             'deviceInfosHandler': 'getDeviceInfos',
             'codenameHandler': 'getDeviceFromCodename',
+            'deviceSpecsHandler': 'getDeviceSpecs',
         }
     }
 }

@@ -362,6 +362,11 @@ tg.router
         new exports["deviceinfos"]()
     )
 
+    .when(
+        new TextCommand('/specs', 'deviceSpecsHandler', ''),
+        new exports["deviceinfos"]()
+    )
+
     .callbackQuery(new CallbackController())
     .inlineQuery(new InlineController())
     .otherwise(new OtherwiseController())
