@@ -61,6 +61,9 @@ class OtherwiseController extends TelegramBaseController {
                         } else if (url.indexOf("https://www.apkmirror.com/apk/") !== -1 &&
                             url.indexOf("-download") !== -1) {
                             OtherwiseController.handleAPKMirror($, url)
+                        } else if (url.indexOf("https://osdn.net/projects/") !== -1 &&
+                            url.indexOf("storage") !== -1) {
+                            OtherwiseController.handleOSDN($, url)
                         }
                     }
 
@@ -74,6 +77,47 @@ class OtherwiseController extends TelegramBaseController {
         if ($.message.chat) {
             this.parseChat($);
         }
+    }
+
+    static handleOSDN($, url) {
+        request.get(url, {
+            headers: {
+                "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:58.0) Gecko/20100101 Firefox/58.0",
+            }
+        }, function (error, response, body) {
+            var dom = new JSDOM.JSDOM(body);
+
+            var link = dom.window.document.querySelector("a.mirror_link")
+            if (!link) {
+                return;
+            }
+
+            link = "https://osdn.net" + link.href;
+
+            var currentMirror = new RegExp('m=(.*)&f', 'gmi').exec(link)[1]
+            var message = "*Mirrors for * " + url.split("/")[url.split("/").length - 2] + "\n"
+
+            var mirrors = dom.window.document.querySelector('#mirror-select-form').querySelectorAll('tr');
+
+            if (!mirrors || mirrors.length === 0)
+                return;
+
+            for (let mirror of mirrors) {
+                var currentLine = mirror.querySelectorAll("td")[2]
+
+                if (!currentLine)
+                    continue
+
+                var mirrorText = currentLine.textContent.trim().split("(")[1].replace(")", "");
+                message += "[" + mirrorText + "](" + link.replace(currentMirror, mirror.querySelector('input').value) + ")  "
+            }
+
+            $.sendMessage(message, {
+                parse_mode: "markdown",
+                reply_to_message_id: $.message.messageId
+            });
+
+        })
     }
 
     static handleMega($, url) {
