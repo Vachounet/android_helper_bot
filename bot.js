@@ -357,6 +357,11 @@ tg.router
         new exports["deviceinfos"]()
     )
 
+    .when(
+        new TextCommand('/codename', 'codenameHandler', ''),
+        new exports["deviceinfos"]()
+    )
+
     .callbackQuery(new CallbackController())
     .inlineQuery(new InlineController())
     .otherwise(new OtherwiseController())
