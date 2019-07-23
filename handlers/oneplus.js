@@ -76,7 +76,7 @@ class OneplusController extends TelegramBaseController {
             case "7pro":
                 deviceID = 12
                 break;
-            case "7pro":
+            case "7p5g":
                 deviceID = 16
                 break;
         }
