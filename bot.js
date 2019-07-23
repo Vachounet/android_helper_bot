@@ -352,6 +352,11 @@ tg.router
         new exports["github"]()
     )
 
+    .when(
+        new TextCommand('/deviceinfos', 'deviceInfosHandler', ''),
+        new exports["deviceinfos"]()
+    )
+
     .callbackQuery(new CallbackController())
     .inlineQuery(new InlineController())
     .otherwise(new OtherwiseController())
