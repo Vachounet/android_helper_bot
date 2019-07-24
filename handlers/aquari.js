@@ -26,11 +26,6 @@ class AquaController extends TelegramBaseController {
 
         var keywords = $.command.arguments[0]
 
-        var plop = this;
-        var kb = {
-            inline_keyboard: []
-        };
-
         request.get("https://androidfilehost.com/?w=search&s=Aquarios-" + keywords + "&type=files&page=1", {
                 headers: {
                     "Host": "androidfilehost.com",

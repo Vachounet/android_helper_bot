@@ -82,18 +82,12 @@ class StartController extends TelegramBaseController {
                 text: "Devices Infos",
                 callback_data: "help|deviceinfos"
                         }]);
-        if ($.message.from.id == $.message.chat.id) {
+        if ($.message.from.id === $.message.chat.id) {
             tg.api.sendMessage($.message.from.id, "Menu", {
                 parse_mode: "markdown",
                 reply_markup: JSON.stringify(kb),
                 reply_to_message_id: $.message.messageId
             });
-        } else {
-            //tg.api.sendMessage($.message.chat.id, "Check PM for help", {
-            //    parse_mode: "markdown",
-            //reply_markup: JSON.stringify(kb),
-            //    reply_to_message_id: $.message.messageId
-            //});
         }
     }
 

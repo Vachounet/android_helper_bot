@@ -2,7 +2,6 @@ const Telegram = require('telegram-node-bot')
 const TelegramBaseController = Telegram.TelegramBaseController;
 var BotUtils = require("../utils.js")
 var request = require("request")
-var requestPromise = require("request-promise")
 const JSDOM = require('jsdom')
 
 class DeviceInfosController extends TelegramBaseController {

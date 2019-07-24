@@ -137,6 +137,9 @@ class GSIController extends TelegramBaseController {
         BotUtils.getJSON("https://api.github.com/repos/Descendant/InOps/releases/latest",
             function (json, err) {
 
+                if (err)
+                    return
+
                 var msg = "<b>" + json.name + "</b>\n\n"
 
                 var assets = json.assets;
@@ -158,6 +161,9 @@ class GSIController extends TelegramBaseController {
     phhBuilds($) {
         BotUtils.getJSON("https://api.github.com/repos/phhusson/treble_experimentations/releases/latest",
             function (json, err) {
+
+                if (err)
+                    return
 
                 var msg = "<b>" + json.name + "</b>\n\n"
 

@@ -1,5 +1,6 @@
 const Telegram = require('telegram-node-bot')
 const TelegramBaseInlineQueryController = Telegram.TelegramBaseInlineQueryController;
+const request = require("request")
 
 class InlineController extends TelegramBaseInlineQueryController {
     /**
@@ -12,7 +13,7 @@ class InlineController extends TelegramBaseInlineQueryController {
         var keyword = $._inlineQuery._query;
 
         if (!keyword || keyword === "") {
-            $.answer(articles, "{}", callback)
+            $.answer(articles, "{}", this.callback)
             return
         }
 
@@ -40,7 +41,7 @@ class InlineController extends TelegramBaseInlineQueryController {
 
                     var cnt = devices.hits.length > 10 ? 10 : devices.hits.length;
                     for (var n = 0; n < cnt; n++) {
-                        if (devices.hits[n] && devices.hits[n]._highlightResult && devices.hits[n]._highlightResult.forumTitle.matchLevel == "full") {
+                        if (devices.hits[n] && devices.hits[n]._highlightResult && devices.hits[n]._highlightResult.forumTitle.matchLevel === "full") {
                             if (devices.hits[n].url.split("/").length <= 2) {
                                 articles.push({
                                     type: "article",
@@ -82,8 +83,8 @@ class InlineController extends TelegramBaseInlineQueryController {
 
                         var cnt = json.hits.length;
                         for (var i = 0; i < cnt; i++) {
-                            if (json.hits[i] && json.hits[i]._highlightResult && (json.hits[i]._highlightResult.threadTitle.matchLevel == "full" ||
-                                    json.hits[i]._highlightResult.firstPostText.matchLevel == "full")) {
+                            if (json.hits[i] && json.hits[i]._highlightResult && (json.hits[i]._highlightResult.threadTitle.matchLevel === "full" ||
+                                    json.hits[i]._highlightResult.firstPostText.matchLevel === "full")) {
 
                                 articles.push({
                                     type: "article",
@@ -98,9 +99,13 @@ class InlineController extends TelegramBaseInlineQueryController {
                                 })
                             }
                         }
-                        $.answer(articles, "{}", callback)
+                        $.answer(articles, "{}", this.callback)
                     });
             })
+    }
+
+    callback($) {
+        console.log($)
     }
 }
 

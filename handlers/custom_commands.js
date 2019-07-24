@@ -3,20 +3,14 @@ const TelegramBaseController = Telegram.TelegramBaseController;
 const config = require("../config.js")
 var mongojs = require('mongojs')
 var db = mongojs(config.db.name || process.env.DBNAME)
-var extracommands = db.collection('extracommands')
 var users = db.collection('users');
 var chats = db.collection('chats');
-var followedForums = db.collection('followed_forums');
-var stats = db.collection('stats');
 const urlparser = require('url');
 const util = require('util');
 var exec = require('child_process').exec;
 const BotUtils = require('../utils')
 const request = require('request')
 const JSDOM = require('jsdom')
-var botToken = config.token || process.env.BOT_TOKEN
-var fs = require('fs');
-var archiver = require('archiver');
 
 class OtherwiseController extends TelegramBaseController {
 

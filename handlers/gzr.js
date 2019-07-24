@@ -30,11 +30,6 @@ class GzrController extends TelegramBaseController {
 
         var keywords = $.command.arguments[0]
 
-        var plop = this;
-        var kb = {
-            inline_keyboard: []
-        };
-
         request.get("https://androidfilehost.com/?w=search&s=Gzosp-" + keywords + "&type=files&page=1", {
                 headers: {
                     "Host": "androidfilehost.com",
@@ -90,11 +85,6 @@ class GzrController extends TelegramBaseController {
         }
 
         var keywords = $.command.arguments[0]
-
-        var plop = this;
-        var kb = {
-            inline_keyboard: []
-        };
 
         request.get("https://androidfilehost.com/?w=search&s=Validus-" + keywords + "&type=files&page=1", {
                 headers: {

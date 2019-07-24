@@ -3,7 +3,6 @@ const TelegramBaseController = Telegram.TelegramBaseController;
 const config = require("../config.js")
 var mongojs = require('mongojs')
 var db = mongojs(config.db.name || process.env.DBNAME)
-var extracommands = db.collection('extracommands')
 var chats = db.collection('chats');
 
 class FilterRomController extends TelegramBaseController {
@@ -12,7 +11,7 @@ class FilterRomController extends TelegramBaseController {
 
         var command = $.message.text.replace("/filterrom", "").trim().split(" ");
 
-        if (command.length == 0 || command.length > 1 || command[0] == "") {
+        if (command.length === 0 || command.length > 1 || command[0] === "") {
             $.sendMessage("Usage: /filterrom commandname \n/filterrom off", {
                 parse_mode: "markdown",
                 reply_to_message_id: $.message.messageId
@@ -20,7 +19,7 @@ class FilterRomController extends TelegramBaseController {
             return;
         }
 
-        if (command == "off") {
+        if (command === "off") {
             command = "";
         }
 
@@ -40,7 +39,7 @@ class FilterRomController extends TelegramBaseController {
                             filter: command
                         }
                     });
-                    var msg = command == "" ? "Filter disable" : "Filter updated to " + command;
+                    var msg = command === "" ? "Filter disable" : "Filter updated to " + command;
                     $.sendMessage(msg, {
                         parse_mode: "markdown",
                         reply_to_message_id: $.message.messageId
@@ -52,8 +51,6 @@ class FilterRomController extends TelegramBaseController {
         }
 
         $.getChatAdministrators($.message.chat.id).then(data => {
-
-            let msg = "";
             var isAdmin = false;
             if (data && data.length > 0) {
                 for (var i = 0; i < data.length; i++) {
@@ -76,7 +73,7 @@ class FilterRomController extends TelegramBaseController {
                                 filter: command
                             }
                         });
-                        var msg = command == "" ? "Filter disable" : "Filter updated to " + command;
+                        var msg = command === "" ? "Filter disable" : "Filter updated to " + command;
 
                         $.sendMessage(msg, {
                             parse_mode: "markdown",

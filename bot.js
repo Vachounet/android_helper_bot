@@ -3,9 +3,7 @@
 const config = require('./config')
 const BotUtils = require('./utils')
 const Telegram = require('telegram-node-bot')
-const TelegramBaseController = Telegram.TelegramBaseController
 const TextCommand = Telegram.TextCommand
-const CustomFilterCommand = Telegram.CustomFilterCommand
 const {
     Client
 } = require('tdl')
@@ -36,8 +34,6 @@ var CallbackController = require("./handlers/callbackQuery.js")
 var InlineController = require("./handlers/inline.js")
 var OtherwiseController = require("./handlers/custom_commands.js")
 
-var normalizedPath = require("path").join(__dirname, "handlers");
-
 // Exports all handlers
 require('fs').readdirSync(__dirname + '/handlers/').forEach(function (file) {
     if (file.match(/\.js$/) !== null && file !== 'index.js') {
@@ -46,8 +42,6 @@ require('fs').readdirSync(__dirname + '/handlers/').forEach(function (file) {
         exports[name] = require('./handlers/' + file);
     }
 });
-
-
 // Routes
 tg.router
 
@@ -370,7 +364,6 @@ tg.router
     .callbackQuery(new CallbackController())
     .inlineQuery(new InlineController())
     .otherwise(new OtherwiseController())
-
 tg.onMaster(() => {
 
     var syncStarted = false;

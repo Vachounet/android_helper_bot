@@ -1,6 +1,5 @@
 const Telegram = require('telegram-node-bot')
 const TelegramBaseController = Telegram.TelegramBaseController;
-const InputFile = Telegram.InputFile;
 var request = require('request');
 const BotUtils = require('../utils')
 
@@ -30,7 +29,7 @@ class DUController extends TelegramBaseController {
             function (error, response, body) {
                 var json;
                 var lastUpdate;
-                if (body.indexOf("Slim") == -1) {
+                if (body.indexOf("Slim") === -1) {
                     json = JSON.parse(body);
 
                     lastUpdate = json[json.length - 1];

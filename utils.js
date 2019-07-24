@@ -81,7 +81,6 @@ BotUtils.ischannelAdmin = (userID, chatID, scope, cb) => {
 
     scope.getChatAdministrators(chatID).then(data => {
 
-        let msg = "";
         if (data && data.length > 0) {
             for (var i = 0; i < data.length; i++) {
                 if (data[i].user && data[i].user.id === userID)
@@ -329,7 +328,7 @@ RegExp.prototype.execAll = function (string) {
     while (match = this.exec(string)) {
         var matchArray = [];
         for (i in match) {
-            if (parseInt(i) == i) {
+            if (parseInt(i) === i) {
                 matchArray.push(match[i]);
             }
         }

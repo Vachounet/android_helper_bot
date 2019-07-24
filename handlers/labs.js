@@ -18,7 +18,8 @@ class LabsController extends TelegramBaseController {
         var keywords = $.command.arguments.join(" ")
 
         BotUtils.getJSON("https://labs.xda-developers.com/api/1/search?q=" + encodeURIComponent(keywords), function (json, err) {
-
+            if (err)
+                return
             var results = json.results;
             var msg = "*Labs search results:*\n";
             for (var i = 0; i < results.length; i++) {

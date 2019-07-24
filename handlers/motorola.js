@@ -4,7 +4,6 @@ const config = require("../config.js")
 var mongojs = require('mongojs')
 var db = mongojs(config.db.name || process.env.DBNAME)
 var motoFirmwares = db.collection('moto')
-const request = require('request')
 var requestPromise = require("request-promise")
 
 class MotorolaController extends TelegramBaseController {

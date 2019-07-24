@@ -9,10 +9,6 @@ class TWRPController extends TelegramBaseController {
 
     search($) {
 
-        var kb = {
-            inline_keyboard: []
-        };
-
         if (!$.command.success || $.command.arguments.length === 0) {
             $.sendMessage("Usage: /twrp device name", {
                 parse_mode: "markdown",
@@ -38,7 +34,6 @@ class TWRPController extends TelegramBaseController {
             for (var i = 0; i < json.length; i++) {
                 if (json[i].title.toLowerCase().indexOf(keyword.toLowerCase()) !== -1) {
                     var codeName = json[i].title.split("(")[1].split(")")[0]
-                    var desc = json[i].desc
 
                     request.get("https://dl.twrp.me/" + codeName + "/",
                         function (error, response, body) {

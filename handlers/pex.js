@@ -1,6 +1,5 @@
 const Telegram = require('telegram-node-bot')
 const TelegramBaseController = Telegram.TelegramBaseController;
-var request = require('request');
 var BotUtils = require("../utils.js")
 
 class PEXController extends TelegramBaseController {
@@ -31,6 +30,9 @@ class PEXController extends TelegramBaseController {
 
         BotUtils.getJSON("https://download.pixelexperience.org/ota/" + keywords + "/pie",
             function (json, err) {
+
+                if (err)
+                    return
 
                 if (json.filename !== "" && json.url !== "") {
                     var msg = "🔍 *PixelExperience build for " + keywords + "* \n";

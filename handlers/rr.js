@@ -71,7 +71,7 @@ class RRController extends TelegramBaseController {
 
                 var deviceLI = dom.window.document.querySelectorAll("#directory-listing li")[dom.window.document.querySelectorAll("#directory-listing li").length - 1];
 
-                if (deviceLI.getAttribute("data-name").indexOf("md5") != -1) {
+                if (deviceLI.getAttribute("data-name").indexOf("md5") !== -1) {
                     deviceLI = dom.window.document.querySelectorAll("#directory-listing li")[dom.window.document.querySelectorAll("#directory-listing li").length - 2];
                 }
 

@@ -254,8 +254,6 @@ class XDAController extends TelegramBaseController {
 
                 var vendors = data["vendor"];
 
-                var postInfos;
-
                 var msg = "*Latests news from XDA Portal* : \n\n";
 
                 if (!keyword) {
@@ -303,7 +301,7 @@ class XDAController extends TelegramBaseController {
                     msg += "<b>Dedicated forum</b> : \n";
                     var cnt = devices.hits.length > 10 ? 10 : devices.hits.length;
                     for (var n = 0; n < cnt; n++) {
-                        if (devices.hits[n] && devices.hits[n]._highlightResult && devices.hits[n]._highlightResult.forumTitle.matchLevel == "full") {
+                        if (devices.hits[n] && devices.hits[n]._highlightResult && devices.hits[n]._highlightResult.forumTitle.matchLevel === "full") {
                             if (devices.hits[n].url.split("/").length <= 2)
                                 msg += "🗨️ <a href=\"https://forum.xda-developers.com" + devices.hits[n].url + "\">" + devices.hits[n].forumTitle + "</a> \n"
                         }
@@ -324,9 +322,9 @@ class XDAController extends TelegramBaseController {
                         var cnt = 0;
                         for (var i = 0; i < json.hits.length; i++) {
 
-                            if (json.hits[i] && json.hits[i]._highlightResult && (json.hits[i]._highlightResult.threadTitle.matchLevel == "full" ||
-                                    json.hits[i]._highlightResult.firstPostText.matchLevel == "full" || (json.hits[i]._highlightResult.forumUrl && json.hits[i]._highlightResult.forumUrl.matchLevel == "full") ||
-                                    (json.hits[i]._highlightResult.forumUrl && json.hits[i]._highlightResult.deviceName.matchLevel == "full"))) {
+                            if (json.hits[i] && json.hits[i]._highlightResult && (json.hits[i]._highlightResult.threadTitle.matchLevel === "full" ||
+                                    json.hits[i]._highlightResult.firstPostText.matchLevel === "full" || (json.hits[i]._highlightResult.forumUrl && json.hits[i]._highlightResult.forumUrl.matchLevel === "full") ||
+                                    (json.hits[i]._highlightResult.forumUrl && json.hits[i]._highlightResult.deviceName.matchLevel === "full"))) {
                                 msg += "🗨️ <a href=\"https://forum.xda-developers.com" + json.hits[i].url + "\">" + json.hits[i].threadTitle + "</a> \n"
                                 cnt++;
                                 if (cnt > 4)
@@ -427,7 +425,7 @@ class XDAController extends TelegramBaseController {
                     $eq: parseInt(keyword)
                 }
             }, function (err, docs) {
-                if (!docs || docs.length == 0) {
+                if (!docs || docs.length === 0) {
 
                     BotUtils.getJSON("https://api.xda-developers.com/v3/posts?threadid=" + keyword,
                         function (json, err) {
@@ -477,7 +475,6 @@ class XDAController extends TelegramBaseController {
         }
 
         $.getChatAdministrators($.message.chat.id).then(data => {
-            let msg = "";
             var isAdmin = false;
             if (data && data.length > 0) {
                 for (var i = 0; i < data.length; i++) {
@@ -556,7 +553,7 @@ class XDAController extends TelegramBaseController {
                         $eq: parseInt(keyword)
                     }
                 }, function (err, docs) {
-                    if (!docs || docs.length == 0) {
+                    if (!docs || docs.length === 0) {
 
                         BotUtils.getJSON("https://api.xda-developers.com/v3/posts?threadid=" + keyword,
                             function (json, err) {
@@ -612,18 +609,11 @@ class XDAController extends TelegramBaseController {
 
     portal($) {
 
-        var keyword = $.message.text.replace("/xda portal").trim().split(" ")[1];
-
         BotUtils.getJSON("https://www.xda-developers.com/?json=1",
             function (data, err) {
                 var json = data.posts;
 
-                var vendors = data["vendor"];
-
-                var postInfos;
-
                 var msg = "*Latests XDA portal posts* : \n\n";
-
 
                 for (var p = 0; p < 5; p++) {
                     msg += "📰 [" + entities.decode(json[p].title_plain) + "](" + json[p].url + ") by *" + json[p].author.name + "*\n\n"

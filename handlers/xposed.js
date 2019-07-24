@@ -10,10 +10,6 @@ class XposedController extends TelegramBaseController {
 
     search($) {
 
-        var kb = {
-            inline_keyboard: []
-        };
-
         if (!$.command.success || $.command.arguments.length === 0) {
             $.sendMessage("Usage: /xposed _keywords_", {
                 parse_mode: "markdown",

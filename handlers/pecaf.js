@@ -1,7 +1,5 @@
 const Telegram = require('telegram-node-bot')
 const TelegramBaseController = Telegram.TelegramBaseController;
-var request = require('request');
-
 var BotUtils = require("../utils.js")
 
 class PECAFController extends TelegramBaseController {
@@ -28,6 +26,9 @@ class PECAFController extends TelegramBaseController {
 
         BotUtils.getJSON("https://download.pixelexperience.org/ota/" + keywords + "/pie_caf",
             function (json, err) {
+
+                if (err)
+                    return;
 
                 if (json.filename !== "" && json.url !== "") {
                     var msg = "🔍 *PixelExperience CAF build for " + keywords + "* \n";

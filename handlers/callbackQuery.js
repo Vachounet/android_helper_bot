@@ -1,8 +1,6 @@
 const Telegram = require('telegram-node-bot')
 const TelegramBaseCallbackQueryController = Telegram.TelegramBaseCallbackQueryController;
-
 const BotUtils = require("../utils.js")
-var request = require('request');
 var exec = require('child_process').exec;
 
 class CallbacksController extends TelegramBaseCallbackQueryController {
@@ -34,13 +32,8 @@ class CallbacksController extends TelegramBaseCallbackQueryController {
             inline_keyboard: []
         };
 
-
         switch (params[1]) {
             case "main":
-
-                var kb = {
-                    inline_keyboard: []
-                };
 
                 kb.inline_keyboard.push(
             [{
@@ -147,6 +140,7 @@ class CallbacksController extends TelegramBaseCallbackQueryController {
                 break;
             case "afh":
                 msg = "/afh search _keyword1_ _keyword2_ | Search for files on AndroidFileHost. Direct links will be generated. \n"
+                break;
             case "deviceinfos":
                 msg = "/deviceinfos device | Get device infos based on device codename. \n"
                 msg += "/codename brand device | Get device infos based on brand and device name. \n"
@@ -272,7 +266,6 @@ class CallbacksController extends TelegramBaseCallbackQueryController {
                 reply_markup: JSON.stringify(kb)
             });
 
-
         });
     }
 
@@ -283,11 +276,13 @@ class CallbacksController extends TelegramBaseCallbackQueryController {
                 $.setUserSession('threadID', fid)
                 BotUtils.getJSON("https://api.xda-developers.com/v3/forums/children?forumid=" + fid,
                     function (data, err) {
+                        if (err)
+                            return;
+
                         var childForums = data.results;
                         var kb = {
                             inline_keyboard: []
                         };
-
 
                         for (var i = 0; i < childForums.length; i++) {
                             kb.inline_keyboard.push(
@@ -311,6 +306,10 @@ class CallbacksController extends TelegramBaseCallbackQueryController {
                 $.setUserSession('threadID', fid)
                 BotUtils.getJSON("https://api.xda-developers.com/v3/threads?forumid=" + fid,
                     function (data, error) {
+
+                        if (error)
+                            return
+
                         var threads = data.results;
                         var kb = {
                             inline_keyboard: []
@@ -343,7 +342,6 @@ class CallbacksController extends TelegramBaseCallbackQueryController {
 
                 var total_posts = parseInt(params[3]);
 
-
                 var current_post = params[4] ? parseInt(params[4]) : parseInt(params[3]);
 
                 var page = Math.ceil(current_post / 10);
@@ -356,6 +354,9 @@ class CallbacksController extends TelegramBaseCallbackQueryController {
 
                 BotUtils.getJSON("https://api.xda-developers.com/v3/posts?threadid=" + threadid + "&page=" + page,
                     function (posts, err) {
+
+                        if (err)
+                            return
 
                         $.getUserSession('threadID').then(data => {
                             var kb = {
@@ -385,7 +386,6 @@ class CallbacksController extends TelegramBaseCallbackQueryController {
                                 message_id: $.message.messageId
                             });
                         })
-
 
                     });
         }

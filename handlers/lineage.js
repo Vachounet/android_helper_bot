@@ -1,6 +1,5 @@
 const Telegram = require('telegram-node-bot')
 const TelegramBaseController = Telegram.TelegramBaseController;
-const InputFile = Telegram.InputFile;
 const BotUtils = require('../utils')
 
 class LineageController extends TelegramBaseController {

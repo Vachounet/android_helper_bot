@@ -20,14 +20,14 @@ class OneplusController extends TelegramBaseController {
 
         BotUtils.getJSON("https://oxygenupdater.com/api/v2.3/mostRecentUpdateData/" + deviceID + "/" + updateType, function (json, err) {
             if (json.error) {
-                $.sendMessage(update.error, {
+                $.sendMessage(json.error, {
                     parse_mode: "markdown",
                     reply_to_message_id: $.message.messageId
                 });
                 return
             }
 
-            var msg = updateType == 1 ? "*Latest OTA*\n" : "*Latest Full Update*\n"
+            var msg = updateType === 1 ? "*Latest OTA*\n" : "*Latest Full Update*\n"
             msg += "[" + json.description.split("\n")[0].replace("#", "").trim() + "](" + json.download_url + ")"
             msg += " - Size : " + BotUtils.humanFileSize(json.download_size);
             var msg1 = msg.replace(/\[www.oneplus.com\]\{http:\/\/www.oneplus.com\/\}/g, '');

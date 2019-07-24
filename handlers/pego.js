@@ -1,6 +1,5 @@
 const Telegram = require('telegram-node-bot')
 const TelegramBaseController = Telegram.TelegramBaseController;
-var request = require('request');
 var BotUtils = require("../utils.js")
 
 class PEGOController extends TelegramBaseController {
@@ -26,7 +25,8 @@ class PEGOController extends TelegramBaseController {
 
         BotUtils.getJSON("https://download.pixelexperience.org/ota/" + keywords + "/pie_go",
             function (json, err) {
-
+                if (err)
+                    return
                 if (json.filename !== "" && json.url !== "") {
                     var msg = "🔍 *PixelExperience GO build for " + keywords + "* \n";
                     msg += "*Changelog*: \n"

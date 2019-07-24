@@ -18,6 +18,9 @@ class GithubController extends TelegramBaseController {
         BotUtils.getJSON("https://api.github.com/search/repositories?q=" + $.command.arguments.join(" ") + "&sort=updated&order=desc",
             function (json, err) {
 
+                if (err)
+                    return
+
                 var msg = ""
                 var count = json.items.length < 5 ? json.items.length : 5
                 if (json.items && json.items.length > 0) {
@@ -110,7 +113,7 @@ class GithubController extends TelegramBaseController {
             }
         }
 
-        var repos = await rp.get(url, options)
+        var repos = await rp.get(url, options);
         var result = repos.body;
         var itemFound = false;
 

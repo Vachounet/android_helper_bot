@@ -27,8 +27,6 @@ class APKMirrorController extends TelegramBaseController {
                 });
 
                 response.on('end', function () {
-                    var status = response.statusCode;
-
                     if (body) {
                         var dom = new JSDOM.JSDOM(body);
                         msg += "🔍 *Apps Search Result(s):*"
