@@ -81,6 +81,9 @@ class StartController extends TelegramBaseController {
                         [{
                 text: "Devices Infos",
                 callback_data: "help|deviceinfos"
+                        }, {
+                text: "CleanAPK",
+                callback_data: "help|cleanapk"
                         }]);
         if ($.message.from.id === $.message.chat.id) {
             tg.api.sendMessage($.message.from.id, "Menu", {

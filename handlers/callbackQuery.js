@@ -108,6 +108,9 @@ class CallbacksController extends TelegramBaseCallbackQueryController {
                         [{
                         text: "Devices Infos",
                         callback_data: "help|deviceinfos"
+                        }, {
+                        text: "CleanAPK",
+                        callback_data: "help|cleanapk"
                         }]);
                 msg = "Commands List"
 
@@ -145,6 +148,12 @@ class CallbacksController extends TelegramBaseCallbackQueryController {
                 msg = "/deviceinfos device | Get device infos based on device codename. \n"
                 msg += "/codename brand device | Get device infos based on brand and device name. \n"
                 msg += "/specs brand device | Get device specifications based on brand and device name. \n"
+                break;
+            case "cleanapk":
+                msg = "/apk discover | Discover new apps \n"
+                msg += "/apk top | Top updated apps \n"
+                msg += "/apk popular | Popular apps in last 24 hours \n"
+                msg += "/apk search keywords | Search for apks "
                 break;
             case "roms":
                 msg = "*Search for latests official builds*\n\n"

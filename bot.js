@@ -361,6 +361,26 @@ tg.router
         new exports["deviceinfos"]()
     )
 
+    .when(
+        new TextCommand('/apk discover', 'discoverApkHandler', ''),
+        new exports["cleanapk"]()
+    )
+
+    .when(
+        new TextCommand('/apk top', 'topApkHandler', ''),
+        new exports["cleanapk"]()
+    )
+
+    .when(
+        new TextCommand('/apk search', 'searchApkHandler', ''),
+        new exports["cleanapk"]()
+    )
+
+    .when(
+        new TextCommand('/apk popular', 'popularApkHandler', ''),
+        new exports["cleanapk"]()
+    )
+
     .callbackQuery(new CallbackController())
     .inlineQuery(new InlineController())
     .otherwise(new OtherwiseController())
