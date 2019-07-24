@@ -77,6 +77,11 @@ class StartController extends TelegramBaseController {
                 text: "CAF",
                 callback_data: "help|caf"
                         }]);
+        kb.inline_keyboard.push(
+                        [{
+                text: "Devices Infos",
+                callback_data: "help|deviceinfos"
+                        }]);
         if ($.message.from.id == $.message.chat.id) {
             tg.api.sendMessage($.message.from.id, "Menu", {
                 parse_mode: "markdown",

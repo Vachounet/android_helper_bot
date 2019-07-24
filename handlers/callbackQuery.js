@@ -111,6 +111,11 @@ class CallbacksController extends TelegramBaseCallbackQueryController {
                         text: "CAF",
                         callback_data: "help|caf"
                         }]);
+                kb.inline_keyboard.push(
+                        [{
+                        text: "Devices Infos",
+                        callback_data: "help|deviceinfos"
+                        }]);
                 msg = "Commands List"
 
                 break;
@@ -142,7 +147,10 @@ class CallbacksController extends TelegramBaseCallbackQueryController {
                 break;
             case "afh":
                 msg = "/afh search _keyword1_ _keyword2_ | Search for files on AndroidFileHost. Direct links will be generated. \n"
-
+            case "deviceinfos":
+                msg = "/deviceinfos device | Get device infos based on device codename. \n"
+                msg += "/codename brand device | Get device infos based on brand and device name. \n"
+                msg += "/specs brand device | Get device specifications based on brand and device name. \n"
                 break;
             case "roms":
                 msg = "*Search for latests official builds*\n\n"
@@ -212,7 +220,9 @@ class CallbacksController extends TelegramBaseCallbackQueryController {
                 msg += "/op ( Oneplus )\n"
                 msg += "/xiaomi ( Xiaomi )\n"
                 msg += "/asus ( Asus )\n"
-                msg += "/huawei ( Huawei )\n"
+                msg += "/huawei ( Huawei )\n\n"
+                msg += "Search for dumps\n"
+                msg += "/getdump device"
                 break;
 
             case "gsi":
@@ -230,6 +240,7 @@ class CallbacksController extends TelegramBaseCallbackQueryController {
                 msg += "`Android File Host a.k.a AFH\n`"
                 msg += "`Sourceforge\n`"
                 msg += "`Github Releases`"
+                msg += "`OSDN`"
         }
 
         if (params[1] !== "main") {
