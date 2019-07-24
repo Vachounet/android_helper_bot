@@ -34,7 +34,7 @@ class OtherwiseController extends TelegramBaseController {
 
                         url = $.message.text.slice(offset, link.length + offset);
                     } else if (link.type === "text_link") {
-                        var url = link.url;
+                        url = link.url;
                     }
 
                     if (url) {
@@ -61,7 +61,7 @@ class OtherwiseController extends TelegramBaseController {
                         } else if (url.indexOf("https://www.apkmirror.com/apk/") !== -1 &&
                             url.indexOf("-download") !== -1) {
                             OtherwiseController.handleAPKMirror($, url)
-                        } else if (url.indexOf("https://osdn.net/projects/") !== -1 &&
+                        } else if (url.indexOf("osdn.net/projects/") !== -1 &&
                             url.indexOf("storage") !== -1) {
                             OtherwiseController.handleOSDN($, url)
                         }
@@ -95,7 +95,7 @@ class OtherwiseController extends TelegramBaseController {
             link = "https://osdn.net" + link.href;
 
             var currentMirror = new RegExp('m=(.*)&f', 'gmi').exec(link)[1]
-            var message = "*Mirrors for * " + url.split("/")[url.split("/").length - 2] + "\n"
+            var message = "*Mirrors for * `" + url.split("/")[url.split("/").length - 2] + "`\n"
 
             var mirrors = dom.window.document.querySelector('#mirror-select-form').querySelectorAll('tr');
 
