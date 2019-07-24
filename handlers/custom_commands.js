@@ -64,6 +64,8 @@ class OtherwiseController extends TelegramBaseController {
                         } else if (url.indexOf("osdn.net/projects/") !== -1 &&
                             url.indexOf("storage") !== -1) {
                             OtherwiseController.handleOSDN($, url)
+                        } else if (url.indexOf("mediafire.com/file/") !== -1) {
+                            OtherwiseController.handleMediafire($, url)
                         }
                     }
 
@@ -77,6 +79,22 @@ class OtherwiseController extends TelegramBaseController {
         if ($.message.chat) {
             this.parseChat($);
         }
+    }
+
+    static handleMediafire($, url) {
+        request.get(url, {
+            headers: {
+                "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:58.0) Gecko/20100101 Firefox/58.0",
+            }
+        }, function (error, response, body) {
+            var dom = new JSDOM.JSDOM(body); //
+            var link = dom.window.document.querySelector("a[aria-label*='Download file']").href
+            var fileName = dom.window.document.querySelector("div.filename").textContent.trim()
+            $.sendMessage("Download: [" + fileName + "](" + link + ")", {
+                parse_mode: "markdown",
+                reply_to_message_id: $.message.messageId
+            });
+        })
     }
 
     static handleOSDN($, url) {

@@ -239,8 +239,9 @@ class CallbacksController extends TelegramBaseCallbackQueryController {
                 msg += "`APKMirror\n`"
                 msg += "`Android File Host a.k.a AFH\n`"
                 msg += "`Sourceforge\n`"
-                msg += "`Github Releases`"
-                msg += "`OSDN`"
+                msg += "`Github Releases`\n"
+                msg += "`OSDN`\n"
+                msg += "`MediaFire`\n"
         }
 
         if (params[1] !== "main") {
