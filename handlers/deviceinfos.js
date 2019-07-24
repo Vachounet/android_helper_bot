@@ -23,8 +23,8 @@ class DeviceInfosController extends TelegramBaseController {
                 while (deviceCount--) {
                     if (json[deviceCount].device === device || json[deviceCount].model === device) {
                         var message = json[deviceCount].brand + " " + json[deviceCount].name + "\n"
-                        message += "*Codename* : " + json[deviceCount].device + "\n"
-                        message += "*Model* : " + json[deviceCount].model + "\n"
+                        message += "*Codename* : `" + json[deviceCount].device + "`\n"
+                        message += "*Model* : `" + json[deviceCount].model + "`\n"
                         $.sendMessage(message, {
                             parse_mode: "markdown",
                             reply_to_message_id: $.message.messageId
@@ -61,8 +61,8 @@ class DeviceInfosController extends TelegramBaseController {
                     if (json[deviceCount].brand.toLowerCase().includes(brand.toLowerCase()) &&
                         json[deviceCount].name.toLowerCase().includes(device.toLowerCase())) {
                         var message = json[deviceCount].brand + " " + json[deviceCount].name + "\n"
-                        message += "*Codename* : " + json[deviceCount].device + "\n"
-                        message += "*Model* : " + json[deviceCount].model + "\n"
+                        message += "*Codename* : `" + json[deviceCount].device + "`\n"
+                        message += "*Model* : `" + json[deviceCount].model + "`\n"
                         $.sendMessage(message, {
                             parse_mode: "markdown",
                             reply_to_message_id: $.message.messageId
@@ -122,11 +122,12 @@ class DeviceInfosController extends TelegramBaseController {
                                     var description = dom.window.document.querySelector("#model-brief-specifications");
 
                                     var titles = description.innerHTML.match(new RegExp('<b>(.*?)</b>', 'gmi'))
-                                    var datas = description.innerHTML.match(new RegExp('</b>: (.*?)<br>', 'gmi'))
+
                                     var message = "*" + dom.window.document.querySelector("header h1").textContent.trim() + "*\n\n"
-                                    for (let title in titles) {
-                                        if (titles[title] && datas[title])
-                                            message += "*" + titles[title].replace('<b>', '').replace('</b>', '') + "* " + datas[title].replace('<br>', '').replace('</b>', '') + "\n"
+
+                                    for (let title of titles) {
+                                        var data = description.innerHTML.trim().split(title)[1].split("<br>")[0].split("<b>")[0]
+                                        message += "*" + title.replace('<b>', '').replace('</b>', '') + "* " + data + "\n"
                                     }
 
                                     var imageUrl = dom.window.document.head.querySelector("meta[property='og:image']")
@@ -138,7 +139,6 @@ class DeviceInfosController extends TelegramBaseController {
                                         caption: message,
                                         reply_to_message_id: $.message.messageId
                                     })
-
                                 })
                                 break;
                             }
