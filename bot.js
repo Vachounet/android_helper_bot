@@ -54,6 +54,12 @@ tg.router
         new exports["start"]()
     )
 
+
+    .when(
+        new TextCommand('/ddump', 'dumpHandler', ''),
+        new exports["dump"]()
+    )
+
     .when(
         new TextCommand('/filterrom', 'filterRomHandler', ''),
         new exports["filterrom"]()
@@ -380,6 +386,7 @@ tg.router
         new TextCommand('/apk popular', 'popularApkHandler', ''),
         new exports["cleanapk"]()
     )
+
 
     .callbackQuery(new CallbackController())
     .inlineQuery(new InlineController())

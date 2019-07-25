@@ -19,6 +19,7 @@
         "aws-sign2": "0.7.0",
         "aws4": "1.8.0",
         "bcrypt-pbkdf": "1.0.2",
+        "better-queue": "^3.8.10",
         "bluebird": "3.5.3",
         "boolbase": "1.0.0",
         "browser-process-hrtime": "0.1.3",
