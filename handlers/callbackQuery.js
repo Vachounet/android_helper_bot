@@ -184,7 +184,6 @@ class CallbacksController extends TelegramBaseCallbackQueryController {
                 msg += "/omni (OmniROM)\n"
                 msg += "/pe (PixelExperience)\n"
                 msg += "/pecaf (PixelExperience CAF Edition)\n"
-                msg += "/pego (PixelExperience GO Edition)\n"
                 msg += "/pixeldust (PixelDust Project)\n"
                 msg += "/pixys (PixysOS)\n"
                 msg += "/posp (Potato Open Source Project)\n"

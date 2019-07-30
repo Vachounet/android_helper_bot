@@ -181,11 +181,6 @@ tg.router
     )
 
     .when(
-        new TextCommand('/pego', 'pegoBuildHandler', ''),
-        new exports["pego"]()
-    )
-
-    .when(
         new TextCommand('/pe', 'pexBuildHandler', ''),
         new exports["pex"]()
     )
