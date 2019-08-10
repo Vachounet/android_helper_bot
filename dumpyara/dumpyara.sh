@@ -31,7 +31,7 @@ URL=${array[0]}
 FILE=${URL##*/}
 EXTENSION=${URL##*.}
 UNZIP_DIR=${FILE/.$EXTENSION/}
-PARTITIONS="system vendor cust odm oem factory product modem xrom"
+PARTITIONS="system vendor cust odm oem factory product modem xrom systemex"
 
 $PROJECT_DIR/Firmware_extractor/extractor.sh $PROJECT_DIR/input/${FILE} $PROJECT_DIR/working/${UNZIP_DIR}
 
