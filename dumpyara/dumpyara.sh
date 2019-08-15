@@ -17,19 +17,25 @@ fi
 
 # download or copy from local?
 URL=$1
-#if echo "$1" | grep "http" ; then
-	cd $PROJECT_DIR/input
-	echo "Downloading file"
-	aria2c -q -s 16 -x 16 ${URL:?} || wget ${URL:?} || exit 1 #download rom
-	echo "Done"
-#else
-#	cp -a "$1" $PROJECT_DIR/input
-#fi
+
+cd $PROJECT_DIR/input
+echo "Downloading file"
+aria2c -q -s 16 -x 16 ${URL:?} || wget ${URL:?} || exit 1 #download rom
+echo "Done"
+
 ORG=AndroidDumps #for orgs support, here can write your org name
 IFS='?' read -r -a array <<< "$URL"
-URL=${array[0]}
-FILE=${URL##*/}
-EXTENSION=${URL##*.}
+if [[ ${URL} == *"googleusercontent"* ]];then
+    REGEX_FL='(?<=filename=").*?(?=";)'
+    output=`wget -q -O - --server-response --spider $URL 2>&1`
+    FILE=`echo $output | grep -Po $REGEX_FL`
+    EXTENSION=${FILE##*.}
+else
+    URL=${array[0]}
+    FILE=${URL##*/}
+    EXTENSION=${URL##*.}
+fi
+
 UNZIP_DIR=${FILE/.$EXTENSION/}
 PARTITIONS="system vendor cust odm oem factory product modem xrom systemex"
 
