@@ -19,21 +19,20 @@ fi
 URL=$1
 #if echo "$1" | grep "http" ; then
 	cd $PROJECT_DIR/input
-	aria2c --download-result=hide --show-console-readout=false --enable-color=false -s 16 -x 16 ${URL:?} || wget ${URL:?} || exit 1 #download rom
+	echo "Downloading file"
+	aria2c -q -s 16 -x 16 ${URL:?} || wget ${URL:?} || exit 1 #download rom
+	echo "Done"
 #else
 #	cp -a "$1" $PROJECT_DIR/input
 #fi
 ORG=AndroidDumps #for orgs support, here can write your org name
+IFS='?' read -r -a array <<< "$URL"
+URL=${array[0]}
 FILE=${URL##*/}
 EXTENSION=${URL##*.}
 UNZIP_DIR=${FILE/.$EXTENSION/}
 PARTITIONS="system vendor cust odm oem factory product modem xrom"
 
-if [ -d "$PROJECT_DIR/Firmware_extractor" ]; then
-    git -C $PROJECT_DIR/Firmware_extractor pull --recurse-submodules
-else
-    git clone --recurse-submodules https://github.com/AndroidDumps/Firmware_extractor $PROJECT_DIR/Firmware_extractor
-fi
 $PROJECT_DIR/Firmware_extractor/extractor.sh $PROJECT_DIR/input/${FILE} $PROJECT_DIR/working/${UNZIP_DIR}
 
 cd $PROJECT_DIR/working/${UNZIP_DIR}
@@ -42,30 +41,28 @@ if [ ! -d "$PROJECT_DIR/extract-dtb" ]; then
     git clone https://github.com/PabloCastellano/extract-dtb $PROJECT_DIR/extract-dtb
 fi
 python3 $PROJECT_DIR/extract-dtb/extract-dtb.py $PROJECT_DIR/working/${UNZIP_DIR}/boot.img -o $PROJECT_DIR/working/${UNZIP_DIR}/bootimg > /dev/null # Extract boot
-echo 'boot extracted'
 
 if [[ -f $PROJECT_DIR/working/${UNZIP_DIR}/dtbo.img ]]; then
     python3 $PROJECT_DIR/extract-dtb/extract-dtb.py $PROJECT_DIR/working/${UNZIP_DIR}/dtbo.img -o $PROJECT_DIR/working/${UNZIP_DIR}/dtbo > /dev/null # Extract dtbo
-    echo 'dtbo extracted'
 fi
 
 # Extract dts
 mkdir $PROJECT_DIR/working/${UNZIP_DIR}/bootdts
 dtb_list=`find $PROJECT_DIR/working/${UNZIP_DIR}/bootimg -name '*.dtb' -type f -printf '%P\n' | sort`
 for dtb_file in $dtb_list; do
-	echo -e "Extracting dts from $dtb_file"
 	dtc -I dtb -O dts -o $(echo "$PROJECT_DIR/working/${UNZIP_DIR}/bootdts/$dtb_file" | sed -r 's|.dtb|.dts|g') $PROJECT_DIR/working/${UNZIP_DIR}/bootimg/$dtb_file > /dev/null 2>&1
 done
 
 for p in $PARTITIONS; do
-    if [ -e "$p.img" ]; then
+    if [ -e "$PROJECT_DIR/working/${UNZIP_DIR}/$p.img" ]; then
         mkdir $p || rm -rf $p/*
-        echo $p 'extracted'
         7z x $p.img -y -o$p/ 2>/dev/null >> zip.log
         rm $p.img 2>/dev/null
     fi
 done
 rm zip.log
+
+echo "All partitions extracted"
 
 # board-info.txt
 find $PROJECT_DIR/working/${UNZIP_DIR}/modem -type f -exec strings {} \; | grep "QC_IMAGE_VERSION_STRING=MPSS." | sed "s|QC_IMAGE_VERSION_STRING=MPSS.||g" | cut -c 4- | sed -e 's/^/require version-baseband=/' >> $PROJECT_DIR/working/${UNZIP_DIR}/board-info.txt
@@ -118,23 +115,28 @@ description=$(grep -oP "(?<=^ro.build.description=).*" -hs {system,system/system
 branch=$(echo $description | tr ' ' '-')
 repo=$(echo $brand\_$codename\_dump | tr '[:upper:]' '[:lower:]')
 
-printf "\nflavor: $flavor\nrelease: $release\nid: $id\nincremental: $incremental\ntags: $tags\nfingerprint: $fingerprint\nbrand: $brand\ncodename: $codename\ndescription: $description\nbranch: $branch\nrepo: $repo\n"
+printf "\nbrand: $brand - codename: $codename - branch: $branch - repo: $repo\n"
 
-git init
-if [ -z "$(git config --get user.email)" ]; then
+echo "Init git repo"
+output=`git init`
+#if [ -z "$(git config --get user.email)" ]; then
     git config user.email AndroidDumps@github.com
-fi
-if [ -z "$(git config --get user.name)" ]; then
+#fi
+#if [ -z "$(git config --get user.name)" ]; then
     git config user.name AndroidDumps
-fi
-git checkout -b $branch
+#fi
+output=`git checkout -b $branch`
 find -size +97M -printf '%P\n' -o -name *sensetime* -printf '%P\n' -o -name *.lic -printf '%P\n' > .gitignore
-git add --all
+output=`git add --all`
 
-curl -s -X POST -H "Authorization: token ${GIT_OAUTH_TOKEN}" -d '{ "name": "'"$repo"'" }' "https://api.github.com/orgs/${ORG}/repos" #create new repo
-git remote add origin https://github.com/$ORG/${repo,,}.git
-git commit -asm "Add ${description}"
-git push https://$GIT_OAUTH_TOKEN@github.com/$ORG/${repo,,}.git $branch ||
+echo "Creating github repo if needed"
+output=`curl -s -X POST -H "Authorization: token ${GIT_OAUTH_TOKEN}" -d '{ "name": "'"$repo"'" }' "https://api.github.com/orgs/${ORG}/repos"` #create new repo
+output=`git remote add origin https://github.com/$ORG/${repo,,}.git`
+#echo $output
+output=`git commit -asm "Add ${description}"`
+#echo $output
+echo "Pushing files"
+output=`git push https://$GIT_OAUTH_TOKEN@github.com/$ORG/${repo,,}.git $branch ||
 
 (git update-ref -d HEAD ; git reset system/ vendor/ ;
 git checkout -b $branch ;
@@ -148,23 +150,9 @@ git commit -asm "Add apps for ${description}" ;
 git push https://$GIT_OAUTH_TOKEN@github.com/$ORG/${repo,,}.git $branch ;
 git add system/ ;
 git commit -asm "Add system for ${description}" ;
-git push https://$GIT_OAUTH_TOKEN@github.com/$ORG/${repo,,}.git $branch ;)
+git push https://$GIT_OAUTH_TOKEN@github.com/$ORG/${repo,,}.git $branch ;)`
+#echo $output
+echo "Done"
 
-# Telegram channel
-TG_TOKEN=$(cat $PROJECT_DIR/.tgtoken)
-if [ ! -z "$TG_TOKEN" ]; then
-    CHAT_ID="@android_dumps"
-    commit_head=$(git log --format=format:%H | head -n 1)
-    commit_link=$(echo "https://github.com/$ORG/$repo/commit/$commit_head")
-    echo -e "Sending telegram notification"
-    printf "<b>Brand: $brand</b>" > $PROJECT_DIR/working/tg.html
-    printf "\n<b>Device: $codename</b>" >> $PROJECT_DIR/working/tg.html
-    printf "\n<b>Version:</b> $release" >> $PROJECT_DIR/working/tg.html
-    printf "\n<b>Fingerprint:</b> $fingerprint" >> $PROJECT_DIR/working/tg.html
-    printf "\n<b>GitHub:</b>" >> $PROJECT_DIR/working/tg.html
-    printf "\n<a href=\"$commit_link\">Commit</a>" >> $PROJECT_DIR/working/tg.html
-    printf "\n<a href=\"https://github.com/$ORG/$repo/tree/$branch/\">$codename</a>" >> $PROJECT_DIR/working/tg.html
-    TEXT=$(cat $PROJECT_DIR/working/tg.html)
-    curl -s "https://api.telegram.org/bot${TG_TOKEN}/sendmessage" --data "text=${TEXT}&chat_id=${CHAT_ID}&parse_mode=HTML&disable_web_page_preview=True" > /dev/null
-    rm -rf $PROJECT_DIR/working/tg.html
-fi
+
+exit 0
