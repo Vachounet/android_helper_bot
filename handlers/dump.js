@@ -33,7 +33,10 @@ var q = new Queue(function (input, cb) {
         });
 
         dump.on('exit', function (code) {
-            //console.log('child process exited with code ' + code.toString());
+            $.sendMessage("Job done", {
+                parse_mode: "markdown",
+                reply_to_message_id: $.message.messageId
+            })
             cb()
         });
     });
