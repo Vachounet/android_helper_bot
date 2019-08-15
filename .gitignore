@@ -65,3 +65,5 @@ typings/
 _td_database/
 _td_files/
 /libtdjson.so
+/.brackets.json
+/.jshintrc
