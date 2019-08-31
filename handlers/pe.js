@@ -2,7 +2,7 @@ const Telegram = require('telegram-node-bot')
 const TelegramBaseController = Telegram.TelegramBaseController;
 var BotUtils = require("../utils.js")
 
-class PEXController extends TelegramBaseController {
+class PEController extends TelegramBaseController {
 
     triggerCommand($) {
         BotUtils.getRomFilter($, this.searchBuild)
@@ -65,11 +65,11 @@ class PEXController extends TelegramBaseController {
 
     get routes() {
         return {
-            'pexBuildHandler': 'triggerCommand',
+            'peBuildHandler': 'triggerCommand',
         }
     }
 }
 
 
 
-module.exports = PEXController;
+module.exports = PEController;

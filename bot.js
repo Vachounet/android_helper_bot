@@ -176,8 +176,8 @@ tg.router
     )
 
     .when(
-        new TextCommand('/pe', 'pexBuildHandler', ''),
-        new exports["pex"]()
+        new TextCommand('/pe', 'peBuildHandler', ''),
+        new exports["pe"]()
     )
 
 
