@@ -180,6 +180,10 @@ tg.router
         new exports["pe"]()
     )
 
+    .when(
+        new TextCommand('/peplus', 'peplusBuildHandler', ''),
+        new exports["peplus"]()
+    )
 
     .when(
         new TextCommand('/pixys', 'pixysBuildHandler', ''),

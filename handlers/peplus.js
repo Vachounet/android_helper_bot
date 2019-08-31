@@ -2,7 +2,7 @@ const Telegram = require('telegram-node-bot')
 const TelegramBaseController = Telegram.TelegramBaseController;
 var BotUtils = require("../utils.js")
 
-class PEController extends TelegramBaseController {
+class PEPLUSController extends TelegramBaseController {
 
     triggerCommand($) {
         BotUtils.getRomFilter($, this.searchBuild)
@@ -10,16 +10,12 @@ class PEController extends TelegramBaseController {
 
     searchBuild($) {
 
-        if ($.message.text && ($.message.text.startsWith("/peplus"))) {
-            return
-        }
-
         var kb = {
             inline_keyboard: []
         };
 
         if (!$.command.success || $.command.arguments.length === 0) {
-            $.sendMessage("Usage: /pe device", {
+            $.sendMessage("Usage: /peplus device", {
                 parse_mode: "markdown",
                 reply_to_message_id: $.message.messageId
             });
@@ -28,14 +24,14 @@ class PEController extends TelegramBaseController {
 
         var keywords = $.command.arguments[0]
 
-        BotUtils.getJSON("https://download.pixelexperience.org/ota_v3/" + keywords + "/pie",
+        BotUtils.getJSON("https://download.pixelexperience.org/ota_v3/" + keywords + "/pie_plus",
             function (json, err) {
 
                 if (err)
                     return
 
                 if (json.filename !== "" && json.url !== "") {
-                    var msg = "🔍 *PixelExperience build for " + keywords + "* \n";
+                    var msg = "🔍 *PixelExperience Plus build for " + keywords + "* \n";
                     msg += "*Build date*: " + json.build_date + "\n"
                     msg += "*File Size*: " + BotUtils.humanFileSize(json.filesize, true) + "\n"
 
@@ -63,11 +59,11 @@ class PEController extends TelegramBaseController {
 
     get routes() {
         return {
-            'peBuildHandler': 'triggerCommand',
+            'peplusBuildHandler': 'triggerCommand',
         }
     }
 }
 
 
 
-module.exports = PEController;
+module.exports = PEPLUSController;
