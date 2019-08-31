@@ -10,10 +10,6 @@ class PEController extends TelegramBaseController {
 
     searchBuild($) {
 
-        if ($.message.text && ($.message.text.startsWith("/pecaf") || $.message.text.startsWith("/pego"))) {
-            return
-        }
-
         var kb = {
             inline_keyboard: []
         };
@@ -28,7 +24,7 @@ class PEController extends TelegramBaseController {
 
         var keywords = $.command.arguments[0]
 
-        BotUtils.getJSON("https://download.pixelexperience.org/ota/" + keywords + "/pie",
+        BotUtils.getJSON("https://download.pixelexperience.org/ota_v3/" + keywords + "/pie",
             function (json, err) {
 
                 if (err)
@@ -36,8 +32,6 @@ class PEController extends TelegramBaseController {
 
                 if (json.filename !== "" && json.url !== "") {
                     var msg = "🔍 *PixelExperience build for " + keywords + "* \n";
-                    msg += "*Changelog*: \n"
-                    msg += "`" + json.changelog + "`\n"
                     msg += "*Build date*: " + json.build_date + "\n"
                     msg += "*File Size*: " + BotUtils.humanFileSize(json.filesize, true) + "\n"
 
