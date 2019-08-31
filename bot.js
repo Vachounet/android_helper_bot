@@ -176,11 +176,6 @@ tg.router
     )
 
     .when(
-        new TextCommand('/pecaf', 'pecafBuildHandler', ''),
-        new exports["pecaf"]()
-    )
-
-    .when(
         new TextCommand('/pe', 'pexBuildHandler', ''),
         new exports["pex"]()
     )
