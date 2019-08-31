@@ -64,6 +64,13 @@ BotUtils.humanFileSize = (bytes, si) => {
     return bytes.toFixed(1) + ' ' + units[u];
 }
 
+BotUtils.humanDateTime = (timestamp) => {
+    const d = new Date(timestamp * 1000);
+    const mm = (`0${d.getUTCMonth() + 1}`).slice(-2);
+    const dd = (`0${d.getUTCDate()}`).slice(-2);
+    return `${d.getFullYear()}/${mm}/${dd}`;
+}
+
 BotUtils.getUrlParameter = (search, name) => {
     name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
     var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
