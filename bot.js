@@ -56,6 +56,11 @@ tg.router
     )
 
     .when(
+        new TextCommand('/ddog', 'deldogHandler', ''),
+        new exports["deldog"]()
+    )
+
+    .when(
         new TextCommand('/start', 'startHandler', 'Display commands menu'),
         new exports["start"]()
     )
