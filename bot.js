@@ -46,6 +46,11 @@ require('fs').readdirSync(__dirname + '/handlers/').forEach(function (file) {
 tg.router
 
     .when(
+        new TextCommand('/reapk', 'apktoolHandler', ''),
+        new exports["apk"]()
+    )
+
+    .when(
         new TextCommand('/start', 'startHandler', 'Display commands menu'),
         new exports["start"]()
     )
