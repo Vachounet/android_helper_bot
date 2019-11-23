@@ -137,7 +137,7 @@ BotUtils.sendAFHMirrors = (fid, scope) => {
     var headers = {
         "X-Requested-With": "XMLHttpRequest",
         "Host": "androidfilehost.com",
-        "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:58.0) Gecko/20100101 Firefox/58.0",
+        "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36",
         "X-MOD-SBB-CTYPE": "xhr",
         "Referer": "https://androidfilehost.com/?fid=" + fid
     }
