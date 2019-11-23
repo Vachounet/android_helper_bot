@@ -135,10 +135,16 @@ class CleanAPKController extends TelegramBaseController {
 
                 for (let app of json.home.top_updated_apps) {
                     var dlURL = BaseURL + DownloadAction + app._id
-                    var dlInfos = await requestPromise.get(dlURL)
-                    dlInfos = JSON.parse(dlInfos);
-                    if (dlInfos && dlInfos.success) {
-                        message += "[" + app.name + "](" + dlInfos.download_data.eelo_download_link + ")\n"
+                    try {
+                        var dlInfos = await requestPromise.get(dlURL)
+                        dlInfos = JSON.parse(dlInfos);
+                        if (dlInfos && dlInfos.success) {
+                            message += "[" + app.name + "](" + dlInfos.download_data.eelo_download_link + ")\n"
+                        }
+                    }
+                    catch (ex) {
+                        continue;
+
                     }
                 }
 
