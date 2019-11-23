@@ -23,51 +23,22 @@ class GAppsController extends TelegramBaseController {
                 android_version = $.command.arguments[1];
         }
 
-        BotUtils.getJSON("https://api.github.com/repos/opengapps/" + type + "/releases/latest",
-            function (json, err) {
+        BotUtils.getJSON("https://api.opengapps.org/list",
+            function(json, err) {
 
-                var release = json;
+                var msg = "🔍 *Latests " + android_version + " OpenGapps Packages (" + type + ")* - Released on " + json.archs[type].human_date + ": \n";
 
-                var date = release.published_at.split("T")[0].replace("-", "").replace("-", "")
-
-                var nano_micro = [];
-                var pico_mini = [];
-                var kb = {
-                    inline_keyboard: []
-                };
-                //https://github.com/opengapps/arm64/releases/download/20180301/open_gapps-arm64-7.1-pico-20180301.zip
-                nano_micro.push({
-                    text: "Nano",
-                    url: "https://github.com/opengapps/" + type + "/releases/download/" + date + "/open_gapps-" + type + "-" + android_version + "-nano-" + date + ".zip"
+                json.archs[type].apis[android_version].variants.forEach(function(element) {
+                    msg += "[" + element.name + "](" + element.zip + ")  "
                 });
 
-                nano_micro.push({
-                    text: "Micro",
-                    url: "https://github.com/opengapps/" + type + "/releases/download/" + date + "/open_gapps-" + type + "-" + android_version + "-micro-" + date + ".zip"
-                });
-                pico_mini.push({
-                    text: "Pico",
-                    url: "https://github.com/opengapps/" + type + "/releases/download/" + date + "/open_gapps-" + type + "-" + android_version + "-pico-" + date + ".zip"
-                });
-                pico_mini.push({
-                    text: "Mini",
-                    url: "https://github.com/opengapps/" + type + "/releases/download/" + date + "/open_gapps-" + type + "-" + android_version + "-mini-" + date + ".zip"
-                });
-                kb.inline_keyboard.push(
-                    [{
-                        text: "Aroma",
-                        url: "https://github.com/opengapps/" + type + "/releases/download/" + date + "/open_gapps-" + type + "-" + android_version + "-aroma-" + date + ".zip"
-                    }]);
-
-                kb.inline_keyboard.push(nano_micro);
-                kb.inline_keyboard.push(pico_mini)
-
-                var msg = "🔍 *Latests " + android_version + " OpenGapps Packages (" + type + ")*: \n";
                 $.sendMessage(msg, {
                     parse_mode: "markdown",
-                    reply_markup: JSON.stringify(kb),
-                    reply_to_message_id: $.message.messageId
+                    //reply_markup: JSON.stringify(kb),
+                    reply_to_message_id: $.message.messageId,
+                    disable_web_page_preview: true
                 });
+
             })
     }
 
