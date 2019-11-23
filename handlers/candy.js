@@ -28,7 +28,7 @@ class CandyController extends TelegramBaseController {
     static romInfos() {
         return {
             fullName: "CandyROM",
-            extraSFPath: "Official/Pie/{0}",
+            extraSFPath: "Official/ten/{0}",
             projectName: "candyroms",
             website: "https://sourceforge.net/projects/candyroms/"
         }

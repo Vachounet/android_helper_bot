@@ -28,7 +28,7 @@ class ArrowController extends TelegramBaseController {
     static romInfos() {
         return {
             fullName: "ArrowOS",
-            extraSFPath: "arrow-9.x/{0}",
+            extraSFPath: "arrow-10.0/{0}",
             projectName: "arrow-os",
             website: "https://www.arrowos.net/"
         }
