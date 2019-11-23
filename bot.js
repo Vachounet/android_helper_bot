@@ -51,6 +51,11 @@ tg.router
     )
 
     .when(
+        new TextCommand('/of', 'orangeFoxHandler', ''),
+        new exports["orangefox"]()
+    )
+
+    .when(
         new TextCommand('/start', 'startHandler', 'Display commands menu'),
         new exports["start"]()
     )
