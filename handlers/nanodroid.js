@@ -41,12 +41,12 @@ class NanodroidController extends TelegramBaseController {
 
                 var msg = "<b>Magisk Modules :</b>\n";
                 modules.forEach(function (module) {
-                    msg += "<a href='" + module.href + "'>" + module.textContent.trim() + "</a> \n"
+                    msg += "<a href='https://downloads.nanolx.org" + module.href + "'>" + module.textContent.trim() + "</a> \n"
                 })
 
                 msg += "\n<b>Extras :</b>\n";
                 extras.forEach(function (extra) {
-                    msg += "<a href='" + extra.href + "'>" + extra.textContent.trim() + "</a> \n"
+                    msg += "<a href='https://downloads.nanolx.org" + extra.href + "'>" + extra.textContent.trim() + "</a> \n"
                 })
                 $.sendMessage(msg, {
                     parse_mode: "html",
