@@ -22,7 +22,8 @@ const botConfig = {
         XPOSED:"XPosed",
         MAGISK:"Magisk",
         NANODROID:"NanoDroid",
-        DEVELOPERS:"Developers"
+        DEVELOPERS:"Developers",
+        FDROID:"FDroid"
     }
 };
 
