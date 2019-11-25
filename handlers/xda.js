@@ -24,8 +24,6 @@ function getDevices() {
         });
 }
 
-//startSync();
-
 getDevices();
 
 class XDAController extends TelegramBaseController {
@@ -116,15 +114,12 @@ class XDAController extends TelegramBaseController {
                                 }
                             ]);
 
-
                         $.sendMessage(msg, {
                             parse_mode: "markdown",
                             reply_markup: JSON.stringify(kb),
                             reply_to_message_id: $.message.messageId
                         });
                     });
-
-
             });
     }
 
@@ -185,15 +180,11 @@ class XDAController extends TelegramBaseController {
 
                     }
 
-
                     $.sendMessage("*Forums search results*", {
                         parse_mode: "markdown",
                         reply_markup: JSON.stringify(kb),
                         reply_to_message_id: $.message.messageId
                     });
-
-
-
                 });
         } else {
             for (var i = 0; i < forums.length; i++) {
@@ -205,9 +196,7 @@ class XDAController extends TelegramBaseController {
                             url: "https://forum.xda-developers.com" + forums[i].web_uri
                         }]);
                 }
-
             }
-
 
             $.sendMessage("*Forums search results*", {
                 parse_mode: "markdown",
@@ -346,7 +335,6 @@ class XDAController extends TelegramBaseController {
         var keyword = $.message.text.replace("/xda follow ", "");
 
         if (!keyword || keyword === "" || keyword === "/xda follow") {
-
             $.sendMessage("Usage : /xda follow threadid | add a new thread\n/xda follow rm threadid |  remove a thread\n/xda follow clear | remove all threads/\n/xda follow get | lists followed threads", {
                 parse_mode: "markdown",
                 disable_web_page_preview: true,
@@ -442,9 +430,6 @@ class XDAController extends TelegramBaseController {
                                 disable_web_page_preview: true,
                                 reply_to_message_id: $.message.messageId
                             });
-
-
-
                         })
 
                 } else {
@@ -463,14 +448,9 @@ class XDAController extends TelegramBaseController {
                                     reply_to_message_id: $.message.messageId
                                 });
                             })
-
-
-
                         })
                 }
             })
-
-
             return;
         }
 
@@ -591,9 +571,6 @@ class XDAController extends TelegramBaseController {
                                         reply_to_message_id: $.message.messageId
                                     });
                                 })
-
-
-
                             })
                     }
                 })
@@ -604,7 +581,6 @@ class XDAController extends TelegramBaseController {
                 });
             }
         });
-
     }
 
     portal($) {
@@ -629,11 +605,17 @@ class XDAController extends TelegramBaseController {
 
     devDB($) {
 
-        var keyword = $.message.text.replace("/devdb", "").trim().split(" ");
+        if (!$.command.success || $.command.arguments.length === 0) {
+            $.sendMessage("Usage: /devdb type keyword\n\n/devdb rom omnirom\n/devdb kernel illusion\n/devdb tools root", {
+                parse_mode: "markdown",
+                reply_to_message_id: $.message.messageId
+            });
+            return;
+        }
 
         var projectType;
-        switch (keyword[0]) {
-            case "roms":
+        switch ($.command.arguments[0]) {
+            case "rom":
                 projectType = 5
                 break;
             case "kernel":
@@ -647,7 +629,7 @@ class XDAController extends TelegramBaseController {
         if (!projectType)
             return
 
-        var searchTerm = $.message.text.replace("/devdb ", "").replace(keyword[0] + " ", "")
+        var searchTerm = $.command.arguments[1]
 
         request.post("https://forum.xda-developers.com/devdb/project/", {
                 headers: {
@@ -661,7 +643,6 @@ class XDAController extends TelegramBaseController {
                     filter__project__orderType: "desc",
                     filter__project__tags: [],
                     filter__project__productName: encodeURIComponent(searchTerm),
-                    //page: 10,
                     securitytoken: "guest"
                 }
             },
@@ -670,7 +651,7 @@ class XDAController extends TelegramBaseController {
                 var trs = dom.window.document.querySelectorAll(".projectResult_row1")
                 var msg = "";
 
-                var trLength = trs.length > 9 ? 9 : trs.length;
+                var trLength = trs.length;
                 for (var i = 0; i < trLength; i++) {
                     var link = "https://forum.xda-developers.com" + trs[i].children[0].querySelector("a").href
                     var title = trs[i].children[0].querySelector("a").textContent.trim();
@@ -705,29 +686,51 @@ class XDAController extends TelegramBaseController {
     get config() {
         return {
             commands: [{
-                command: "/xda device",
-                handler: "xdaDeviceHandler",
-                help: "Search for device forums on XDA"
-            },
-            {
-                command: "/xda user",
-                handler: "xdaUserHandler",
-                help: "Search for a profile on XDA"
-            },
-            {
-                command: "/xda browse",
-                handler: "xdaBrowseHandler",
-                help: "Browse forums on XDA from TG"
-            },
-            {
-                command: "/xda portal",
-                handler: "xdaPortalHandler"
-            },
-            {
-                command: "/xda news",
-                handler: "xdaNewsHandler",
-                help: "Get latests news from XDA"
-            }],
+                    command: "/xda device",
+                    handler: "xdaDeviceHandler",
+                    help: "Search for device forums on XDA"
+                },
+                {
+                    command: "/xda user",
+                    handler: "xdaUserHandler",
+                    help: "Search for a profile on XDA"
+                },
+                {
+                    command: "/xda browse",
+                    handler: "xdaBrowseHandler",
+                    help: "Browse forums on XDA from TG"
+                },
+                {
+                    command: "/xda forum",
+                    handler: "xdaSearchHandler",
+                    help: "Search for forums"
+                },
+                {
+                    command: "/xda news",
+                    handler: "xdaNewsHandler",
+                    help: "Get latests news from XDA"
+                },
+                {
+                    command: "/devdb",
+                    handler: "devDBHandler",
+                    help: "Search for devDB threads"
+                },
+                {
+                    command: "/xda follow",
+                    handler: "xdaFollowHandler",
+                    help: "Get notified on new posts for a given thread"
+                },
+                {
+                    command: "/xda thread",
+                    handler: "xdaThreadHandler",
+                    help: "Search for threads"
+                },
+                {
+                    command: "/xda portal",
+                    handler: "xdaPortalHandler",
+                    help: "Get portal posts"
+                }
+            ],
             type: config.commands_type.XDA
         }
     }
