@@ -310,7 +310,7 @@ BotUtils.getRomFilter = (scope, cb) => {
             $eq: scope.message.chat.id
         }
     }, function (err, docs) {
-        if ((docs || docs.length > 0) && docs[0].filter) {
+        if ((docs || docs.length > 0) && docs[0] && docs[0].filter) {
             if (docs[0].filter !== "" && !scope.message.text.startsWith("/" + docs[0].filter))
                 return
             else

@@ -1,6 +1,7 @@
 const Telegram = require('telegram-node-bot')
 const TelegramBaseController = Telegram.TelegramBaseController;
 const BotUtils = require('../utils')
+const config = require('../config')
 
 class PotatoController extends TelegramBaseController {
 
@@ -36,6 +37,17 @@ class PotatoController extends TelegramBaseController {
     get routes() {
         return {
             'potatoBuildHandler': 'triggerCommand',
+        }
+    }
+
+    get config() {
+        return {
+            commands: [{
+                command: "/potato",
+                handler: "potatoBuildHandler",
+                help: "Get POSP builds"
+            }],
+            type: config.commands_type.ROMS
         }
     }
 }

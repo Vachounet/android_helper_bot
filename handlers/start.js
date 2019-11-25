@@ -1,103 +1,101 @@
 const Telegram = require('telegram-node-bot')
 const TelegramBaseController = Telegram.TelegramBaseController;
-
+const config = require('../config')
 class StartController extends TelegramBaseController {
 
-    help($) {
+    help($, replaceMainmenu) {
         var kb = {
             inline_keyboard: []
         };
 
-        kb.inline_keyboard.push(
-            [{
-                text: "APKMirror",
-                callback_data: "help|am"
-            }, {
-                text: "AndroidFileHost",
-                callback_data: "help|afh"
-            }]);
-        kb.inline_keyboard.push(
-            [{
-                    text: "OpenGapps",
-                    callback_data: "help|gapps"
-                },
-                {
-                    text: "GoogleCamera",
-                    callback_data: "help|gcam"
-                }
-            ]);
+        var menu = [];
+        Object.keys(config.commands_type).forEach(function (key) {
 
-        kb.inline_keyboard.push(
-            [{
-                    text: "TWRP",
-                    callback_data: "help|twrp"
-                },
-                {
-                    text: "NanoDroid",
-                    callback_data: "help|nanodroid"
+            menu.push({
+                text: config.commands_type[key],
+                cbname: config.commands_type[key],
+                callback: (callbackQuery, message) => {
+
+                    var msg = "";
+                    for (var i = 0; i < tg.router._routes.length; i++) {
+                        if (tg.router._routes[i].controller.config &&
+                            tg.router._routes[i].controller.config.type &&
+                            tg.router._routes[i].controller.config.type === callbackQuery.data)
+
+                            tg.router._routes[i].controller.config.commands.forEach(command => {
+                                if (!msg.includes(command.command))
+                                    msg += command.command + " : " + command.help + " \n"
+                            })
+
+
+                    }
+
+                    kb.inline_keyboard.push(
+                        [{
+                            text: "Back",
+                            callback_data: "main_menu"
+                        }]);
+
+                    tg.api.answerCallbackQuery(callbackQuery.id);
+                    tg.api.editMessageText(msg, {
+                        parse_mode: "markdown",
+                        chat_id: message.chat.id,
+                        reply_markup: JSON.stringify(kb),
+                        message_id: message.messageId
+                    })
                 }
-            ]);
-        kb.inline_keyboard.push(
-                [{
-                text: "XDA",
-                callback_data: "help|xda"
-                }, {
-                text: "GitHub",
-                callback_data: "help|github"
-                }]);
-        kb.inline_keyboard.push(
-                    [{
-                text: "ROMs",
-                callback_data: "help|roms"
-                    }, {
-                text: "Magisk",
-                callback_data: "help|magisk"
-                    }]);
-        kb.inline_keyboard.push(
-                        [{
-                text: "ADB/Fastboot",
-                callback_data: "help|adb"
-                        }, {
-                text: "microG",
-                callback_data: "help|microg"
-                        }]);
-        kb.inline_keyboard.push(
-                        [{
-                text: "Firmwares",
-                callback_data: "help|firmware"
-                        }, {
-                text: "GSI",
-                callback_data: "help|gsi"
-                        }]);
-        kb.inline_keyboard.push(
-                        [{
-                text: "Direct Link Generator",
-                callback_data: "help|directlinks"
-                        }, {
-                text: "CAF",
-                callback_data: "help|caf"
-                        }]);
-        kb.inline_keyboard.push(
-                        [{
-                text: "Devices Infos",
-                callback_data: "help|deviceinfos"
-                        }, {
-                text: "CleanAPK",
-                callback_data: "help|cleanapk"
-                        }]);
-        if ($.message.from.id === $.message.chat.id) {
-            tg.api.sendMessage($.message.from.id, "Menu", {
-                parse_mode: "markdown",
-                reply_markup: JSON.stringify(kb),
-                reply_to_message_id: $.message.messageId
-            });
+            })
+        })
+
+        var msg = "Generate direct links for different sources\n\n"
+        msg += "*Usage*: Paste downloadable links from supported source\n\n"
+        msg += "Currently Supported:\n\n"
+        msg += "`Google Drive\n`"
+        msg += "`Mega\n`"
+        msg += "`APKMirror\n`"
+        msg += "`Android File Host a.k.a AFH\n`"
+        msg += "`Sourceforge\n`"
+        msg += "`Github Releases`\n"
+        msg += "`OSDN`\n"
+        msg += "`MediaFire`\n\n"
+        msg += "You can also use the inline mode to search for GIFs\n\n"
+        msg += "Help about commands :"
+
+        if (replaceMainmenu) {
+            $.runInlineMenu({
+                layout: 2,
+                method: 'updateMenu',
+                params: [msg, {parse_mode: "markdown"}],
+                menu: menu
+            }, $.update.callbackQuery.message)
+        } else {
+            $.runInlineMenu({
+                layout: 2,
+                method: 'sendMessage',
+                params: [msg, {parse_mode: "markdown"}],
+                menu: menu
+            })
         }
     }
 
     get routes() {
         return {
             'startHandler': 'help',
-            'helpHandler': 'help'
+        }
+    }
+
+    get config() {
+        return {
+            commands: [{
+                command: "/start",
+                handler: "startHandler",
+                help: "Display main menu"
+            }, {
+                command: "/help",
+                handler: "startHandler",
+                help: "Display main menu"
+            }],
+            type: config.commands_type.TTOLS
         }
     }
 }

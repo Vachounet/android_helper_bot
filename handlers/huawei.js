@@ -4,6 +4,7 @@ const request = require('request')
 var requestPromise = require('request-promise');
 var parser = require('fast-xml-parser');
 var BotUtils = require("../utils.js")
+const config = require('../config')
 
 class HuaweiController extends TelegramBaseController {
 
@@ -92,6 +93,17 @@ class HuaweiController extends TelegramBaseController {
     get routes() {
         return {
             'huaweiHandler': 'getFirmwares',
+        }
+    }
+
+    get config() {
+        return {
+            commands: [{
+                command: "/huawei",
+                handler: "huaweiHandler",
+                help: "Search for Huawei firmwares"
+            }],
+            type: config.commands_type.FIRMWARE
         }
     }
 }

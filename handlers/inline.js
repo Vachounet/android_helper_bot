@@ -11,12 +11,10 @@ class InlineController extends TelegramBaseInlineQueryController {
         if (!$._inlineQuery._query || $._inlineQuery._query === "") {
             return
         }
-        
 
         var articles = [];
 
         var keyword = $._inlineQuery._query.split(" ").join("-");
-        console.log(keyword)
         var parent = this;
 
         BotUtils.getJSON("https://gifer.com/api/search/media?q=" + keyword + "&limit=20&", function (json) {
@@ -24,18 +22,15 @@ class InlineController extends TelegramBaseInlineQueryController {
                 articles.push({
                     type: "gif",
                     id: Math.random().toString(36).substring(7),
-                    gif_url: "https://i.gifer.com/embedded/download/"+gifResult._id+".gif",
+                    gif_url: "https://i.gifer.com/embedded/download/" + gifResult._id + ".gif",
                     gif_width: gifResult.width,
                     gif_height: gifResult.height,
-                    thumb_url: "https://i.gifer.com/fetch/w100-preview/"+gifResult.file.path+".gif"
+                    thumb_url: "https://i.gifer.com/fetch/w100-preview/" + gifResult.file.path + ".gif"
                 })
             })
-            $.answer(articles, "{cache_time: 0}", parent.callback)
-        })
-    }
 
-    callback($) {
-        console.log($)
+            $.answer(articles, "{cache_time: 0}")
+        })
     }
 }
 

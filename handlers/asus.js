@@ -2,6 +2,7 @@ const Telegram = require('telegram-node-bot')
 const TelegramBaseController = Telegram.TelegramBaseController;
 
 var BotUtils = require("../utils.js")
+var config = require("../config.js")
 
 class AsusController extends TelegramBaseController {
 
@@ -80,6 +81,17 @@ class AsusController extends TelegramBaseController {
     get routes() {
         return {
             'asusHandler': 'getFirmwares',
+        }
+    }
+
+    get config() {
+        return {
+            commands: [{
+                command: "/asus",
+                handler: "asusHandler",
+                help:"Search Asus firmwares"
+            }],
+            type: config.commands_type.FIRMWARE
         }
     }
 }

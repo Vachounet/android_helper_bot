@@ -1,6 +1,7 @@
 const Telegram = require('telegram-node-bot')
 const TelegramBaseController = Telegram.TelegramBaseController;
 const BotUtils = require('../utils')
+const config = require('../config')
 
 class PixysController extends TelegramBaseController {
 
@@ -36,6 +37,17 @@ class PixysController extends TelegramBaseController {
     get routes() {
         return {
             'pixysBuildHandler': 'triggerCommand',
+        }
+    }
+
+    get config() {
+        return {
+            commands: [{
+                command: "/pixy",
+                handler: "pixysBuildHandler",
+                help: "Get PixyOS builds"
+            }],
+            type: config.commands_type.ROMS
         }
     }
 }

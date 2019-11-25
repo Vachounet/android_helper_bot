@@ -4,6 +4,7 @@ const TelegramBaseController = Telegram.TelegramBaseController;
 var request = require('request');
 const JSDOM = require('jsdom');
 const BotUtils = require('../utils')
+const config = require('../config')
 
 class RevengeController extends TelegramBaseController {
 
@@ -70,6 +71,17 @@ class RevengeController extends TelegramBaseController {
     get routes() {
         return {
             'revengeBuildHandler': 'triggerCommand',
+        }
+    }
+
+    get config() {
+        return {
+            commands: [{
+                command: "/revenge",
+                handler: "revengeBuildHandler",
+                help: "Get RevengeOS builds"
+            }],
+            type: config.commands_type.ROMS
         }
     }
 }

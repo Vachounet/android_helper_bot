@@ -1,17 +1,17 @@
 const Telegram = require('telegram-node-bot')
 const TelegramBaseController = Telegram.TelegramBaseController;
+const config = require('../config')
+const BotUtils = require('../utils')
 
- const BotUtils = require('../utils')
+class PixeldustController extends TelegramBaseController {
 
- class PixeldustController extends TelegramBaseController {
-
-     triggerCommand($) {
+    triggerCommand($) {
         BotUtils.getRomFilter($, this.searchBuild)
     }
 
-     searchBuild($) {
+    searchBuild($) {
 
-         if (!$.command.success || $.command.arguments.length === 0) {
+        if (!$.command.success || $.command.arguments.length === 0) {
             $.sendMessage("Usage: /pixeldust device", {
                 parse_mode: "markdown",
                 reply_to_message_id: $.message.messageId
@@ -19,13 +19,13 @@ const TelegramBaseController = Telegram.TelegramBaseController;
             return;
         }
 
-         var device = $.command.arguments[0];
+        var device = $.command.arguments[0];
 
-         BotUtils.getSourceForgeBuilds($, PixeldustController.romInfos(), device);
+        BotUtils.getSourceForgeBuilds($, PixeldustController.romInfos(), device);
 
-     }
+    }
 
-     static romInfos() {
+    static romInfos() {
         return {
             fullName: "PixelDust Project",
             extraSFPath: "ota/{0}",
@@ -35,13 +35,22 @@ const TelegramBaseController = Telegram.TelegramBaseController;
     }
 
 
-     get routes() {
+    get routes() {
         return {
             'pixeldustBuildHandler': 'triggerCommand',
         }
     }
+
+    get config() {
+        return {
+            commands: [{
+                command: "/pdust",
+                handler: "pixeldustBuildHandler",
+                help: "Get PixelDust builds"
+            }],
+            type: config.commands_type.ROMS
+        }
+    }
 }
 
-
-
- module.exports = PixeldustController;
+module.exports = PixeldustController;

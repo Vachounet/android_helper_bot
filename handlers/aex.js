@@ -2,6 +2,7 @@ const Telegram = require('telegram-node-bot')
 const TelegramBaseController = Telegram.TelegramBaseController;
 
 const BotUtils = require('../utils')
+const config = require('../config')
 
 class AEXController extends TelegramBaseController {
 
@@ -40,8 +41,16 @@ class AEXController extends TelegramBaseController {
             'aexBuildHandler': 'triggerCommand',
         }
     }
+
+    get config() {
+        return {
+            commands: [{
+                command: "/aex",
+                handler: "aexBuildHandler",
+                help: "Get AospExtended builds"
+            }],
+            type: config.commands_type.ROMS
+        }
+    }
 }
-
-
-
-module.exports = AEXController;
+module.exports = AEXController

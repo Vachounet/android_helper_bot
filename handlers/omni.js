@@ -3,6 +3,7 @@ const TelegramBaseController = Telegram.TelegramBaseController;
 
 var request = require('request');
 const BotUtils = require('../utils')
+var config = require("../config.js")
 
 class OmniController extends TelegramBaseController {
 
@@ -85,6 +86,17 @@ class OmniController extends TelegramBaseController {
     get routes() {
         return {
             'omniBuildHandler': 'triggerCommand',
+        }
+    }
+
+    get config() {
+        return {
+            commands: [{
+                command: "/omni",
+                handler: "omniBuildHandler",
+                help:"Get OmniROM builds"
+            }],
+            type: config.commands_type.ROMS
         }
     }
 }

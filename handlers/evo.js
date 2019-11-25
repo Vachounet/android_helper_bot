@@ -1,6 +1,7 @@
 const Telegram = require('telegram-node-bot')
 const TelegramBaseController = Telegram.TelegramBaseController;
 const BotUtils = require('../utils')
+const config = require('../config')
 
 class EvoController extends TelegramBaseController {
 
@@ -9,7 +10,6 @@ class EvoController extends TelegramBaseController {
     }
 
     searchBuild($) {
-	console.log($.command.command);
         if (!$.command.success || $.command.arguments.length === 0) {
             $.sendMessage("Usage: /evox device", {
                 parse_mode: "markdown",
@@ -17,9 +17,9 @@ class EvoController extends TelegramBaseController {
             });
             return;
         }
-        
+
         if ($.command.command === "evo") {
-        	return;
+            return;
         }
 
         var device = $.command.arguments[0];
@@ -40,6 +40,17 @@ class EvoController extends TelegramBaseController {
     get routes() {
         return {
             'evoBuildHandler': 'triggerCommand',
+        }
+    }
+
+    get config() {
+        return {
+            commands: [{
+                command: "/evox",
+                handler: "evoBuildHandler",
+                help: "Get EvolutionX builds"
+            }],
+            type: config.commands_type.ROMS
         }
     }
 }

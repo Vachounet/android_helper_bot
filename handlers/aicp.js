@@ -1,6 +1,7 @@
 const Telegram = require('telegram-node-bot')
 const TelegramBaseController = Telegram.TelegramBaseController;
 const BotUtils = require('../utils')
+const config = require('../config')
 
 class AICPController extends TelegramBaseController {
 
@@ -33,15 +34,15 @@ class AICPController extends TelegramBaseController {
                     var link = lastUpdate.url;
 
                     kb.inline_keyboard.push(
-                                [{
+                        [{
                             text: lastUpdate.name,
                             url: link
-                                }]);
+                        }]);
                     kb.inline_keyboard.push(
-                                [{
+                        [{
                             text: "Changelog",
                             url: link + ".html"
-                                }]);
+                        }]);
 
                     $.sendMessage("🔍  *Latest AICP build for " + keywords + "*", {
                         parse_mode: "markdown",
@@ -65,6 +66,17 @@ class AICPController extends TelegramBaseController {
     get routes() {
         return {
             'aicpBuildHandler': 'triggerCommand',
+        }
+    }
+
+    get config() {
+        return {
+            commands: [{
+                command: "/aicp",
+                handler: "aicpBuildHandler",
+                help: "Get Android Ice Cold Project builds"
+            }],
+            type: config.commands_type.ROMS
         }
     }
 }

@@ -2,6 +2,7 @@ const Telegram = require('telegram-node-bot')
 const TelegramBaseController = Telegram.TelegramBaseController;
 
 const BotUtils = require('../utils')
+const config = require('../config')
 
 class ArrowController extends TelegramBaseController {
 
@@ -37,6 +38,17 @@ class ArrowController extends TelegramBaseController {
     get routes() {
         return {
             'arrowBuildHandler': 'triggerCommand',
+        }
+    }
+
+    get config() {
+        return {
+            commands: [{
+                command: "/arrow",
+                handler: "arrowBuildHandler",
+                help: "Get ArrowOS build"
+            }],
+            type: config.commands_type.ROMS
         }
     }
 }

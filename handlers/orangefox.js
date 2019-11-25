@@ -1,6 +1,8 @@
 const Telegram = require('telegram-node-bot')
 const TelegramBaseController = Telegram.TelegramBaseController;
 const request = require('request')
+const config = require('../config')
+
 class OrangeFoxController extends TelegramBaseController {
 
     getBuild($) {
@@ -32,9 +34,7 @@ class OrangeFoxController extends TelegramBaseController {
                 }
             },
             function (error, response, body) {
-                console.log(body)
                 var msg = "🔍 <b>OrangeFox build for " + keyword + " </b>: \n";
-                // console.log(body)
                 if (body && body.items && body.items.length > 0) {
 
                     body.items.sort(function (a, b) {
@@ -75,6 +75,17 @@ class OrangeFoxController extends TelegramBaseController {
     get routes() {
         return {
             'orangeFoxHandler': 'getBuild',
+        }
+    }
+
+    get config() {
+        return {
+            commands: [{
+                command: "/of",
+                handler: "orangeFoxHandler",
+                help: "OrangeFox recovery"
+            }],
+            type: config.commands_type.RECOVERY
         }
     }
 }

@@ -3,6 +3,7 @@ const TelegramBaseController = Telegram.TelegramBaseController;
 var request = require('request');
 var parser = require('fast-xml-parser');
 var BotUtils = require("../utils.js")
+const config = require('../config')
 
 class MicroGController extends TelegramBaseController {
 
@@ -53,6 +54,17 @@ class MicroGController extends TelegramBaseController {
     get routes() {
         return {
             'microgHandler': 'getLast',
+        }
+    }
+
+    get config() {
+        return {
+            commands: [{
+                command: "/microg",
+                handler: "syberiaBuildHandler",
+                help: "Get latest microG packages"
+            }],
+            type: config.commands_type.TTOLS
         }
     }
 }

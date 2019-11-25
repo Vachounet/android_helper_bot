@@ -38,7 +38,8 @@ class DDogController extends TelegramBaseController {
                 })
         } else if ($.message._replyToMessage && $.message._replyToMessage.document) {
 
-            if (!$.message._replyToMessage.document.mimeType.includes("text")) {
+            if (!$.message._replyToMessage.document.mimeType ||
+                !$.message._replyToMessage.document.mimeType.includes("text")) {
                 $.sendMessage("File type not supported", {
                     parse_mode: "markdown",
                     reply_to_message_id: $.message.messageId,
@@ -74,6 +75,17 @@ class DDogController extends TelegramBaseController {
     get routes() {
         return {
             'deldogHandler': 'sendData',
+        }
+    }
+
+    get config() {
+        return {
+            commands: [{
+                command: "/ddog",
+                handler: "deldogHandler",
+                help: "Post message or document content to del.dog and get the URL"
+            }],
+            type: config.commands_type.TTOLS
         }
     }
 }

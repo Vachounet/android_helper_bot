@@ -701,9 +701,36 @@ class XDAController extends TelegramBaseController {
             'devDBHandler': 'devDB',
         }
     }
+
+    get config() {
+        return {
+            commands: [{
+                command: "/xda device",
+                handler: "xdaDeviceHandler",
+                help: "Search for device forums on XDA"
+            },
+            {
+                command: "/xda user",
+                handler: "xdaUserHandler",
+                help: "Search for a profile on XDA"
+            },
+            {
+                command: "/xda browse",
+                handler: "xdaBrowseHandler",
+                help: "Browse forums on XDA from TG"
+            },
+            {
+                command: "/xda portal",
+                handler: "xdaPortalHandler"
+            },
+            {
+                command: "/xda news",
+                handler: "xdaNewsHandler",
+                help: "Get latests news from XDA"
+            }],
+            type: config.commands_type.XDA
+        }
+    }
 }
-
-
-
 
 module.exports = XDAController;

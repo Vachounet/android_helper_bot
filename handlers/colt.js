@@ -1,6 +1,7 @@
 const Telegram = require('telegram-node-bot')
 const TelegramBaseController = Telegram.TelegramBaseController;
 const BotUtils = require('../utils')
+const config = require('../config')
 
 class ColtController extends TelegramBaseController {
 
@@ -38,8 +39,17 @@ class ColtController extends TelegramBaseController {
             'coltBuildHandler': 'triggerCommand',
         }
     }
+
+    get config() {
+        return {
+            commands: [{
+                command: "/colt",
+                handler: "coltBuildHandler",
+                help: "Get ColtOS builds"
+            }],
+            type: config.commands_type.ROMS
+        }
+    }
 }
-
-
 
 module.exports = ColtController;

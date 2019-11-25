@@ -2,6 +2,7 @@ const Telegram = require('telegram-node-bot')
 const TelegramBaseController = Telegram.TelegramBaseController;
 var request = require('request');
 const JSDOM = require('jsdom')
+const config = require('../config')
 
 class CAFController extends TelegramBaseController {
 
@@ -64,6 +65,17 @@ class CAFController extends TelegramBaseController {
     get routes() {
         return {
             'cafHandler': 'searchTAG',
+        }
+    }
+
+    get config() {
+        return {
+            commands: [{
+                command: "/caf",
+                handler: "cafHandler",
+                help: "Search for CAF tags"
+            }],
+            type: config.commands_type.TTOLS
         }
     }
 }

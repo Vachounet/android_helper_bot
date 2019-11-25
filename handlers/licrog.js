@@ -3,6 +3,7 @@ const TelegramBaseController = Telegram.TelegramBaseController;
 
 var request = require('request');
 const BotUtils = require('../utils')
+const config = require('../config')
 
 class LicrogController extends TelegramBaseController {
 
@@ -85,6 +86,17 @@ class LicrogController extends TelegramBaseController {
     get routes() {
         return {
             'licrogBuildHandler': 'triggerCommand',
+        }
+    }
+
+    get config() {
+        return {
+            commands: [{
+                command: "/licrog",
+                handler: "licrogBuildHandler",
+                help: "Get LineageOS microG builds"
+            }],
+            type: config.commands_type.ROMS
         }
     }
 }

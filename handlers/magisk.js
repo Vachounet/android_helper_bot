@@ -1,6 +1,7 @@
 const Telegram = require('telegram-node-bot')
 const TelegramBaseController = Telegram.TelegramBaseController;
 var BotUtils = require("../utils.js")
+var config = require("../config.js")
 var request = require("request")
 
 class MagiskController extends TelegramBaseController {
@@ -39,7 +40,6 @@ class MagiskController extends TelegramBaseController {
 
                                 var message = "";
                                 allResults.forEach(function (result) {
-                                    console.log("https://raw.githubusercontent.com/" + result.full_name + "/module.prop")
                                     request.get("https://raw.githubusercontent.com/" + result.full_name + "/master/module.prop",
                                         function (error, response, body) {
 
@@ -97,6 +97,17 @@ class MagiskController extends TelegramBaseController {
     get routes() {
         return {
             'magiskHandler': 'getLast',
+        }
+    }
+
+    get config() {
+        return {
+            commands: [{
+                    command: "/magisk",
+                    handler: "magiskHandler",
+                    help: "Get latest magisk package and search modules"
+                }],
+            type: config.commands_type.MAGISK
         }
     }
 }

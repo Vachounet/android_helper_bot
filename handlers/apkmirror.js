@@ -2,6 +2,7 @@ const Telegram = require('telegram-node-bot')
 const TelegramBaseController = Telegram.TelegramBaseController;
 const HTTP = require('https')
 const JSDOM = require('jsdom');
+const config = require('../config')
 
 class APKMirrorController extends TelegramBaseController {
 
@@ -60,10 +61,10 @@ class APKMirrorController extends TelegramBaseController {
                                 var link = apps[i].querySelector("a").href;
 
                                 kb.inline_keyboard.push(
-                                [{
+                                    [{
                                         text: title,
                                         url: "https://www.apkmirror.com" + link
-                                }]);
+                                    }]);
                             }
                         }
                     } else {
@@ -92,6 +93,17 @@ class APKMirrorController extends TelegramBaseController {
     get routes() {
         return {
             'searchHandler': 'search'
+        }
+    }
+
+    get config() {
+        return {
+            commands: [{
+                command: "/am search",
+                handler: "searchHandler",
+                help: "Search for APKs on APKMirror"
+            }],
+            type: config.commands_type.APP
         }
     }
 }

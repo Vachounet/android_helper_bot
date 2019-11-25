@@ -2,6 +2,7 @@ const Telegram = require('telegram-node-bot')
 const TelegramBaseController = Telegram.TelegramBaseController;
 var request = require('request');
 const JSDOM = require('jsdom')
+const config = require('../config')
 
 class NanodroidController extends TelegramBaseController {
 
@@ -19,11 +20,9 @@ class NanodroidController extends TelegramBaseController {
                 var links = dom.window.document.querySelectorAll("table tr");
                 var modules = [];
                 var extras = [];
-                console.log(links.length)
                 for (var i = 1; i < links.length; i++) {
                     if (links[i].textContent.trim().indexOf(".sha") === -1 &&
                         links[i].textContent.trim().indexOf(".asc") === -1) {
-
                         if (links[i].textContent.trim().indexOf("patcher") !== -1 ||
                             links[i].textContent.trim().indexOf("setup") !== -1 ||
                             links[i].textContent.trim().indexOf("systest") !== -1 ||
@@ -32,10 +31,6 @@ class NanodroidController extends TelegramBaseController {
                         } else {
                             modules.push(links[i].querySelector("a"))
                         }
-
-
-                        //var link = links[i].querySelector("a");
-                        //console.log(link.href)
                     }
                 }
 
@@ -58,6 +53,17 @@ class NanodroidController extends TelegramBaseController {
     get routes() {
         return {
             'nanodroidHandler': 'getLast',
+        }
+    }
+
+    get config() {
+        return {
+            commands: [{
+                command: "/nanodroid",
+                handler: "nanodroidHandler",
+                help:"Get latest nanoDroid packages"
+            }],
+            type: config.commands_type.NANODROID
         }
     }
 }

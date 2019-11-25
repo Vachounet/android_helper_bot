@@ -1,6 +1,6 @@
 const Telegram = require('telegram-node-bot')
 const TelegramBaseController = Telegram.TelegramBaseController;
-
+const config = require('../config')
 const BotUtils = require('../utils')
 
 class CandyController extends TelegramBaseController {
@@ -38,6 +38,17 @@ class CandyController extends TelegramBaseController {
     get routes() {
         return {
             'candyBuildHandler': 'triggerCommand',
+        }
+    }
+
+    get config() {
+        return {
+            commands: [{
+                command: "/candy",
+                handler: "candyBuildHandler",
+                help: "Get CandyROM builds"
+            }],
+            type: config.commands_type.ROMS
         }
     }
 }

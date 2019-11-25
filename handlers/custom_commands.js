@@ -152,10 +152,10 @@ class OtherwiseController extends TelegramBaseController {
         } else {
 
             kb.inline_keyboard.push(
-                    [{
+                [{
                     text: "Click here to get it throught PM",
                     callback_data: "mega|" + url.split("#")[1]
-                    }]);
+                }]);
 
             $.sendMessage("*Generate download link* ", {
                 parse_mode: "markdown",
@@ -422,7 +422,6 @@ class OtherwiseController extends TelegramBaseController {
             var dom = new JSDOM.JSDOM(body);
             var shrtlink = dom.window.document.head.querySelector("link[rel='shortlink']")
             var fileID = shrtlink.href.split("=")[1];
-            console.log("https://www.apkmirror.com/wp-content/themes/APKMirror/download.php?id=" + fileID)
             var msg = "<b>Download Link : </b><a href='https://www.apkmirror.com/wp-content/themes/APKMirror/download.php?id=" + fileID + "'>" + dom.window.document.title + "</a>"
             $.sendMessage(msg, {
                 parse_mode: "html",

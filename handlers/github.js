@@ -1,6 +1,7 @@
 const Telegram = require('telegram-node-bot')
 const TelegramBaseController = Telegram.TelegramBaseController;
 const BotUtils = require('../utils')
+const config = require('../config')
 var rp = require('request-promise');
 
 class GithubController extends TelegramBaseController {
@@ -30,10 +31,12 @@ class GithubController extends TelegramBaseController {
                 }
 
                 var kb = {
-                    inline_keyboard: [[{
-                        text: "More results",
-                        url: "https://github.com/search?q=" + $.command.arguments.join(" ") + "&s=updated&o=desc"
-                }]]
+                    inline_keyboard: [
+                        [{
+                            text: "More results",
+                            url: "https://github.com/search?q=" + $.command.arguments.join(" ") + "&s=updated&o=desc"
+                        }]
+                    ]
                 };
 
                 $.sendMessage(msg, {
@@ -68,16 +71,17 @@ class GithubController extends TelegramBaseController {
             var count = json.items.length < 5 ? json.items.length : 5
             if (json.items && json.items.length > 0) {
                 for (var i = 0; i < count; i++) {
-                    console.log(json.items[i].commit.message)
                     msg += "▪️ <a href='" + json.items[i].url + "'>" + json.items[i].commit.message.split("\n")[0] + "</a>\n"
                 }
             }
 
             var kb = {
-                inline_keyboard: [[{
-                    text: "More results",
-                    url: "https://github.com/search?q=" + $.command.arguments.join(" ") + "&s=updated&o=desc&type=Commits"
-                }]]
+                inline_keyboard: [
+                    [{
+                        text: "More results",
+                        url: "https://github.com/search?q=" + $.command.arguments.join(" ") + "&s=updated&o=desc&type=Commits"
+                    }]
+                ]
             };
 
             $.sendMessage(msg, {
@@ -169,6 +173,28 @@ class GithubController extends TelegramBaseController {
             'githubSearchHandler': 'searchRepos',
             'githubCommitsHandler': 'searchCommits',
             'dumpHandler': 'getDump',
+        }
+    }
+
+    get config() {
+        return {
+            commands: [{
+                    command: "/repos",
+                    handler: "githubSearchHandler",
+                    help: "Search for repositories"
+                },
+                {
+                    command: "/commits",
+                    handler: "githubCommitsHandler",
+                    help: "Search for commits"
+                },
+                {
+                    command: "/getdump",
+                    handler: "dumpHandler",
+                    help: "Search for firmware dumps from AndroidDumps repo"
+                }
+            ],
+            type: config.commands_type.GITHUB
         }
     }
 }

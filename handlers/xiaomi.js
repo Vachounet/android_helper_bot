@@ -1,6 +1,7 @@
 const Telegram = require('telegram-node-bot')
 const TelegramBaseController = Telegram.TelegramBaseController;
 const BotUtils = require('../utils')
+const config = require('../config')
 
 class XiaomiController extends TelegramBaseController {
 
@@ -64,6 +65,17 @@ class XiaomiController extends TelegramBaseController {
     get routes() {
         return {
             'xiaomiHandler': 'getFirmwares',
+        }
+    }
+
+    get config() {
+        return {
+            commands: [{
+                command: "/xiaomi",
+                handler: "xiaomiHandler",
+                help: "Search for Xiaomi firmwares"
+            }],
+            type: config.commands_type.FIRMWARE
         }
     }
 }

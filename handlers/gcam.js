@@ -1,6 +1,6 @@
 const Telegram = require('telegram-node-bot')
 const TelegramBaseController = Telegram.TelegramBaseController;
-
+const config = require("../config.js")
 var request = require('request');
 const JSDOM = require('jsdom')
 
@@ -90,8 +90,17 @@ class GcamController extends TelegramBaseController {
             'gcamHandler': 'search',
         }
     }
+
+    get config() {
+        return {
+            commands: [{
+                command: "/gcam",
+                handler: "gcamHandler",
+                help: "Search for GCam APKs"
+            }],
+            type: config.commands_type.APP
+        }
+    }
 }
-
-
 
 module.exports = GcamController;

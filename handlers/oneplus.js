@@ -1,6 +1,7 @@
 const Telegram = require('telegram-node-bot')
 const TelegramBaseController = Telegram.TelegramBaseController;
 const BotUtils = require('../utils')
+const config = require('../config')
 
 class OneplusController extends TelegramBaseController {
 
@@ -94,6 +95,16 @@ class OneplusController extends TelegramBaseController {
     get routes() {
         return {
             'oneplusOTAHandler': 'getOTA',
+        }
+    }
+
+    get config() {
+        return {
+            commands: [{
+                command: "/op",
+                handler: "oneplusOTAHandler"
+            }],
+            type: config.commands_type.FIRMWARE
         }
     }
 }

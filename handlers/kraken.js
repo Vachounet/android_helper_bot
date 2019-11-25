@@ -2,6 +2,7 @@ const Telegram = require('telegram-node-bot')
 const TelegramBaseController = Telegram.TelegramBaseController;
 
  const BotUtils = require('../utils')
+ const config = require('../config')
 
  class KrakenController extends TelegramBaseController {
 
@@ -38,6 +39,17 @@ const TelegramBaseController = Telegram.TelegramBaseController;
      get routes() {
         return {
             'krakenBuildHandler': 'triggerCommand',
+        }
+    }
+
+    get config() {
+        return {
+            commands: [{
+                command: "/kraken",
+                handler: "krakenBuildHandler",
+                help: "Get Kraken Open Tentacles Project builds"
+            }],
+            type: config.commands_type.ROMS
         }
     }
 }

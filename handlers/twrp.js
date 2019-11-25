@@ -4,6 +4,7 @@ var request = require('request');
 
 const JSDOM = require('jsdom')
 var BotUtils = require("../utils.js")
+const config = require('../config')
 
 class TWRPController extends TelegramBaseController {
 
@@ -68,6 +69,17 @@ class TWRPController extends TelegramBaseController {
     get routes() {
         return {
             'twrpHandler': 'search',
+        }
+    }
+
+    get config() {
+        return {
+            commands: [{
+                command: "/twrp",
+                handler: "twrpHandler",
+                help: "TWRP recovery"
+            }],
+            type: config.commands_type.RECOVERY
         }
     }
 }

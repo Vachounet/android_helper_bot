@@ -4,6 +4,7 @@ var request = require('request');
 
 const JSDOM = require('jsdom');
 const BotUtils = require('../utils')
+const config = require('../config')
 
 class RRController extends TelegramBaseController {
 
@@ -95,6 +96,17 @@ class RRController extends TelegramBaseController {
     get routes() {
         return {
             'rrBuildHandler': 'triggerCommand',
+        }
+    }
+
+    get config() {
+        return {
+            commands: [{
+                command: "/rr",
+                handler: "rrBuildHandler",
+                help: "Get ResurrectionRemix builds"
+            }],
+            type: config.commands_type.ROMS
         }
     }
 }

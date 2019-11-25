@@ -1,6 +1,7 @@
 const Telegram = require('telegram-node-bot')
 const TelegramBaseController = Telegram.TelegramBaseController;
 const BotUtils = require('../utils')
+const config = require('../config')
 
 class DotOSController extends TelegramBaseController {
 
@@ -36,6 +37,17 @@ class DotOSController extends TelegramBaseController {
     get routes() {
         return {
             'dotosBuildHandler': 'triggerCommand',
+        }
+    }
+
+    get config() {
+        return {
+            commands: [{
+                command: "/dotos",
+                handler: "dotosBuildHandler",
+                help: "Get dotOS builds"
+            }],
+            type: config.commands_type.ROMS
         }
     }
 }

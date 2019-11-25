@@ -2,7 +2,7 @@ const Telegram = require('telegram-node-bot')
 const TelegramBaseController = Telegram.TelegramBaseController;
 var request = require('request');
 const BotUtils = require('../utils')
-
+const config = require('../config')
 class DUController extends TelegramBaseController {
 
     triggerCommand($) {
@@ -78,8 +78,17 @@ class DUController extends TelegramBaseController {
             'duBuildHandler': 'triggerCommand',
         }
     }
+
+    get config() {
+        return {
+            commands: [{
+                command: "/du",
+                handler: "duBuildHandler",
+                help: "Get DirtyUnicorns builds"
+            }],
+            type: config.commands_type.ROMS
+        }
+    }
 }
-
-
 
 module.exports = DUController;

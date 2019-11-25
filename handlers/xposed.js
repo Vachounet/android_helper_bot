@@ -5,6 +5,7 @@ var request = require('request');
 var requestPromise = require('request-promise');
 
 const JSDOM = require('jsdom')
+const config = require('../config')
 
 class XposedController extends TelegramBaseController {
 
@@ -75,6 +76,17 @@ class XposedController extends TelegramBaseController {
     get routes() {
         return {
             'xposedHandler': 'search',
+        }
+    }
+
+    get config() {
+        return {
+            commands: [{
+                command: "/xposed",
+                handler: "xposedHandler",
+                help:"Get latest xposed package, and search for addons"
+            }],
+            type: config.commands_type.XPOSED
         }
     }
 }

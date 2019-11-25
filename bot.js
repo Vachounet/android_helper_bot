@@ -11,11 +11,15 @@ const {
     TDLib
 } = require('tdl-tdlib-ffi')
 
-const tdlib = require("./tdlib")
-const tdLibLCient = new tdlib();
+var tdlib;
+var tdLibLCient;
 
-if (config.enableTdlib)
+if (config.enableTdlib) {
+    console.log("init tdlib")
+    tdlib = require("./tdlib")
+    tdLibLCient = new tdlib();
     tdLibLCient.init();
+}
 
 var request = require('request');
 var mongojs = require('mongojs')
@@ -37,370 +41,27 @@ var OtherwiseController = require("./handlers/custom_commands.js")
 // Exports all handlers
 require('fs').readdirSync(__dirname + '/handlers/').forEach(function (file) {
     if (file.match(/\.js$/) !== null && file !== 'index.js') {
-        var name = file.replace('.js', '');
-
-        exports[name] = require('./handlers/' + file);
+        try {
+            var handler = require('./handlers/' + file)
+            var instance = new handler()
+            if (instance.config) {
+                instance.config.commands.forEach(command => {
+                    tg.router.when(
+                        new TextCommand(command.command, command.handler, 'Display commands menu'),
+                        instance
+                    )
+                })
+            }
+        } catch (ex) {
+            console.log(ex)
+        }
     }
 });
 // Routes
-tg.router
-
-    .when(
-        new TextCommand('/reapk', 'apktoolHandler', ''),
-        new exports["apk"]()
-    )
-
-    .when(
-        new TextCommand('/of', 'orangeFoxHandler', ''),
-        new exports["orangefox"]()
-    )
-
-    .when(
-        new TextCommand('/ddog', 'deldogHandler', ''),
-        new exports["deldog"]()
-    )
-
-    .when(
-        new TextCommand('/start', 'startHandler', 'Display commands menu'),
-        new exports["start"]()
-    )
-    .when(
-        new TextCommand('/help', 'helpHandler', 'Display commands menu'),
-        new exports["start"]()
-    )
-
-
-    .when(
-        new TextCommand('/ddump', 'dumpHandler', ''),
-        new exports["dump"]()
-    )
-
-    .when(
-        new TextCommand('/filterrom', 'filterRomHandler', ''),
-        new exports["filterrom"]()
-    )
-
-    .when(
-        new TextCommand('/adb', 'adbHandler', 'Get latest SDK Platform Tools links'),
-        new exports["adb"]()
-    )
-
-    .when(
-        new TextCommand('/aex', 'aexBuildHandler', 'Search for latests AOSPExtended builds'),
-        new exports["aex"]()
-    )
-
-    .when(
-        new TextCommand('/fastboot', 'adbHandler', 'Get latest SDK Platform Tools links'),
-        new exports["adb"]()
-    )
-
-    .when(
-        new TextCommand('/afh search', 'afhSearchHandler', 'Search for files on AndroidFileHost'),
-        new exports["afh"]()
-    )
-
-    .when(
-        new TextCommand('/aicp', 'aicpBuildHandler', 'Search for latests AICP builds'),
-        new exports["aicp"]()
-    )
-
-    .when(
-        new TextCommand('/aosip', 'aosipBuildHandler', 'Search for latests AOSiP builds'),
-        new exports["aosip"]()
-    )
-
-    .when(
-        new TextCommand('/am search', 'searchHandler', 'Search for APKs on APKMirror'),
-        new exports["apkmirror"]()
-    )
-
-    .when(
-        new TextCommand('/arrow', 'arrowBuildHandler', 'Search for latests ArrowOS builds'),
-        new exports["arrow"]()
-    )
-
-    .when(
-        new TextCommand('/bootleg', 'bootlegBuildHandler', 'Search for latests Bootleggers builds'),
-        new exports["bootleg"]()
-    )
-
-    .when(
-        new TextCommand('/carbon', 'carbonBuildHandler', 'Search for latests CarbonROM builds'),
-        new exports["carbon"]()
-    )
-
-    .when(
-        new TextCommand('/cosp', 'cospBuildHandler', 'Search for latests COSP builds'),
-        new exports["cosp"]()
-    )
-
-    .when(
-        new TextCommand('/crdroid', 'crDroidBuildHandler', 'Search for latests crDroid builds'),
-        new exports["crdroid"]()
-    )
-
-    .when(
-        new TextCommand('/dot', 'dotosBuildHandler', 'Search for latests DotOS builds'),
-        new exports["dotos"]()
-    )
-
-    .when(
-        new TextCommand('/du', 'duBuildHandler', 'Search for latests DirtyUnicorns builds'),
-        new exports["du"]()
-    )
-
-    .when(
-        new TextCommand('/gapps', 'gappsHandler', ''),
-        new exports["gapps"]()
-    )
-
-    .when(
-        new TextCommand('/gcam', 'gcamHandler', ''),
-        new exports["gcam"]()
-    )
-
-    .when(
-        new TextCommand('/havoc', 'havocBuildHandler', ''),
-        new exports["havoc"]()
-    )
-
-    .when(
-        new TextCommand('/labs', 'labsHandler', ''),
-        new exports["labs"]()
-    )
-
-    .when(
-        new TextCommand('/lineage', 'lineageBuildHandler', ''),
-        new exports["lineage"]()
-    )
-
-    .when(
-        new TextCommand('/magisk', 'magiskHandler', ''),
-        new exports["magisk"]()
-    )
-
-    .when(
-        new TextCommand('/microg', 'microgHandler', ''),
-        new exports["microg"]()
-    )
-
-    .when(
-        new TextCommand('/omni', 'omniBuildHandler', ''),
-        new exports["omni"]()
-    )
-
-    .when(
-        new TextCommand('/pecaf', 'pecafBuildHandler', ''),
-        new exports["pecaf"]()
-    )
-
-    .when(
-        new TextCommand('/pe', 'pexBuildHandler', ''),
-        new exports["pex"]()
-    )
-
-
-    .when(
-        new TextCommand('/pixys', 'pixysBuildHandler', ''),
-        new exports["pixy"]()
-    )
-
-    .when(
-        new TextCommand('/posp', 'potatoBuildHandler', ''),
-        new exports["potato"]()
-    )
-
-    .when(
-        new TextCommand('/revenge', 'revengeBuildHandler', ''),
-        new exports["revenge"]()
-    )
-
-    .when(
-        new TextCommand('/rr', 'rrBuildHandler', ''),
-        new exports["rr"]()
-    )
-
-    .when(
-        new TextCommand('/syberia', 'syberiaBuildHandler', ''),
-        new exports["syberia"]()
-    )
-
-    .when(
-        new TextCommand('/twrp', 'twrpHandler', ''),
-        new exports["twrp"]()
-    )
-
-    .when(
-        new TextCommand('/viper', 'viperBuildHandler', ''),
-        new exports["viper"]()
-    )
-
-    .when(
-        new TextCommand('/gsi', 'gsiHandler', ''),
-        new exports["gsi"]()
-    )
-
-    .when(
-        new TextCommand('/superior', 'superiorBuildHandler', ''),
-        new exports["superior"]()
-    )
-
-    .when(
-        new TextCommand('/aqua', 'aquaBuildHandler', ''),
-        new exports["aquari"]()
-    )
-
-    .when(
-        new TextCommand('/validus', 'validusBuildHandler', ''),
-        new exports["gzr"]()
-    )
-
-    .when(
-        new TextCommand('/gzosp', 'gzospBuildHandler', ''),
-        new exports["gzr"]()
-    )
-
-    .when(
-        new TextCommand('/candy', 'candyBuildHandler', ''),
-        new exports["candy"]()
-    )
-
-    .when(
-        new TextCommand('/kraken', 'krakenBuildHandler', ''),
-        new exports["kraken"]()
-    )
-
-    .when(
-        new TextCommand('/pixeldust', 'pixeldustBuildHandler', ''),
-        new exports["pixeldust"]()
-    )
-
-    .when(new TextCommand('/xda device', 'xdaDeviceHandler', 'Search for device forums on XDA'), new exports["xda"]())
-    .when(new TextCommand('/xda user', 'xdaUserHandler', 'Search users on XDA'), new exports["xda"]())
-    .when(new TextCommand('/xda browse', 'xdaBrowseHandler', 'Browse XDA forums'), new exports["xda"]())
-    .when(new TextCommand('/xda forum', 'xdaSearchHandler', 'Find forums on XDA'), new exports["xda"]())
-    .when(new TextCommand('/xda news', 'xdaNewsHandler', 'Get latests news from XDA Portal \n Usage : /xda news\n/xda news vendorname'), new exports["xda"]())
-    .when(new TextCommand('/xda upload', 'xdaUploadHandler', ''), new exports["xda"]())
-    .when(new TextCommand('/xda thread', 'xdaThreadHandler', ''), new exports["xda"]())
-    .when(new TextCommand('/xda portal', 'xdaPortalHandler', ''), new exports["xda"]())
-    .when(new TextCommand('/xda follow', 'xdaFollowHandler', 'Get notified on lastests posts for given threads\nUsage : /xda follow threadid\n/xda follow rm threadid\n/xda follow clear/\n/xda follow get'), new exports["xda"]())
-    .when(new TextCommand('/devdb', 'devDBHandler', ''), new exports["xda"]())
-
-    .when(
-        new TextCommand('/xposed', 'xposedHandler', ''),
-        new exports["xposed"]()
-    )
-
-    .when(
-        new TextCommand('/xtended', 'xtendedBuildHandler', ''),
-        new exports["xtended"]()
-    )
-
-    .when(
-        new TextCommand('/op', 'oneplusOTAHandler', ''),
-        new exports["oneplus"]()
-    )
-
-    .when(
-        new TextCommand('/moto', 'motorolaHandler', ''),
-        new exports["motorola"]()
-    )
-
-    .when(
-        new TextCommand('/xiaomi', 'xiaomiHandler', ''),
-        new exports["xiaomi"]()
-    )
-
-    .when(
-        new TextCommand('/asus', 'asusHandler', ''),
-        new exports["asus"]()
-    )
-
-    .when(
-        new TextCommand('/huawei', 'huaweiHandler', ''),
-        new exports["huawei"]()
-    )
-
-    .when(
-        new TextCommand('/repos', 'githubSearchHandler', ''),
-        new exports["github"]()
-    )
-
-    .when(
-        new TextCommand('/commits', 'githubCommitsHandler', ''),
-        new exports["github"]()
-    )
-
-    .when(
-        new TextCommand('/colt', 'coltBuildHandler', ''),
-        new exports["colt"]()
-    )
-
-    .when(
-        new TextCommand('/evox', 'evoBuildHandler', ''),
-        new exports["evo"]()
-    )
-
-    .when(
-        new TextCommand('/losg', 'licrogBuildHandler', ''),
-        new exports["licrog"]()
-    )
-
-    .when(
-        new TextCommand('/nanodroid', 'nanodroidHandler', ''),
-        new exports["nanodroid"]()
-    )
-
-    .when(
-        new TextCommand('/caf', 'cafHandler', ''),
-        new exports["caf"]()
-    )
-
-    .when(
-        new TextCommand('/getdump', 'dumpHandler', ''),
-        new exports["github"]()
-    )
-
-    .when(
-        new TextCommand('/deviceinfos', 'deviceInfosHandler', ''),
-        new exports["deviceinfos"]()
-    )
-
-    .when(
-        new TextCommand('/codename', 'codenameHandler', ''),
-        new exports["deviceinfos"]()
-    )
-
-    .when(
-        new TextCommand('/specs', 'deviceSpecsHandler', ''),
-        new exports["deviceinfos"]()
-    )
-
-    .when(
-        new TextCommand('/apk discover', 'discoverApkHandler', ''),
-        new exports["cleanapk"]()
-    )
-
-    .when(
-        new TextCommand('/apk top', 'topApkHandler', ''),
-        new exports["cleanapk"]()
-    )
-
-    .when(
-        new TextCommand('/apk search', 'searchApkHandler', ''),
-        new exports["cleanapk"]()
-    )
-
-    .when(
-        new TextCommand('/apk popular', 'popularApkHandler', ''),
-        new exports["cleanapk"]()
-    )
-
-
-    .callbackQuery(new CallbackController())
+tg.router.callbackQuery(new CallbackController())
     .inlineQuery(new InlineController())
     .otherwise(new OtherwiseController())
+
 tg.onMaster(() => {
 
     var syncStarted = false;

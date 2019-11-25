@@ -1,6 +1,6 @@
 const Telegram = require('telegram-node-bot')
 const TelegramBaseController = Telegram.TelegramBaseController;
-
+const config = require('../config')
 const BotUtils = require('../utils')
 
 class SuperiorController extends TelegramBaseController {
@@ -37,6 +37,17 @@ class SuperiorController extends TelegramBaseController {
     get routes() {
         return {
             'superiorBuildHandler': 'triggerCommand',
+        }
+    }
+
+    get config() {
+        return {
+            commands: [{
+                command: "/superior",
+                handler: "superiorBuildHandler",
+                help: "Get SuperiorOS builds"
+            }],
+            type: config.commands_type.ROMS
         }
     }
 }

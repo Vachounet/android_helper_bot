@@ -1,5 +1,6 @@
 const Telegram = require('telegram-node-bot')
 const TelegramBaseController = Telegram.TelegramBaseController;
+const config = require('../config')
 
 class ADBController extends TelegramBaseController {
 
@@ -22,8 +23,21 @@ class ADBController extends TelegramBaseController {
             'fastbootHandler': 'getSDKTools',
         }
     }
+
+    get config() {
+        return {
+            commands: [{
+                command: "/adb",
+                handler: "adbHandler",
+                help: "Link latest SDK Platform Tools"
+            }, {
+                command: "/fastboot",
+                handler: "fastbootHandler",
+                help: "Same as /adb"
+            }],
+            type: config.commands_type.DEVELOPERS
+
+        }
+    }
 }
-
-
-
-module.exports = ADBController;
+module.exports = ADBController

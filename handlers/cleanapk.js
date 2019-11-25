@@ -1,6 +1,7 @@
 const Telegram = require('telegram-node-bot')
 const TelegramBaseController = Telegram.TelegramBaseController;
 const BotUtils = require('../utils')
+const config = require('../config')
 var requestPromise = require("request-promise")
 
 const BaseURL = "https://api.cleanapk.org/apps?"
@@ -141,8 +142,7 @@ class CleanAPKController extends TelegramBaseController {
                         if (dlInfos && dlInfos.success) {
                             message += "[" + app.name + "](" + dlInfos.download_data.eelo_download_link + ")\n"
                         }
-                    }
-                    catch (ex) {
+                    } catch (ex) {
                         continue;
 
                     }
@@ -162,6 +162,33 @@ class CleanAPKController extends TelegramBaseController {
             'discoverApkHandler': 'discover',
             'topApkHandler': 'top',
             'popularApkHandler': 'popular',
+        }
+    }
+
+    get config() {
+        return {
+            commands: [{
+                    command: "/top",
+                    handler: "topApkHandler",
+                    help: "Display top APKs from CleanAPK"
+                },
+                {
+                    command: "/popular",
+                    handler: "popularApkHandler",
+                    help: "Display popular APKs from CleanAPK"
+                },
+                {
+                    command: "/apk search",
+                    handler: "searchApkHandler",
+                    help: "Search for APKs on CleanAPK"
+                },
+                {
+                    command: "/discover",
+                    handler: "discoverApkHandler",
+                    help: "Discover new APKs from CleanAPK"
+                }
+            ],
+            type: config.commands_type.APP
         }
     }
 }

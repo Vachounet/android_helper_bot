@@ -4,6 +4,7 @@ const TelegramBaseController = Telegram.TelegramBaseController;
 var request = require('request');
 const JSDOM = require('jsdom')
 const BotUtils = require('../utils')
+const config = require('../config')
 
 class CarbonController extends TelegramBaseController {
 
@@ -104,6 +105,17 @@ class CarbonController extends TelegramBaseController {
     get routes() {
         return {
             'carbonBuildHandler': 'triggerCommand',
+        }
+    }
+
+    get config() {
+        return {
+            commands: [{
+                command: "/carbon",
+                handler: "carbonBuildHandler",
+                help: "Get CarbonROM builds"
+            }],
+            type: config.commands_type.ROMS
         }
     }
 }

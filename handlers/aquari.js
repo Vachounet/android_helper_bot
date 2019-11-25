@@ -3,6 +3,7 @@ const TelegramBaseController = Telegram.TelegramBaseController;
 const BotUtils = require('../utils')
 var request = require('request');
 const JSDOM = require('jsdom');
+const config = require('../config')
 
 class AquaController extends TelegramBaseController {
 
@@ -42,10 +43,10 @@ class AquaController extends TelegramBaseController {
                 for (var i = 0; i < links.length; i++) {
                     if (links[i].textContent.toLowerCase().indexOf(keywords.toLowerCase()) !== -1) {
                         kb.inline_keyboard.push(
-                                [{
+                            [{
                                 text: links[i].textContent,
                                 url: "https://androidfilehost.com" + links[i].href
-                                }]);
+                            }]);
                         break;
                     }
                 }
@@ -69,6 +70,17 @@ class AquaController extends TelegramBaseController {
     get routes() {
         return {
             'aquaBuildHandler': 'triggerCommand',
+        }
+    }
+
+    get config() {
+        return {
+            commands: [{
+                command: "/aqua",
+                handler: "aquaBuildHandler",
+                help: "Get latest AquiriOS builds"
+            }],
+            type: config.commands_type.ROMS
         }
     }
 }

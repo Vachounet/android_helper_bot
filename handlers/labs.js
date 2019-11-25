@@ -2,6 +2,7 @@ const Telegram = require('telegram-node-bot')
 const TelegramBaseController = Telegram.TelegramBaseController;
 
 var BotUtils = require("../utils.js")
+const config = require("../config.js")
 
 class LabsController extends TelegramBaseController {
 
@@ -39,6 +40,17 @@ class LabsController extends TelegramBaseController {
     get routes() {
         return {
             'labsHandler': 'search',
+        }
+    }
+
+    get config() {
+        return {
+            commands: [{
+                command: "/labs",
+                handler: "labsHandler",
+                help: "Search for apps on XDA Labs"
+            }],
+            type: config.commands_type.XDA
         }
     }
 }

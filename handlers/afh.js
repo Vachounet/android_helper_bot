@@ -2,6 +2,7 @@ const Telegram = require('telegram-node-bot')
 const TelegramBaseController = Telegram.TelegramBaseController;
 var request = require('request');
 const JSDOM = require('jsdom');
+const config = require("../config.js")
 
 class AFHController extends TelegramBaseController {
 
@@ -122,6 +123,17 @@ class AFHController extends TelegramBaseController {
     get routes() {
         return {
             'afhSearchHandler': 'search',
+        }
+    }
+
+    get config() {
+        return {
+            commands: [{
+                command: "/afh search",
+                handler: "afhSearchHandler",
+                help: "Search for files on AndroidFileHost"
+            }],
+            type: config.commands_type.TTOLS
         }
     }
 }

@@ -2,6 +2,7 @@ const Telegram = require('telegram-node-bot')
 const TelegramBaseController = Telegram.TelegramBaseController;
 const InputFile = Telegram.InputFile;
 var request = require('request');
+const config = require('../config')
 var parser = require('fast-xml-parser');
 const BotUtils = require('../utils')
 
@@ -142,8 +143,17 @@ class CrDroidController extends TelegramBaseController {
             'crDroidBuildHandler': 'triggerCommand',
         }
     }
+
+    get config() {
+        return {
+            commands: [{
+                command: "/crdroid",
+                handler: "crDroidBuildHandler",
+                help: "Get crDroid build"
+            }],
+            type: config.commands_type.ROMS
+        }
+    }
 }
-
-
 
 module.exports = CrDroidController;

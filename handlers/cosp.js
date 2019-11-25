@@ -3,6 +3,7 @@ const TelegramBaseController = Telegram.TelegramBaseController;
 
 var request = require('request');
 const BotUtils = require('../utils')
+const config = require('../config')
 
 class COSPController extends TelegramBaseController {
 
@@ -85,6 +86,17 @@ class COSPController extends TelegramBaseController {
     get routes() {
         return {
             'cospBuildHandler': 'triggerCommand',
+        }
+    }
+
+    get config() {
+        return {
+            commands: [{
+                command: "/cosp",
+                handler: "cospBuildHandler",
+                help: "Get COSP builds"
+            }],
+            type: config.commands_type.ROMS
         }
     }
 }

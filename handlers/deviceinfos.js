@@ -1,6 +1,7 @@
 const Telegram = require('telegram-node-bot')
 const TelegramBaseController = Telegram.TelegramBaseController;
 var BotUtils = require("../utils.js")
+const config = require('../config')
 var request = require("request")
 const JSDOM = require('jsdom')
 
@@ -154,6 +155,27 @@ class DeviceInfosController extends TelegramBaseController {
             'deviceInfosHandler': 'getDeviceInfos',
             'codenameHandler': 'getDeviceFromCodename',
             'deviceSpecsHandler': 'getDeviceSpecs',
+        }
+    }
+
+    get config() {
+        return {
+            commands: [{
+                command: "/deviceinfos",
+                handler: "deviceInfosHandler",
+                help: "Get device codename from model name"
+            },
+            {
+                command: "/codename",
+                handler: "codenameHandler",
+                help: "Get model infos from codename"
+            },
+            {
+                command: "/specs",
+                handler: "deviceSpecsHandler",
+                help: "Get device specs"
+            }],
+            type: config.commands_type.TTOLS
         }
     }
 }

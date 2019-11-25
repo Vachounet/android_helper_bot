@@ -3,6 +3,7 @@ const TelegramBaseController = Telegram.TelegramBaseController;
 
 var request = require('request');
 const BotUtils = require('../utils')
+const config = require('../config')
 
 class AOSIPController extends TelegramBaseController {
 
@@ -94,6 +95,17 @@ class AOSIPController extends TelegramBaseController {
     get routes() {
         return {
             'aosipBuildHandler': 'triggerCommand',
+        }
+    }
+
+    get config() {
+        return {
+            commands: [{
+                command: "/aosip",
+                handler: "aosipBuildHandler",
+                help: "Get Android Open Source illusion Project build"
+            }],
+            type: config.commands_type.ROMS
         }
     }
 }

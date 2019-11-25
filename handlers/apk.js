@@ -27,7 +27,6 @@ class ApkToolController extends TelegramBaseController {
     }
 
     var parsed = url.parse($.command.arguments[0]);
-    console.log(path.basename(parsed.pathname));
     var fileName = path.basename(parsed.pathname);
     $.sendMessage("Downloading `" + fileName + "` and running apktool", {
       parse_mode: "markdown",
@@ -48,7 +47,6 @@ class ApkToolController extends TelegramBaseController {
         console.log('stderr: ' + data.toString());
       });
       apktool_task.on('exit', function (code, signal) {
-        console.log("code: " + code, "signal " + signal)
         if (code !== "0") {
           $.sendMessage("Unable to decompile " + fileName + ", aborted", {
             parse_mode: "markdown",
@@ -67,7 +65,6 @@ class ApkToolController extends TelegramBaseController {
         archive.directory("/home/tg/android_helper_bot/apks/" + fileName.split(".")[0] + "/", fileName.split(".")[0]);
 
         archive.on('error', function (err) {
-          console.log(err);
           return;
         });
 
@@ -95,6 +92,17 @@ class ApkToolController extends TelegramBaseController {
   get routes() {
     return {
       'apktoolHandler': 'apktool'
+    }
+  }
+
+  get config() {
+    return {
+      commands: [{
+        command: "/reapk",
+        handler: "apktoolHandler",
+        help: "Decompile APKs"
+      }],
+            type: config.commands_type.TTOLS
     }
   }
 }

@@ -95,8 +95,17 @@ class FilterRomController extends TelegramBaseController {
             'filterRomHandler': 'search',
         }
     }
+
+    static get config() {
+        return {
+            commands: [{
+                command: "/filterrom",
+                handler: "filterRomHandler",
+                help: "Groups only - Allow to filter for one ROM only"
+            }],
+            type: config.commands_type.ROMS
+        }
+    }
 }
-
-
 
 module.exports = FilterRomController;

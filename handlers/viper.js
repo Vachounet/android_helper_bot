@@ -1,6 +1,7 @@
 const Telegram = require('telegram-node-bot')
 const TelegramBaseController = Telegram.TelegramBaseController;
 const BotUtils = require('../utils')
+const config = require('../config')
 
 class ViperController extends TelegramBaseController {
 
@@ -36,6 +37,17 @@ class ViperController extends TelegramBaseController {
     get routes() {
         return {
             'viperBuildHandler': 'triggerCommand',
+        }
+    }
+
+    get config() {
+        return {
+            commands: [{
+                command: "/viper",
+                handler: "viperBuildHandler",
+                help: "Get ViperOS builds"
+            }],
+            type: config.commands_type.ROMS
         }
     }
 }

@@ -1,6 +1,7 @@
 const Telegram = require('telegram-node-bot')
 const TelegramBaseController = Telegram.TelegramBaseController;
 const BotUtils = require('../utils')
+const config = require('../config')
 
 class XtendedController extends TelegramBaseController {
 
@@ -36,6 +37,17 @@ class XtendedController extends TelegramBaseController {
     get routes() {
         return {
             'xtendedBuildHandler': 'triggerCommand',
+        }
+    }
+
+    get config() {
+        return {
+            commands: [{
+                command: "/xtended",
+                handler: "xtendedBuildHandler",
+                help: "Get MSM Xtended builds"
+            }],
+            type: config.commands_type.ROMS
         }
     }
 }
