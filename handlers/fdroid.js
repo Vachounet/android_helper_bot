@@ -43,7 +43,8 @@ class FDroidController extends TelegramBaseController {
                 if (docs && docs.length > 0) {
                     var msg = ""
                     for (var i = 0; i < docs.length; i++) {
-                        msg += "[" + docs[i].name + "](https://mirror.cyberbits.eu/fdroid/repo/" + docs[i].packageName + ")"
+                        console.log(docs[i])
+                        msg += "[" + docs[i].name + "](https://mirror.cyberbits.eu/fdroid/repo/" + docs[i].packageName + "_" + docs[i].suggestedVersionCode + ".apk)"
                         if (docs[i].authorName) {
                             msg += " by " + docs[i].authorName
                         }
