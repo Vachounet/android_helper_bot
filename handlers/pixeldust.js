@@ -28,7 +28,6 @@ class PixeldustController extends TelegramBaseController {
     static romInfos() {
         return {
             fullName: "PixelDust Project",
-            extraSFPath: "ota/{0}",
             projectName: "pixeldustproject",
             website: "https://sourceforge.net/projects/pixeldustproject/"
         }

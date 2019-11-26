@@ -28,7 +28,6 @@ class ColtController extends TelegramBaseController {
     static romInfos() {
         return {
             fullName: "ColtOS",
-            extraSFPath: "{0}",
             projectName: "coltos",
             website: ""
         }

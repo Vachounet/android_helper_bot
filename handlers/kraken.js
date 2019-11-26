@@ -29,7 +29,6 @@ const TelegramBaseController = Telegram.TelegramBaseController;
      static romInfos() {
         return {
             fullName: "Kraken Open Tentacles Project",
-            extraSFPath: "{0}",
             projectName: "krakenproject",
             website: "https://sourceforge.net/projects/krakenproject/"
         }

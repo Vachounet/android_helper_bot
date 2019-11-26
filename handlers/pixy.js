@@ -28,7 +28,6 @@ class PixysController extends TelegramBaseController {
     static romInfos() {
         return {
             fullName: "PixysOS",
-            extraSFPath: "pie/{0}",
             projectName: "pixys-os",
             website: ""
         }

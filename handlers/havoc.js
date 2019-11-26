@@ -29,7 +29,6 @@ class HavocController extends TelegramBaseController {
     static romInfos() {
         return {
             fullName: "HavocOS",
-            extraSFPath: "{0}",
             projectName: "havoc-os",
             website: ""
         }

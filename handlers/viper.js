@@ -28,7 +28,6 @@ class ViperController extends TelegramBaseController {
     static romInfos() {
         return {
             fullName: "ViperOS",
-            extraSFPath: "{0}",
             projectName: "viper-project",
             website: ""
         }

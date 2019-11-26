@@ -28,7 +28,6 @@ class BootlegController extends TelegramBaseController {
     static romInfos() {
         return {
             fullName: "Bootleggers",
-            extraSFPath: "builds/{0}",
             projectName: "bootleggersrom",
             website: ""
         }

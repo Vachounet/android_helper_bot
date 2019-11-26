@@ -28,7 +28,6 @@ class XtendedController extends TelegramBaseController {
     static romInfos() {
         return {
             fullName: "MSM Extended",
-            extraSFPath: "{0}",
             projectName: "xtended",
             website: ""
         }

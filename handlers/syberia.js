@@ -28,7 +28,6 @@ class SyberiaController extends TelegramBaseController {
     static romInfos() {
         return {
             fullName: "SyberiaOS",
-            extraSFPath: "{0}",
             projectName: "syberiaos",
             website: ""
         }

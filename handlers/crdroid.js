@@ -132,7 +132,6 @@ class CrDroidController extends TelegramBaseController {
     static romInfos() {
         return {
             fullName: "crDroidAndroid",
-            extraSFPath: "{0}/crdroid-p",
             projectName: "crdroid",
             website: ""
         }

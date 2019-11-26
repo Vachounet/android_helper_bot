@@ -29,7 +29,6 @@ class AEXController extends TelegramBaseController {
     static romInfos() {
         return {
             fullName: "AOSPExtended",
-            extraSFPath: "{0}/q",
             projectName: "aospextended-rom",
             website: "https://aospextended.com/"
         }

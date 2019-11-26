@@ -28,7 +28,6 @@ class DotOSController extends TelegramBaseController {
     static romInfos() {
         return {
             fullName: "dotOS",
-            extraSFPath: "dotp/{0}",
             projectName: "dotos-downloads",
             website: ""
         }

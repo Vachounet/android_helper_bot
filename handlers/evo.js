@@ -31,7 +31,6 @@ class EvoController extends TelegramBaseController {
     static romInfos() {
         return {
             fullName: "EvolutionX",
-            extraSFPath: "{0}",
             projectName: "evolution-x",
             website: ""
         }

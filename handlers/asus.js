@@ -89,7 +89,7 @@ class AsusController extends TelegramBaseController {
             commands: [{
                 command: "/asus",
                 handler: "asusHandler",
-                help:"Search Asus firmwares"
+                help: "Search Asus firmwares"
             }],
             type: config.commands_type.FIRMWARE
         }

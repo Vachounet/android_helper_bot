@@ -28,7 +28,6 @@ class SuperiorController extends TelegramBaseController {
     static romInfos() {
         return {
             fullName: "SuperiorOS",
-            extraSFPath: "{0}",
             projectName: "superioros",
             website: ""
         }
