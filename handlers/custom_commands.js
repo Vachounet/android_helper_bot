@@ -60,6 +60,8 @@ class OtherwiseController extends TelegramBaseController {
                             OtherwiseController.handleOSDN($, url)
                         } else if (url.indexOf("mediafire.com/file/") !== -1) {
                             OtherwiseController.handleMediafire($, url)
+                        } else if (url.indexOf("/job/") !== -1) {
+                            OtherwiseController.handleJenkins($, url)
                         }
                     }
 
@@ -72,6 +74,53 @@ class OtherwiseController extends TelegramBaseController {
 
         if ($.message.chat) {
             this.parseChat($);
+        }
+    }
+
+    static handleJenkins($, url) {
+        var urls = url.split("/");
+        console.log(urls)
+        if (urls[3] === "job" && urls[5]) {
+            let jenkins = require('jenkins')({
+                baseUrl: url.split("/job/")[0]
+            });
+            jenkins.build.get(urls[4], parseInt(urls[5]), function (err, data) {
+                if (err) {
+                    return
+                }
+
+                var msg = "*Job* : `" + data.fullDisplayName + "`\n"
+
+                if (data.actions) {
+                    data.actions.forEach(action => {
+                        if (action.parameters) {
+                            action.parameters.forEach(param => {
+                                
+                                if (param.name.toLowerCase().includes("device")) {
+                                    msg += "*Device* : `" + param.value + "`\n";
+                                } else if (param.name.toLowerCase().includes("version")) {
+                                    msg += "*Version* : `" + param.value + "`\n";
+                                } else if (param.name.toLowerCase().includes("user")) {
+                                    msg += "*By* : `" + param.value + "`\n";
+                                } else if (param.name.toLowerCase().includes("branch")) {
+                                    msg += "*Branch* : `" + param.value + "`\n";
+                                }
+                            })
+                        }
+                    })
+                }
+
+                if (data.building) {
+                    msg += "*Build running*"
+                } else {
+                    msg += "*Result* : `" + data.result + "`"
+                }
+
+                $.sendMessage(msg, {
+                    parse_mode: "markdown",
+                    reply_to_message_id: $.message.messageId
+                });
+            });
         }
     }
 

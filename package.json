@@ -72,6 +72,7 @@
     "is-typedarray": "1.0.0",
     "isarray": "1.0.0",
     "isstream": "0.1.2",
+    "jenkins": "^0.27.0",
     "jsbn": "0.1.1",
     "jsdom": "14.0.0",
     "json-schema": "0.2.3",
@@ -170,4 +171,3 @@
   },
   "homepage": "https://github.com/Vachounet/android_helper_bot#readme"
 }
-
