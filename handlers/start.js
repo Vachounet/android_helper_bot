@@ -47,9 +47,8 @@ class StartController extends TelegramBaseController {
             })
         })
 
-        var msg = "Generate direct links for different sources\n\n"
-        msg += "*Usage*: Paste downloadable links from supported source\n\n"
-        msg += "Currently Supported:\n\n"
+        var msg = "Generate direct links for different sources\n"
+        msg += "Currently Supported:\n"
         msg += "`Google Drive\n`"
         msg += "`Mega\n`"
         msg += "`APKMirror\n`"
@@ -59,20 +58,25 @@ class StartController extends TelegramBaseController {
         msg += "`OSDN`\n"
         msg += "`MediaFire`\n\n"
         msg += "You can also use the inline mode to search for GIFs\n\n"
+        msg += "Join @androidhelpergroup to get help and report bugs\n\n"
         msg += "Help about commands :"
 
         if (replaceMainmenu) {
             $.runInlineMenu({
                 layout: 2,
                 method: 'updateMenu',
-                params: [msg, {parse_mode: "markdown"}],
+                params: [msg, {
+                    parse_mode: "markdown"
+                }],
                 menu: menu
             }, $.update.callbackQuery.message)
         } else {
             $.runInlineMenu({
                 layout: 2,
                 method: 'sendMessage',
-                params: [msg, {parse_mode: "markdown"}],
+                params: [msg, {
+                    parse_mode: "markdown"
+                }],
                 menu: menu
             })
         }
