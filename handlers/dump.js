@@ -13,7 +13,7 @@ var q = new Queue(function (input, cb) {
         reply_to_message_id: $.message.messageId
     }).then(function (msg) {
 
-        var dump = spawn(__dirname + "/../dumpyara/dumpyara.sh", [$.command.arguments[0], config.github_token]);
+        var dump = spawn(__dirname + "/../extract_and_push.sh", [$.command.arguments[0]]);
         dump.stdout.on('data', function (data) {
 
             var message = data.toString();
@@ -40,9 +40,6 @@ var q = new Queue(function (input, cb) {
             cb()
         });
     });
-}, {
-    concurrent: 1,
-    batchSize: 1
 })
 
 class DumpController extends TelegramBaseController {
@@ -56,7 +53,7 @@ class DumpController extends TelegramBaseController {
             return
 
         if (!$.command.success || $.command.arguments.length === 0) {
-            $.sendMessage("Usage: /ddump url", {
+            $.sendMessage("Usage: /dump url", {
                 parse_mode: "markdown",
                 reply_to_message_id: $.message.messageId
             });
@@ -78,6 +75,18 @@ class DumpController extends TelegramBaseController {
             'dumpHandler': 'dump',
         }
     }
+
+    get config() {
+        return {
+            commands: [{
+                command: "/dump",
+                handler: "dumpHandler",
+                help: "Dump firmware to git.rip"
+            }],
+            type: config.commands_type.ROMS
+        }
+    }
 }
 
 module.exports = DumpController;
+
