@@ -9,11 +9,11 @@ class GAppsController extends TelegramBaseController {
     getLast($) {
 
         var type = "arm64",
-            android_version = "9.0";
+            android_version = "10.0";
 
         if (!$.command.arguments[0]) {
             type = "arm64";
-            android_version = "9.0";
+            android_version = "10.0";
         } else if (isNaN($.command.arguments[0]) === false) {
             android_version = $.command.arguments[0];
             if ($.command.arguments[1])
@@ -35,7 +35,6 @@ class GAppsController extends TelegramBaseController {
                           
                           $.sendMessage(msg, {
                               parse_mode: "markdown",
-                              //reply_markup: JSON.stringify(kb),
                               reply_to_message_id: $.message.messageId,
                               disable_web_page_preview: true
                           });
