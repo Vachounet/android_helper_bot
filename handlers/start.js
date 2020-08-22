@@ -29,7 +29,9 @@ class StartController extends TelegramBaseController {
 
 
                     }
-
+                    var kb = {
+                        inline_keyboard: []
+                    };
                     kb.inline_keyboard.push(
                         [{
                             text: "Back",
@@ -64,9 +66,11 @@ class StartController extends TelegramBaseController {
         if (replaceMainmenu) {
             $.runInlineMenu({
                 layout: 2,
-                method: 'updateMenu',
+                method: 'editMessageText',
                 params: [msg, {
-                    parse_mode: "markdown"
+                    parse_mode: "markdown",
+                    chat_id: $.update.callbackQuery.message.chat.id,
+                    message_id: $.update.callbackQuery.message.messageId
                 }],
                 menu: menu
             }, $.update.callbackQuery.message)

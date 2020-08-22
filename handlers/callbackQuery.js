@@ -17,7 +17,6 @@ class CallbacksController extends TelegramBaseCallbackQueryController {
                     this.handleXDACallback($, params)
                     break;
                 case "main_menu":
-                    //this.handleHelp($, params)
                     new StartController().help($, true);
                     break;
                 case "mega":
