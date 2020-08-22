@@ -79,16 +79,16 @@ class DUController extends TelegramBaseController {
         }
     }
 
-    get config() {
-        return {
-            commands: [{
-                command: "/du",
-                handler: "duBuildHandler",
-                help: "Get DirtyUnicorns builds"
-            }],
-            type: config.commands_type.ROMS
-        }
-    }
+    // get config() {
+    //     return {
+    //         commands: [{
+    //             command: "/du",
+    //             handler: "duBuildHandler",
+    //             help: "Get DirtyUnicorns builds"
+    //         }],
+    //         type: config.commands_type.ROMS
+    //     }
+    // }
 }
 
 module.exports = DUController;
