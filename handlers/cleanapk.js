@@ -14,13 +14,13 @@ class CleanAPKController extends TelegramBaseController {
     search($) {
 
         if (!$.command.success || $.command.arguments.length === 0) {
-            $.sendMessage("Usage: /apk search keywords", {
+            $.sendMessage("Usage: /apk keywords", {
                 parse_mode: "markdown",
                 reply_to_message_id: $.message.messageId
             });
             return;
         }
-        var keywords = $.message.text.replace("/apk search ", "")
+        var keywords = $.message.text.replace("/apk ", "")
         BotUtils.getJSON(BaseURL + SearchAction + keywords.trim(), async function (json, err) {
 
             if (json && json.success && json.apps.length > 0) {
@@ -57,15 +57,6 @@ class CleanAPKController extends TelegramBaseController {
     }
 
     discover($) {
-
-        if (!$.command.success || $.command.arguments.length === 0) {
-            $.sendMessage("Usage: /apk discover", {
-                parse_mode: "markdown",
-                reply_to_message_id: $.message.messageId
-            });
-            return;
-        }
-
         BotUtils.getJSON(BaseURL + ListHomeAction, async function (json, err) {
             if (json && json.success) {
 
@@ -89,15 +80,6 @@ class CleanAPKController extends TelegramBaseController {
     }
 
     popular($) {
-
-        if (!$.command.success || $.command.arguments.length === 0) {
-            $.sendMessage("Usage: /apk popular", {
-                parse_mode: "markdown",
-                reply_to_message_id: $.message.messageId
-            });
-            return;
-        }
-
         BotUtils.getJSON(BaseURL + ListHomeAction, async function (json, err) {
             if (json && json.success) {
 
@@ -121,14 +103,6 @@ class CleanAPKController extends TelegramBaseController {
     }
 
     top($) {
-
-        if (!$.command.success || $.command.arguments.length === 0) {
-            $.sendMessage("Usage: /apk top", {
-                parse_mode: "markdown",
-                reply_to_message_id: $.message.messageId
-            });
-            return;
-        }
         BotUtils.getJSON(BaseURL + ListHomeAction, async function (json, err) {
             if (json && json.success) {
 
@@ -178,7 +152,7 @@ class CleanAPKController extends TelegramBaseController {
                     help: "Display popular APKs from CleanAPK"
                 },
                 {
-                    command: "/apk search",
+                    command: "/apk",
                     handler: "searchApkHandler",
                     help: "Search for APKs on CleanAPK"
                 },
