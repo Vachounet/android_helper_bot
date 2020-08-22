@@ -41,10 +41,10 @@ class OtherwiseController extends TelegramBaseController {
                         } else if (url.indexOf("sourceforge.net") !== -1 &&
                             url.indexOf("/download") !== -1) {
                             OtherwiseController.handleSF($, url)
-                        } else if (url.indexOf("drive.google.com") !== -1 &&
-                            (url.indexOf("view") !== -1 || url.indexOf("open?id=") !== -1 ||
-                                url.indexOf("uc?id=") !== -1)) {
-                            OtherwiseController.handleGDrive($, url)
+                        //} else if (url.indexOf("drive.google.com") !== -1 &&
+                        //    (url.indexOf("view") !== -1 || url.indexOf("open?id=") !== -1 ||
+                        //        url.indexOf("uc?id=") !== -1)) {
+                       //     OtherwiseController.handleGDrive($, url)
                         } else if (url.indexOf("github.com") !== -1 &&
                             url.indexOf("/releases") !== -1 && url.indexOf("gapps") === -1) {
                             OtherwiseController.handleGithub($, url)
@@ -95,7 +95,7 @@ class OtherwiseController extends TelegramBaseController {
                     data.actions.forEach(action => {
                         if (action.parameters) {
                             action.parameters.forEach(param => {
-                                
+
                                 if (param.name.toLowerCase().includes("device")) {
                                     msg += "*Device* : `" + param.value + "`\n";
                                 } else if (param.name.toLowerCase().includes("version")) {
