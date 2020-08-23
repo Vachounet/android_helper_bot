@@ -22,16 +22,25 @@ class AEXController extends TelegramBaseController {
 
         var device = $.command.arguments[0];
 
-        BotUtils.getSourceForgeBuilds($, AEXController.romInfos(), device);
+        BotUtils.getJSON('https://api.aospextended.com/builds/' + device + '/q', function (json, err) {
+            if (!json) {
+                return;
+            }
+            var msg = 'AospExtended build(s) for ' + device + '\n\n';
+            msg += 'Ten : <a href="' + json[0].download_link + '">' + json[0].file_name + '</a>\n'
 
-    }
+            BotUtils.getJSON('https://api.aospextended.com/builds/' + device + '/q_gapps', function (json, err) {
+                if (json) {
+                    msg += 'Ten GApps : <a href="' + json[0].download_link + '">' + json[0].file_name + '</a>'
+                }
 
-    static romInfos() {
-        return {
-            fullName: "AOSPExtended",
-            projectName: "aospextended-rom",
-            website: "https://aospextended.com/"
-        }
+                $.sendMessage(msg, {
+                    parse_mode: "html",
+                    reply_to_message_id: $.message.messageId
+                });
+            })
+        })
+
     }
 
 
@@ -53,3 +62,4 @@ class AEXController extends TelegramBaseController {
     }
 }
 module.exports = AEXController
+
