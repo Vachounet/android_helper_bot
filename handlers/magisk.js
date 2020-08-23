@@ -31,6 +31,14 @@ class MagiskController extends TelegramBaseController {
                                 var newResults = json.filter(release => regex.test(release.name) || regex.test(release.description))
                                 var allResults = filteredResults.concat(newResults)
 
+                                if (allResults.length === 0) {
+                                    tg.api.editMessageText("No modules found ", {
+                                        parse_mode: "markdown",
+                                        chat_id: msg._chat._id,
+                                        message_id: msg._messageId
+                                    });
+                                    return;
+                                }
 
                                 tg.api.editMessageText("Found " + allResults.length + " results. Loading details...", {
                                     parse_mode: "markdown",
@@ -50,22 +58,18 @@ class MagiskController extends TelegramBaseController {
                                                 dict[prop.split("=")[0]] = prop.split("=")[1]
                                             })
 
-                                            message += "[" + dict["name"] + "](https://github.com/" + result.full_name + "/archive/master.zip) " + dict["version"] + "\n";
+                                            message += "<a href='https://github.com/" + result.full_name + "/archive/master.zip'>"+dict["name"]+"</a> " + dict["version"] + "\n"
                                             message += dict["description"] + "\n\n";
-
                                             tg.api.editMessageText(message, {
-                                                parse_mode: "markdown",
+                                                parse_mode: "html",
                                                 chat_id: msg._chat._id,
                                                 disable_web_page_preview: true,
                                                 message_id: msg._messageId
                                             });
 
                                         })
-
                                 })
-
                             })
-
                     })
             })
 
@@ -76,8 +80,8 @@ class MagiskController extends TelegramBaseController {
         BotUtils.getJSON("https://api.github.com/repos/topjohnwu/Magisk/releases",
             function (json, err) {
 
-                var magisk = json[0].name.indexOf("Manager") === -1 ? json[0] : json[1];
-                var magiskManager = json[0].name.indexOf("Manager") === -1 ? json[1] : json[0];
+                var magisk = json.filter(asset => !asset.tag_name.includes("manager"))[0]
+                var magiskManager = json.filter(asset => asset.tag_name.includes("manager"))[0]
 
                 var msg = "<b>" + magisk.name + "</b> \n"
                 msg += "<a href=\"" + magisk.assets[1].browser_download_url + "\">" + magisk.assets[1].name + "</a> \n"
@@ -103,13 +107,14 @@ class MagiskController extends TelegramBaseController {
     get config() {
         return {
             commands: [{
-                    command: "/magisk",
-                    handler: "magiskHandler",
-                    help: "Get latest magisk package and search modules"
-                }],
+                command: "/magisk",
+                handler: "magiskHandler",
+                help: "Get latest magisk package and search modules"
+            }],
             type: config.commands_type.MAGISK
         }
     }
 }
 
 module.exports = MagiskController;
+
