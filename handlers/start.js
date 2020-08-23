@@ -4,6 +4,7 @@ const config = require('../config')
 class StartController extends TelegramBaseController {
 
     help($, replaceMainmenu) {
+
         var kb = {
             inline_keyboard: []
         };
@@ -75,6 +76,9 @@ class StartController extends TelegramBaseController {
                 menu: menu
             }, $.update.callbackQuery.message)
         } else {
+            if ($.message.chat.id !== $.message.from.id) {
+                return;
+            }
             $.runInlineMenu({
                 layout: 2,
                 method: 'sendMessage',
@@ -109,3 +113,4 @@ class StartController extends TelegramBaseController {
 }
 
 module.exports = StartController;
+
