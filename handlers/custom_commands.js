@@ -52,9 +52,6 @@ class OtherwiseController extends TelegramBaseController {
                             OtherwiseController.handlePlayStore($, url)
                         } else if (url.indexOf("https://mega.nz/") !== -1) {
                             OtherwiseController.handleMega($, url)
-                        } else if (url.indexOf("https://www.apkmirror.com/apk/") !== -1 &&
-                            url.indexOf("-download") !== -1) {
-                            OtherwiseController.handleAPKMirror($, url)
                         } else if (url.indexOf("osdn.net/projects/") !== -1 &&
                             url.indexOf("storage") !== -1) {
                             OtherwiseController.handleOSDN($, url)
@@ -464,19 +461,6 @@ class OtherwiseController extends TelegramBaseController {
                 reply_to_message_id: $.message.messageId
             });
         }
-    }
-
-    static handleAPKMirror($, url) {
-        request.get(url, function (error, response, body) {
-            var dom = new JSDOM.JSDOM(body);
-            var shrtlink = dom.window.document.head.querySelector("link[rel='shortlink']")
-            var fileID = shrtlink.href.split("=")[1];
-            var msg = "<b>Download Link : </b><a href='https://www.apkmirror.com/wp-content/themes/APKMirror/download.php?id=" + fileID + "'>" + dom.window.document.title + "</a>"
-            $.sendMessage(msg, {
-                parse_mode: "html",
-                reply_to_message_id: $.message.messageId
-            });
-        })
     }
 
     parseUser(scope) {
