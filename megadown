@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VERSION="1.9.45"
+VERSION="2.0"
 
 HERE=$(dirname "$0")
 SCRIPT=$(readlink -f "$0")
@@ -23,7 +23,7 @@ function showError {
 }
 
 function showHelp {
-	echo -e "\nmegadown $VERSION - https://github.com/tonikelope/megadown"
+	echo -e "\nmegadown $VERSION - https://github.com/masterofthesith/megadown"
 	echo -e "\ncli downloader for mega.nz and megacrypter"
 	echo -e "\nSingle url mode:           megadown [OPTION]... 'URL'\n"
 	echo -e "\tOptions:"
@@ -144,8 +144,7 @@ function hrk2hk {
 	declare -A hk
 	hk[0]=$(( 0x${1:0:16} ^ 0x${1:32:16} ))
 	hk[1]=$(( 0x${1:16:16} ^ 0x${1:48:16} ))
-
-	printf "%016x" ${hk[*]}
+	printf "%016x%016x" ${hk[0]} ${hk[1]}
 }
 
 # 1:link
@@ -324,11 +323,13 @@ while true; do
 	esac
 done
 
-p1=$(trim $(urldecode "$1"))
+yen=$(echo $1 | sed 's|#|!|g' | sed 's|file/|#!|g')
+p1=$(trim $(urldecode "$yen"))
 
 if [[ "$p1" =~ ^http ]] || [[ "$p1" =~ ^mega:// ]]; then
 	link="$p1"
 fi
+
 
 if [ -z "$link" ]; then
 
@@ -412,7 +413,9 @@ if [ $(echo -n "$link" | grep -E -o 'mega://enc') ]; then
 	link=$(decrypt_md_link "$link")
 fi
 
-
+if [ ! $quiet ]; then
+	echo -e "\nReading link metadata..."
+fi
 
 if [ $(echo -n "$link" | grep -E -o 'mega(\.co)?\.nz') ]; then
 
@@ -491,214 +494,8 @@ if [ $(echo -n "$link" | grep -E -o 'mega(\.co)?\.nz') ]; then
 	fi
 
 	dl_temp_url=$(echo "$mega_res_json" | jq -r .[0].g)
-	echo "{\"file_name\" : \"${file_name}\", \"file_size\" : ${file_size}, \"url\" : \"${dl_temp_url}\"}"  
-	exit 0
-else
+	echo "{\"file_name\" : \"${file_name}\", \"url\" : \"${dl_temp_url}\"}"
 
-	#MEGACRYPTER LINK
-
-	MC_API_URL=$(echo -n "$link" | grep -i -E -o 'https?://[^/]+')"/api"
-
-	md5=$(echo -n "$link" | $OPENSSL_MD5 | grep -E -o '[0-9a-f]{32}')
-
-	if [ -f ".megadown/${md5}" ];then
-		mc_link_info=$(cat ".megadown/${md5}")
-	else
-		mc_link_info=$(get_mc_link_info "$link")
-
-		if [ "$?" -eq 1 ];then
-			echo -e "$mc_link_info"
-			exit 1
-		fi
-
-		echo -n "$mc_link_info" >> ".megadown/${md5}"
-	fi
-
-	IFS='@' read -a array <<< "$mc_link_info"
-
-	if [ -z "$output" ];then
-		file_name=$(echo -n "${array[0]}" | base64 -d -i 2>/dev/null)
-	else
-		file_name="$output"
-	fi
-
-	path=${array[1]}
-
-	if [ "$path" != "false" ]; then
-		path=$(echo -n "$path" | base64 -d -i 2>/dev/null)
-	fi
-
-	file_size=${array[2]}
-
-	mc_pass=${array[3]}
-
-	key=${array[4]}
-
-	no_exp_token=${array[5]}
-
-	if [ "$mc_pass" != "false" ]; then
-
-		if [ -z "$(command -v python 2>&1)" ]; then
-
-			echo "ERROR: python is required for MegaCrypter password protected links and it's not installed."
-			exit 1
-
-		fi
-
-		echo -ne "\nLink is password protected. "
-
-		if [ -n "$password" ]; then
-
-			pass_hash=$(mc_pass_check "$mc_pass" "$password")
-
-		fi
-
-		if [ -z "$pass_hash" ] || [ "$pass_hash" == "0" ]; then
-
-			echo -ne "\n\n"
-
-			read -e -p "Enter password: " pass
-
-			pass_hash=$(mc_pass_check "$mc_pass" "$pass")
-
-			until [ "$pass_hash" != "false" ]; do
-				read -e -p "Wrong password! Try again: " pass
-				pass_hash=$(mc_pass_check "$mc_pass" "$pass")
-			done
-		fi
-
-		echo -ne "\nPassword is OK. Decrypting metadata...\n"
-
-		IFS='#' read -a array <<< "$pass_hash"
-
-		pass_hash=${array[0]}
-
-		iv=${array[1]}
-
-		hex_raw_key=$(echo -n "$key" | $OPENSSL_AES_CBC_256_DEC -K "$pass_hash" -iv "$iv" | od -v -An -t x1 | tr -d '\n ')
-
-		if [ -z "$output" ]; then
-			file_name=$(echo -n "$file_name" | $OPENSSL_AES_CBC_256_DEC -K "$pass_hash" -iv "$iv")
-		fi
-	else
-		hex_raw_key=$(echo -n $(urlb64_to_b64 "$key") | base64 -d -i 2>/dev/null | od -v -An -t x1 | tr -d '\n ')
-	fi
-
-	if [ $metadata ]; then
-		echo "{\"file_name\" : \"${file_name}\", \"file_size\" : ${file_size}}"
-		exit 0
-	fi
-
-	if [ "$path" != "false" ] && [ "$path" != "" ]; then
-
-		if [ ! -d "$path" ]; then
-
-			mkdir -p "$path"
-		fi
-
-		file_name="${path}${file_name}"
-	fi
-
-	check_file_exists "$file_name" "$file_size" "$(format_file_size "$file_size")" "$md5"
-
-	hex_key=$(hrk2hk "$hex_raw_key")
-
-	dl_link=$($DL_COM --header 'Content-Type: application/json' $DL_COM_PDATA "{\"m\":\"dl\", \"link\":\"$link\", \"noexpire\":\"$no_exp_token\"}" "$MC_API_URL")
-        echo -e "$dl_link"
-	download_exit_code=$?
-
-	if [ "$download_exit_code" -ne 0 ]; then
-		showError "Oooops, something went bad. EXIT CODE (${download_exit_code})"
-	fi
-
-	if [ $(echo $dl_link | grep '"error"') ]; then
-
-		error_code=$(echo "$dl_link" | jq -r .error)
-
-		showError "MEGACRYPTER ERROR $error_code"
-	fi
-
-	dl_temp_url=$(echo "$dl_link" | jq -r .url)
-
-	if [ "$mc_pass" != "false" ]; then
-
-		iv=$(echo "$dl_link" | jq -r .pass | base64 -d -i 2>/dev/null | od -v -An -t x1 | tr -d '\n ')
-
-		dl_temp_url=$(echo -n "$dl_temp_url" | $OPENSSL_AES_CBC_256_DEC -K "$pass_hash" -iv "$iv")
-	fi
-fi
-
-if [ -z "$speed" ]; then
-	DL_COMMAND="$DL_COM"
-else
-	DL_COMMAND="$DL_COM --limit-rate $speed"
-fi
-
-if [ "$output" == "-" ]; then
-
-	hex_iv="${hex_raw_key:32:16}0000000000000000"
-
-	$DL_COMMAND "$dl_temp_url" | $OPENSSL_AES_CTR_128_DEC -K "$hex_key" -iv "$hex_iv"
-
-	exit 0
-fi
-
-if [ ! $quiet ]; then
-	echo -e "$DL_MSG"
-fi
-
-if [ ! $quiet ]; then
-	PV_CMD="pv"
-else
-	PV_CMD="pv -q"
-fi
-
-download_exit_code=1
-
-until [ "$download_exit_code" -eq 0 ]; do
-
-	if [ -f "${file_name}.temp" ]; then
-
-		echo -e "(Resuming previous download ...)\n"
-		
-		echo -e "$dl_temp_url"
-
-		temp_size=$(stat -c %s "${file_name}.temp")
-
-		offset=$(($temp_size-$(($temp_size%16))))
-
-		iv_forward=$(printf "%016x" $(($offset/16)))
-
-		hex_iv="${hex_raw_key:32:16}$iv_forward"
-
-		truncate -s $offset "${file_name}.temp"
-
-		$DL_COMMAND "$dl_temp_url/$offset" | $PV_CMD -s $(($file_size-$offset)) | $OPENSSL_AES_CTR_128_DEC -K "$hex_key" -iv "$hex_iv" >> "${file_name}.temp"
-	else
-		hex_iv="${hex_raw_key:32:16}0000000000000000"
-
-		$DL_COMMAND "$dl_temp_url" | $PV_CMD -s $file_size | $OPENSSL_AES_CTR_128_DEC -K "$hex_key" -iv "$hex_iv" > "${file_name}.temp"
-	fi
-
-	download_exit_code=${PIPESTATUS[0]}
-
-	if [ "$download_exit_code" -ne 0 ]; then
-		showError "Oooops, download failed! EXIT CODE (${download_exit_code})"
-	fi
-done
-
-if [ ! -f "${file_name}.temp" ]; then
-	showError "ERROR: FILE COULD NOT BE DOWNLOADED :(!"
-fi
-
-mv "${file_name}.temp" "${file_name}"
-
-if [ -f ".megadown/${md5}" ];then
-	rm ".megadown/${md5}"
-fi
-
-if [ ! $quiet ]; then
-	echo -e "\nFILE DOWNLOADED!\n"
 fi
 
 exit 0

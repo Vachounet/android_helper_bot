@@ -28,14 +28,14 @@ class CallbacksController extends TelegramBaseCallbackQueryController {
 
     handleMega($, params) {
 
-        exec(__dirname + "/../megadown 'https://mega.nz/#" + params[1] + "'", function callback(error, stdout, stderr) {
+        exec(__dirname + "/../megadown -q 'https://mega.nz/file/" + params[1] + "'", function callback(error, stdout, stderr) {
             var json = JSON.parse(stdout);
             var kb = {
                 inline_keyboard: []
             };
 
-            tg.api.sendMessage($.update.callbackQuery.from.id, "*Download Link* :\n[" + json.file_name + "](" + json.url + ")", {
-                parse_mode: "markdown",
+            tg.api.sendMessage($.update.callbackQuery.from.id, "<b>Download Link</b> :\n<a href='"+json.url+"'>" + json.file_name + "</a>", {
+                parse_mode: "html",
                 reply_markup: JSON.stringify(kb)
             });
 

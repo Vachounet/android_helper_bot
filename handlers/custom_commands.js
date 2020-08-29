@@ -185,15 +185,17 @@ class OtherwiseController extends TelegramBaseController {
         };
 
         if ($.message.chat.type === "private") {
-            exec(__dirname + "/../megadown '" + url + "'", function callback(error, stdout, stderr) {
-                var json = JSON.parse(stdout);
+            exec(__dirname + "/../megadown -q '" + url + "'", function callback(error, stdout, stderr) {
+                try {
+                    var json = JSON.parse(stdout);
 
-                tg.api.sendMessage($.message.from.id, "*Download Link* :\n[" + json.file_name + "](" + json.url + ")", {
-                    parse_mode: "markdown",
-                    reply_markup: JSON.stringify(kb)
-                });
-
-
+                    tg.api.sendMessage($.message.from.id, "<b>Download Link</b> :\n<a href='"+json.url+"'>" + json.file_name + "</a>", {
+                        parse_mode: "html",
+                        reply_markup: JSON.stringify(kb)
+                    });
+                } catch (e) {
+                    console.log(e)
+                 }
             });
         } else {
 
