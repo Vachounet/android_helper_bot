@@ -201,7 +201,7 @@ class OtherwiseController extends TelegramBaseController {
 
             kb.inline_keyboard.push(
                 [{
-                    text: "Click here to get it throught PM",
+                    text: "Click here to get it through PM",
                     callback_data: "mega|" + url.split("#")[1]
                 }]);
 
