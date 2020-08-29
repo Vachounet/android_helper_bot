@@ -28,7 +28,7 @@ class RRController extends TelegramBaseController {
 
         var keywords = $.command.arguments[0];
 
-        request.get("https://get.resurrectionremix.com/?dir=" + keywords, {
+        request.get("https://get.resurrectionremix.com/?dir=ten/" + keywords, {
                 headers: {
                     "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:58.0) Gecko/20100101 Firefox/58.0",
                 }
@@ -76,6 +76,14 @@ class RRController extends TelegramBaseController {
                     deviceLI = dom.window.document.querySelectorAll("#directory-listing li")[dom.window.document.querySelectorAll("#directory-listing li").length - 2];
                 }
 
+                if (deviceLI.innerHTML.includes("..")) {
+                    $.sendMessage("No builds available for this device yet", {
+                        parse_mode: "markdown",
+                        reply_to_message_id: $.message.messageId
+                    });
+                    return
+                }
+
                 var kb = {
                     inline_keyboard: []
                 };
@@ -114,3 +122,4 @@ class RRController extends TelegramBaseController {
 
 
 module.exports = RRController;
+
