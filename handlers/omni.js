@@ -27,60 +27,31 @@ class OmniController extends TelegramBaseController {
 
         var keyword = $.command.arguments[0]
 
-        request.post(
-            'https://dl.omnirom.org/' + keyword + '/', {
-                form: {
-                    "action": "get",
-                    "items": true,
-                    "itemsHref": "/" + keyword + "/",
-                    "itemsWhat": 1
-                },
-                headers: {
-                    "Accept": "application/json, text/javascript, */*; q=0.01",
-                    "content-type": "application/json; charset=UTF-8",
-                    "Host": "dl.omnirom.org",
-                    "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:58.0) Gecko/20100101 Firefox/58.0",
-                    "Referer": "https://dl.omnirom.org/" + keyword + "/",
-                    "Cookie": "PHPSESSID=i6qd18q4pg5h14hr9o93s5k1a3",
-                    "X-Requested-With": "XMLHttpRequest"
-                }
-            },
-            function (error, response, body) {
-                var msg = "🔍 *OmniROM Build for " + keyword + " *: \n";
+        BotUtils.getJSON("http://dl.omnirom.org/json.php", function(json, err) {
+            var msg = "";
+            var device = json['.\/'+keyword]
+            var deviceTmp = json['.\/tmp']['.\/tmp\/'+keyword]
+            if (!device && !deviceTmp) {
+                $.sendMessage('Device not found', {
+                    parse_mode: "markdown",
+                    reply_to_message_id: $.message.messageId
+                });
+                return
+            }
+            if (device && device.length > 0) {
+                let build = device.filter(device => device.filename.endsWith(".zip")).pop()
+                msg += "["+build.filename.split("/")[build.filename.split("/").length -1]+"](https://dl.omnirom.org/"+build.filename+")"
+            }
+            if (deviceTmp && deviceTmp.length > 0) {
+                let build = deviceTmp.filter(deviceTmp => deviceTmp.filename.endsWith(".zip")).pop()
+                msg += "\n["+build.filename.split("/")[build.filename.split("/").length -1]+"](https://dl.omnirom.org/"+build.filename+")"
+            }
 
-                var json = JSON.parse(body);
-
-                if (json && json.items && json.items.length > 0) {
-                    json.items.sort(function (a, b) {
-                        if (new Date(a.time * 1000) < new Date(b.time * 1000))
-                            return 1;
-                        if (new Date(a.time * 1000) > new Date(b.time * 1000))
-                            return -1;
-                        return 0;
-                    });
-                    for (var i = 0; i < json.items.length; i++) {
-                        if (json.items[i].absHref.indexOf("/" + keyword + "/") !== -1 &&
-                            json.items[i].absHref.indexOf(".zip") !== -1 && json.items[i].absHref.indexOf(".md5") === -1) {
-                            kb.inline_keyboard.push(
-                        [{
-                                    text: json.items[i].absHref.split("/")[json.items[i].absHref.split("/").length - 1],
-                                    url: "https://dl.omnirom.org" + json.items[i].absHref
-                        }]);
-                            break;
-                        }
-                    }
-                    $.sendMessage(msg, {
-                        parse_mode: "markdown",
-                        reply_markup: JSON.stringify(kb),
-                        reply_to_message_id: $.message.messageId
-                    });
-                } else {
-                    $.sendMessage(tg._localization.En.deviceNotFound, {
-                        parse_mode: "markdown",
-                        reply_to_message_id: $.message.messageId
-                    });
-                }
+            $.sendMessage(msg, {
+                parse_mode: "markdown",
+                reply_to_message_id: $.message.messageId
             });
+        })
     }
 
     get routes() {
