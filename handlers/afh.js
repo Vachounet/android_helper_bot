@@ -1,135 +1,69 @@
 const Telegram = require('telegram-node-bot')
 const TelegramBaseController = Telegram.TelegramBaseController;
-var request = require('request');
-const JSDOM = require('jsdom');
 const config = require("../config.js")
+var mongojs = require('mongojs')
+var db = mongojs(config.db.name || process.env.DBNAME)
+var afhFiles = db.collection('afh_files');
 
 class AFHController extends TelegramBaseController {
 
-    search($) {
-
+    launchRequest($) {
         if (!$.command.success || $.command.arguments.length === 0) {
+            $.sendMessage("Usage: /afh [keywords]", {
+                parse_mode: "markdown",
+                reply_to_message_id: $.message.messageId
+            });
             return;
         }
+        var pattern = '^'
 
-        var page = 1;
-        this.launchRequest($.command.arguments, page, $, this);
-    }
+        $.command.arguments.forEach(function (element) {
+            pattern += '(?=.*' + element + ')'
+        })
 
-    launchRequest(command, page, $, context) {
-        var plop = this;
-        var kb = {
-            inline_keyboard: []
-        };
+        pattern += '.*$'
+        afhFiles.aggregate({
+            "$match": {
+                $or: [{
+                    "description": new RegExp(pattern, 'gi')
+                }, {
+                    "name": new RegExp(pattern, 'gi')
+                }]
+            }
+        }).sort({
+            upload_date: -1
+        }, async function (err, docs) {
+            if (!err && docs && docs.length > 0) {
+                var msg = ""
+                var t = 0
+                for (var i = 0; i < docs.length; i++) {
 
-        request.get("https://androidfilehost.com/?w=search&s=" + command[1] + "&type=files&page=" + page, {
-                headers: {
-                    "Host": "androidfilehost.com",
-                    "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:58.0) Gecko/20100101 Firefox/58.0",
-                    "Referer": "https://androidfilehost.com"
-                }
-            },
-            function (error, response, body) {
+                    msg += "<a href='https://androidfilehost.com/?fid=" + docs[i].id + "'>" + docs[i].name + "</a>\n\n"
+                        t++;
 
-                var dom = new JSDOM.JSDOM(body);
-
-                var links = dom.window.document.querySelectorAll(".list-group-item .file-name a");
-
-                for (var i = 0; i < links.length; i++) {
-                    if (links[i].textContent.toLowerCase().indexOf(command[1].toLowerCase()) !== -1 &&
-                        links[i].textContent.toLowerCase().indexOf(command[2].toLowerCase()) !== -1) {
-                        kb.inline_keyboard.push(
-                                [{
-                                text: links[i].textContent,
-                                url: "https://androidfilehost.com" + links[i].href
-                                }]);
+                    if (t > 9)
                         break;
-                    }
                 }
 
-                if (kb.inline_keyboard.length > 0) {
-                    $.sendMessage("*AFH Search Result, generating mirrors*:", {
-                        parse_mode: "markdown",
-                        reply_markup: JSON.stringify(kb),
-                        reply_to_message_id: $.message.messageId
-                    });
-                    var fid = kb.inline_keyboard[0][0].url.split("fid=")[1]
-
-                    request.post("https://androidfilehost.com/libs/otf/mirrors.otf.php", {
-                            form: {
-                                "submit": "submit",
-                                "action": "getdownloadmirrors",
-                                "fid": fid
-
-                            },
-                            headers: {
-                                "X-Requested-With": "XMLHttpRequest",
-                                "Host": "androidfilehost.com",
-                                "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:58.0) Gecko/20100101 Firefox/58.0",
-                                "X-MOD-SBB-CTYPE": "xhr",
-                                "Referer": "https://androidfilehost.com/?fid=" + fid
-                            }
-                        },
-                        function (error, response, body) {
-                            var json = JSON.parse(body);
-                            var links = "";
-                            if (json.STATUS === "1") {
-                                if (json.MIRRORS && json.MIRRORS.length > 0) {
-
-                                    for (var i = 0; i < json.MIRRORS.length; i++) {
-                                        kb.inline_keyboard.push(
-                                [{
-                                                text: json.MIRRORS[i].name,
-                                                url: json.MIRRORS[i].url
-                                }]);
-                                        links += "[" + json.MIRRORS[i].name + "](" + json.MIRRORS[i].url + ")  "
-                                    }
-
-                                } else {
-                                    $.sendMessage("*Mirrors not found *", {
-                                        parse_mode: "markdown",
-                                        reply_to_message_id: $.message.messageId
-                                    });
-                                    return;
-                                }
-                            }
-
-                            $.sendMessage("*Mirrors for " + json.MIRRORS[0].url.split("/")[json.MIRRORS[0].url.split("/").length - 1] + " *: \n" + links, {
-                                parse_mode: "markdown",
-                                reply_to_message_id: $.message.messageId
-                            });
-
-
-                        });
-
-
-                } else {
-                    // TODO: move this on a proper place
-                    // Limit to 5 pages for now
-                    if (page < 5) {
-                        page = page + 1;
-                        plop.launchRequest(command, page, $, context)
-                    } else {
-                        $.sendMessage("*No file found*:", {
-                            parse_mode: "markdown",
-                            reply_to_message_id: $.message.messageId
-                        });
-                    }
-                }
-
-            });
+                $.sendMessage(msg, {
+                    parse_mode: "html",
+                    reply_to_message_id: $.message.messageId,
+                    disable_web_page_preview: true
+                });
+            }
+        })
     }
 
     get routes() {
         return {
-            'afhSearchHandler': 'search',
+            'afhSearchHandler': 'launchRequest',
         }
     }
 
     get config() {
         return {
             commands: [{
-                command: "/afh search",
+                command: "/afh",
                 handler: "afhSearchHandler",
                 help: "Search for files on AndroidFileHost"
             }],
