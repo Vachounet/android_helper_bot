@@ -8,18 +8,22 @@ class OneplusController extends TelegramBaseController {
     getOTA($) {
 
         if (!$.command.success || $.command.arguments.length === 0) {
-            $.sendMessage("Usage: /op _device_\n*Supported devices* : x 1 2 3 3t 5 5t 6 6t 7 7p 7p5g 7t 7tp", {
-                parse_mode: "markdown",
-                reply_to_message_id: $.message.messageId
-            });
+            BotUtils.getJSON("https://oxygenupdater.com/api/v2.5/devices", function (json, err) {
+                var deviceList = ""
+                json.forEach(device => deviceList += " (id: " + device.id + ") " + device.product_names + "\n")
+                $.sendMessage("Usage: /op deviceID\nSupported devices : " + deviceList, {
+                    parse_mode: "html",
+                    reply_to_message_id: $.message.messageId
+                });
+            })
+
             return;
         }
 
-        var device = $.command.arguments[0]
-        var deviceID = this.getDeviceID(device);
+        var deviceID = $.command.arguments[0];
         var updateType = $.command.arguments[1] ? 1 : 2
 
-        BotUtils.getJSON("https://oxygenupdater.com/api/v2.3/mostRecentUpdateData/" + deviceID + "/" + updateType, function (json, err) {
+        BotUtils.getJSON("https://oxygenupdater.com/api/v2.5/mostRecentUpdateData/" + deviceID + "/" + updateType, function (json, err) {
             if (json.error) {
                 $.sendMessage(json.error, {
                     parse_mode: "markdown",
@@ -28,7 +32,7 @@ class OneplusController extends TelegramBaseController {
                 return
             }
 
-            var msg = updateType === 1 ? "*Latest OTA*\n" : "*Latest Full Update*\n"
+            var msg = updateType === 1 ? "*OTA*\n" : "*Full Update*\n"
             msg += "[" + json.description.split("\n")[0].replace("#", "").trim() + "](" + json.download_url + ")"
             msg += " - Size : " + BotUtils.humanFileSize(json.download_size);
             var msg1 = msg.replace(/\[www.oneplus.com\]\{http:\/\/www.oneplus.com\/\}/g, '');
@@ -37,59 +41,6 @@ class OneplusController extends TelegramBaseController {
                 reply_to_message_id: $.message.messageId
             });
         })
-    }
-
-    getDeviceID(name) {
-
-        var deviceID = -1;
-        switch (name) {
-            case "x":
-                deviceID = 3
-                break;
-            case "1":
-                deviceID = 5
-                break;
-            case "2":
-                deviceID = 1
-                break;
-            case "3":
-                deviceID = 2
-                break;
-            case "3t":
-                deviceID = 6
-                break;
-            case "5":
-                deviceID = 7
-                break;
-            case "5t":
-                deviceID = 8
-                break;
-            case "6":
-                deviceID = 9
-                break;
-            case "6t":
-                deviceID = 10
-                break;
-            case "7":
-                deviceID = 13
-                break;
-            case "7p":
-            case "7pro":
-                deviceID = 12
-                break;
-            case "7p5g":
-                deviceID = 16
-                break;
-            case "7t":
-                deviceID = 18
-                break;
-            case "7tp":
-            case "7tpro":
-                deviceID = 19
-                break;
-        }
-
-        return deviceID;
     }
 
     get routes() {
@@ -102,7 +53,8 @@ class OneplusController extends TelegramBaseController {
         return {
             commands: [{
                 command: "/op",
-                handler: "oneplusOTAHandler"
+                handler: "oneplusOTAHandler",
+                help: "Get firmwares for OnePlus devices"
             }],
             type: config.commands_type.FIRMWARE
         }
