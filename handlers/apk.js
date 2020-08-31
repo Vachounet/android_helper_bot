@@ -6,18 +6,11 @@ var url = require("url");
 var fs = require('fs');
 var archiver = require('archiver');
 var path = require("path");
-
+const apkPath = __dirname + "/../apks/";
 
 class ApkToolController extends TelegramBaseController {
 
   apktool($) {
-
-    if (!config.dump_feature_enabled)
-      return
-
-    if (!config.dump_sudoers.includes($.message.from.id))
-      return
-
     if (!$.command.success || $.command.arguments.length === 0) {
       $.sendMessage("Usage: /reapk url", {
         parse_mode: "markdown",
@@ -32,7 +25,7 @@ class ApkToolController extends TelegramBaseController {
       parse_mode: "markdown",
       reply_to_message_id: $.message.messageId
     })
-    var download_task = spawn('aria2c --auto-file-renaming=false -q -j 16 -x 16 -s 16 -d /home/tg/android_helper_bot/apks/ ' + '"' + $.command.arguments[0] + '"', {
+    var download_task = spawn('aria2c --auto-file-renaming=false -q -j 16 -x 16 -s 16 -c -d ' + apkPath + ' ' + '"' + $.command.arguments[0] + '"', {
       shell: true
     });
 
@@ -40,29 +33,29 @@ class ApkToolController extends TelegramBaseController {
       console.log('stderr: ' + data.toString());
     });
     download_task.on('exit', function (code, signal) {
-      var apktool_task = spawn("java -jar /home/tg/android_helper_bot/apks/apktool.jar d '/home/tg/android_helper_bot/apks/" + fileName + "' -o '/home/tg/android_helper_bot/apks/" + fileName.split(".")[0] + "' -kf", {
+      var apktool_task = spawn("java -jar " + apkPath + "apktool.jar d '" + apkPath + fileName + "' -o '" + apkPath + fileName.split(".")[0] + "' -kf", {
         shell: true
       });
       apktool_task.stderr.on('data', function (data) {
         console.log('stderr: ' + data.toString());
       });
       apktool_task.on('exit', function (code, signal) {
-        if (code !== "0") {
+        if (code !== 0) {
           $.sendMessage("Unable to decompile " + fileName + ", aborted", {
             parse_mode: "markdown",
             reply_to_message_id: $.message.messageId
           })
           return;
         }
-        var output = fs.createWriteStream("/home/tg/android_helper_bot/apks/" + fileName + ".zip");
+        var output = fs.createWriteStream(apkPath + fileName + ".zip");
         var archive = archiver('zip', {
           zlib: {
-            level: 1
+            level: 9
           }
         });
 
         archive.pipe(output);
-        archive.directory("/home/tg/android_helper_bot/apks/" + fileName.split(".")[0] + "/", fileName.split(".")[0]);
+        archive.directory(apkPath + fileName.split(".")[0] + "/", fileName.split(".")[0]);
 
         archive.on('error', function (err) {
           return;
@@ -71,7 +64,7 @@ class ApkToolController extends TelegramBaseController {
         output.on('close', async function () {
 
           $.sendDocument({
-            path: "/home/tg/android_helper_bot/apks/" + fileName + ".zip",
+            path: apkPath + fileName + ".zip",
             filename: fileName + '.zip'
           }, {
             parse_mode: "markdown",
@@ -102,7 +95,7 @@ class ApkToolController extends TelegramBaseController {
         handler: "apktoolHandler",
         help: "Decompile APKs"
       }],
-            type: config.commands_type.TTOLS
+      type: config.commands_type.TTOLS
     }
   }
 }
