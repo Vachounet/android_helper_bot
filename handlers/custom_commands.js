@@ -50,7 +50,7 @@ class OtherwiseController extends TelegramBaseController {
                             OtherwiseController.handleGithub($, url)
                         } else if (url.indexOf("play.google.com/store/apps/details?id=") !== -1) {
                             OtherwiseController.handlePlayStore($, url)
-                        } else if (url.indexOf("https://mega.nz/") !== -1) {
+                        } else if (url.indexOf("https://mega.nz/file") !== -1) {
                             OtherwiseController.handleMega($, url)
                         } else if (url.indexOf("osdn.net/projects/") !== -1 &&
                             url.indexOf("storage") !== -1) {
