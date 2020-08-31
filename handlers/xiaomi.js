@@ -20,16 +20,22 @@ class XiaomiController extends TelegramBaseController {
         var device = $.command.arguments[0];
         var msg = "";
 
-        request.get("https://raw.githubusercontent.com/XiaomiFirmwareUpdater/miui-updates-tracker/master/stable_recovery/stable_recovery.yml", function (err, response, body) {
+        request.get("https://raw.githubusercontent.com/XiaomiFirmwareUpdater/miui-updates-tracker/master/data/latest.yml", function (err, response, body) {
 
             var results = YAML.parse(body)
 
-            var stable = results.filter(result => result.codename.indexOf(device) !== -1)
+            console.log(results.length)
 
-            if (stable.length > 0) {
-                msg += "*Stable* \n"
-                stable.forEach(result => {
-                    msg += "[" + result.filename + "](" + result.download + ")\n";
+            var builds = Object.values(results).filter(result => result.codename.includes(device))
+
+            if (builds.length > 0) {
+                builds.forEach(result => {
+                    msg += "*" +result.name.trim() + "*\n [" + result.link.split("/")[4].trim() + "](" + result.link.trim() + ")\n";
+                    msg += "_Branch: " + result.branch + " - " + result.date + "_\n\n"
+                })
+                $.sendMessage(msg, {
+                    parse_mode: "markdown",
+                    reply_to_message_id: $.message.messageId
                 })
             } else {
                 $.sendMessage("*No files found*", {
@@ -38,34 +44,6 @@ class XiaomiController extends TelegramBaseController {
                 })
                 return
             }
-
-
-            request.get("https://raw.githubusercontent.com/XiaomiFirmwareUpdater/miui-updates-tracker/master/weekly_recovery/weekly_recovery.yml", function (err, response, body) {
-
-                var results = YAML.parse(body)
-                var weekly = results.filter(result => result.codename.indexOf(device) !== -1)
-                console.log(weekly.length)
-                if (weekly.length > 0) {
-
-                    msg += "\n*Weekly*\n";
-
-                    weekly.forEach(result => {
-                        msg += "[" + result.filename + "](" + result.download + ")\n";
-                    })
-                }
-                if (weekly.length > 0 || stable.length > 0) {
-                    $.sendMessage(msg, {
-                        parse_mode: "markdown",
-                        reply_to_message_id: $.message.messageId
-                    })
-                } else {
-                    $.sendMessage("*No files found*", {
-                        parse_mode: "markdown",
-                        reply_to_message_id: $.message.messageId
-                    })
-                }
-
-            })
         })
     }
 
