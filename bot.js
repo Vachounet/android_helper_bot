@@ -4,22 +4,6 @@ const config = require('./config')
 const BotUtils = require('./utils')
 const Telegram = require('telegram-node-bot')
 const TextCommand = Telegram.TextCommand
-const {
-    Client
-} = require('tdl')
-const {
-    TDLib
-} = require('tdl-tdlib-ffi')
-
-var tdlib;
-var tdLibLCient;
-
-if (config.enableTdlib) {
-    console.log("init tdlib")
-    tdlib = require("./tdlib")
-    tdLibLCient = new tdlib();
-    tdLibLCient.init();
-}
 
 var request = require('request');
 var mongojs = require('mongojs')

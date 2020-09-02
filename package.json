@@ -19,6 +19,7 @@
     "tdl": "^6.0.0",
     "tdl-tdlib-ffi": "^2.0.0",
     "telegram-node-bot": "github:Vachounet/telegram-node-bot",
+    "tlg": "^1.1.4",
     "yaml": "^1.7.2"
   },
   "devDependencies": {},

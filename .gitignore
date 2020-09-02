@@ -62,8 +62,8 @@ typings/
 /config.js
 
 # tdlib
-_td_database/
-_td_files/
+.tlg/
+apks/
 /libtdjson.so
 /.brackets.json
 /.jshintrc

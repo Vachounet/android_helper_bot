@@ -7,6 +7,13 @@
 ## Host packages
 *aria2, pq, jk, mongodb*
 
+## Python packages
+gplaycli (https://github.com/matlink/gplaycli)
+
+## libtdjson
+Need to be built from sources on host (https://github.com/tdlib/td)
+Copy libtdjson.so on bot root folder
+
 ## Node
 ```bash
 npm install
@@ -21,8 +28,10 @@ const botConfig = {
    host: 'localhost',
    port: 27017,
    name: 'test'
- },mongoimport --db test --collection fdroid --file index-v1.json
- token: '', //Your bot token
+ },
+ token: '', // Your bot token
+ api_id: 0000, // from my.telegram.org
+ api_hash: '0000', // from my.telegram.org
 };
 
 module.exports = botConfig;
