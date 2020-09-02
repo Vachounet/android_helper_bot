@@ -1,6 +1,7 @@
 const Telegram = require('telegram-node-bot')
 const TelegramBaseController = Telegram.TelegramBaseController;
 const config = require("../config")
+const fs = require("fs")
 var exec = require('child_process').exec;
 
 const { Client } = require('tlg')
@@ -25,6 +26,14 @@ class GPlayController extends TelegramBaseController {
 
         exec('gplaycli -tu "http://auroraoss.com:8080" -d "'+appId+'" -f ' + __dirname + "/../apks/", async function callback(error, stdout, stderr) {
             try {
+                if (!fs.existsSync(__dirname + "/../apks/" + appId + ".apk")) {
+                    $.sendMessage("Dowload file failed", {
+                        parse_mode: "markdown",
+                        reply_to_message_id: $.message.messageId
+                    });
+                    return;
+                }
+
                 await client.connect('bot', config.token)
                 await client.getChat($.message.chat.id)
                 await client.getUser($.message.from.id)
