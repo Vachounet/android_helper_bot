@@ -64,6 +64,7 @@ typings/
 # tdlib
 .tlg/
 apks/
+downloads/
 /libtdjson.so
 /.brackets.json
 /.jshintrc
