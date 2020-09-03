@@ -63,14 +63,8 @@ class ApkToolController extends TelegramBaseController {
 
         output.on('close', async function () {
 
-          $.sendDocument({
-            path: apkPath + fileName + ".zip",
-            filename: fileName + '.zip'
-          }, {
-            parse_mode: "markdown",
-            caption: "Decompiled using apktool",
-            reply_to_message_id: $.message.messageId
-          })
+          BotUtils.uploadFile(apkPath + fileName + ".zip", $)
+          
         });
 
         output.on('end', function () {

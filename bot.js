@@ -1,7 +1,7 @@
 'use strict'
 
 const config = require('./config')
-const BotUtils = require('./utils')
+
 const Telegram = require('telegram-node-bot')
 const TextCommand = Telegram.TextCommand
 
@@ -16,6 +16,8 @@ var botToken = config.token || process.env.BOT_TOKEN
 global.tg = new Telegram.Telegram(botToken, {
     localization: [require('./localization/En.json')]
 })
+
+const BotUtils = require('./utils')
 
 // Default Controllers
 var CallbackController = require("./handlers/callbackQuery.js")

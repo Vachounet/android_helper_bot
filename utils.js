@@ -11,39 +11,85 @@ var chats = db.collection('chats');
 let Parser = require('rss-parser');
 let parser = new Parser();
 
+var hash = require('object-hash');
+
+var objHash = hash.MD5(global.tg);
+
+const { Client } = require('tlg')
+var client = new Client({
+    apiId: config.api_id,
+    apiHash: config.api_hash,
+    databaseDirectory: '.tlg/' + objHash,
+    logFile: '.tlg/' + objHash + '/tlg.log'
+
+})
+
+var tdlConnected = false;
+
 BotUtils = {}
+
+BotUtils.uploadFile = async (path, $) => {
+    try {
+
+        if (!tdlConnected) {
+            await client.connect('bot', config.token)
+            tdlConnected = true;
+        }
+
+        await client.getChat($.message.chat.id)
+        await client.getUser($.message.from.id)
+        $.sendChatAction('upload_document')
+        await client.request('sendMessage', {
+            chat_id: $.message.chat.id,
+            reply_to_message_id: $.message.messageId,
+            disable_notification: false,
+            from_background: false,
+            input_message_content: {
+                '@type': 'inputMessageDocument',
+                disable_web_preview: true,
+                clear_draft: true,
+                document: {
+                    '@type': 'inputFileLocal',
+                    path: path
+                }
+            }
+        })
+    } catch (e) {
+        console.log(e)
+    }
+}
 
 BotUtils.getJSON = (url, cb) => {
     rp(url, {
-            json: true,
-            resolveWithFullResponse: true,
-            headers: {
-                "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:58.0) Gecko/20100101 Firefox/58.0",
-            }
-        }).then(function (response) {
-            if (response.statusCode !== 200)
-                return;
+        json: true,
+        resolveWithFullResponse: true,
+        headers: {
+            "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:58.0) Gecko/20100101 Firefox/58.0",
+        }
+    }).then(function (response) {
+        if (response.statusCode !== 200)
+            return;
 
-            if (response.headers['content-type'].indexOf('application/json') === -1) {
+        if (response.headers['content-type'].indexOf('application/json') === -1) {
 
-                if (response.headers['content-type'].indexOf("text/plain") !== -1 ||
-                    response.headers['content-type'].indexOf("text/html") !== -1) {
-                    try {
-                        if (typeof response.body === "object") {
-                            cb(response.body)
-                        } else {
-                            var json = JSON.parse(response.body);
-                            cb(json)
-                        }
-                    } catch (e) {
-                        //console.log(response.body)
+            if (response.headers['content-type'].indexOf("text/plain") !== -1 ||
+                response.headers['content-type'].indexOf("text/html") !== -1) {
+                try {
+                    if (typeof response.body === "object") {
+                        cb(response.body)
+                    } else {
+                        var json = JSON.parse(response.body);
+                        cb(json)
                     }
+                } catch (e) {
+                    //console.log(response.body)
                 }
-                return;
             }
+            return;
+        }
 
-            cb(response.body)
-        })
+        cb(response.body)
+    })
         .catch(function (err) {
             console.log(err)
             //cb(null, err)

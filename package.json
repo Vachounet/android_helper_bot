@@ -13,6 +13,7 @@
     "jenkins": "^0.28.0",
     "jsdom": "^16.4.0",
     "mongojs": "^3.1.0",
+    "object-hash": "^2.0.3",
     "request": "^2.88.2",
     "request-promise": "^4.2.6",
     "rss-parser": "^3.9.0",
