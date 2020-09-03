@@ -2,6 +2,7 @@ const Telegram = require('telegram-node-bot')
 const TelegramBaseController = Telegram.TelegramBaseController;
 var request = require('request');
 var BotUtils = require("../utils.js")
+const config = require("../config.js")
 
 class GSIController extends TelegramBaseController {
 
@@ -33,7 +34,7 @@ class GSIController extends TelegramBaseController {
     erfanBuilds($) {
 
         if (!$.command.arguments[1]) {
-            $.sendMessage("Usage: /gsi erfan _type_\nTypes = oos, hos, pixel, coloros, miui, nubia, zui, zenui or oneui", {
+            $.sendMessage("Usage: /gsi erfan _type_\nTypes = oos, hos, pixel, miui, nubia, zui, zenui, oneui, xperia, generic", {
                 parse_mode: "markdown",
                 reply_to_message_id: $.message.messageId
             });
@@ -54,9 +55,6 @@ class GSIController extends TelegramBaseController {
             case "pixel":
                 filter = "Pixel"
                 break;
-            case "coloros":
-                filter = "ColorOS"
-                break;
             case "nubia":
                 filter = "Nubia"
                 break;
@@ -69,31 +67,41 @@ class GSIController extends TelegramBaseController {
             case "oneui":
                 filter = "OneUI"
                 break;
+            case "xperia":
+                filter = "Xperia"
+                break;
+            case "generic":
+                filter = "Generic"
+                break;
         }
         request.post(
-            'https://mirrors.lolinet.com/firmware/gsi/?', {
-                json: {
-                    "action": "get",
-                    "items": {
-                        "href": "/firmware/gsi/",
-                        "what": 1
-                    }
-                },
-                headers: {
-                    "content-type": "application/json;charset=utf-8",
-                    "Host": "mirrors.lolinet.com",
-                    "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:58.0) Gecko/20100101 Firefox/58.0",
-                    "Referer": "https://mirrors.lolinet.com/firmware/gsi/",
-                    "Cookie": "PHPSESSID=t7ascuh78voqhea02vp54fjf2s"
+            'https://mirrors.lolinet.com/firmware/gsi/' + filter + '/?', {
+            json: {
+                "action": "get",
+                "items": {
+                    "href": "/firmware/gsi/" + filter + "/",
+                    "what": 1
                 }
             },
+            headers: {
+                "content-type": "application/json;charset=utf-8",
+                "Host": "mirrors.lolinet.com",
+                "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:58.0) Gecko/20100101 Firefox/58.0",
+                "Referer": "https://mirrors.lolinet.com/firmware/gsi/" + filter + "/",
+                "Cookie": "PHPSESSID=t7ascuh78voqhea02vp54fjf2s"
+            }
+        },
             function (error, response, body) {
 
                 var kb = {
                     inline_keyboard: []
                 };
-                var msg = "🔍 *Files found*: \n";
 
+                if (!body.items || body.items.length === 0) {
+                    return
+                }
+
+                var msg = "🔍 *Files found*: \n";
                 if (body && body.items && body.items.length > 0) {
 
                     body.items.sort(function (a, b) {
@@ -108,12 +116,12 @@ class GSIController extends TelegramBaseController {
                     for (var i = 0; i < body.items.length; i++) {
                         if (body.items[i].href.indexOf(filter) !== -1) {
                             kb.inline_keyboard.push(
-                        [{
+                                [{
                                     text: body.items[i].href.split("/")[body.items[i].href.split("/").length - 1],
                                     url: "https://build.lolinet.com" + body.items[i].href
-                        }]);
+                                }]);
                             foundEntries = foundEntries + 1;
-                            if (foundEntries === 2) {
+                            if (foundEntries === 6) {
                                 break;
                             }
                         }
@@ -186,6 +194,17 @@ class GSIController extends TelegramBaseController {
     get routes() {
         return {
             'gsiHandler': 'getLast',
+        }
+    }
+
+    get config() {
+        return {
+            commands: [{
+                command: "/gsi",
+                handler: "gsiHandler",
+                help: "Get GSI builds"
+            }],
+            type: config.commands_type.TTOLS
         }
     }
 }
