@@ -12,7 +12,7 @@ class MotorolaController extends TelegramBaseController {
   getFirmwares($) {
 
     if (!$.command.success || $.command.arguments.length === 0) {
-      $.sendMessage("Usage: /moto _keywords_\n*Ex.:* /moto griffin cid50", {
+      $.sendMessage("Usage: /moto _keywords_\n*Ex.:* /moto QPWS30.61-21", {
         parse_mode: "markdown",
         reply_to_message_id: $.message.messageId
       });
@@ -21,25 +21,45 @@ class MotorolaController extends TelegramBaseController {
 
     var keyword = $.command.arguments[0].trim()
 
+
+    const esc_pattern = sequence => {
+      return sequence.replace(/[\-\[\]{}()*+?.,\\$\^|#\s]/g, '\\$&');
+    };
+
+    const parse_pattern = (sequence, advanced) => {
+      if (!advanced) {
+        return esc_pattern(sequence);
+      }
+
+      if (sequence.substr(0, 3) === 're:') {
+        return sequence.substr(3);
+      }
+
+      return sequence.trim().split(/\s+/).map(part => {
+        return part.split('').map(char => esc_pattern(char)).join('.*?');
+      }).join('|');
+    };
+
     request.post(
-      'https://mirrors.lolinet.com/firmware/moto/' + keyword + '/official/?', {
-        json: {
-          "action": "get",
-          "search": {
-            "href": "/firmware/moto/" + keyword + "/official/",
-            "pattern": ".*?",
-            "ignorecase": true
-          }
-        },
-        headers: {
-          "content-type": "application/json;charset=utf-8",
-          "Host": "mirrors.lolinet.com",
-          "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:58.0) Gecko/20100101 Firefox/58.0",
-          "Referer": "https://mirrors.lolinet.com/firmware/moto/" + keyword + "/official/"
+      'https://mirrors.lolinet.com/firmware/moto/?', {
+      json: {
+        "action": "get",
+        "search": {
+          "href": "/firmware/moto/",
+          "pattern": parse_pattern(keyword, true),
+          "ignorecase": true
         }
       },
-      function(error, response, body) {
-        var msg = "🔍 <b>Last firmware for " + keyword + " </b>: \n";
+      headers: {
+        "content-type": "application/json;charset=utf-8",
+        "Host": "mirrors.lolinet.com",
+        "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:58.0) Gecko/20100101 Firefox/58.0",
+        "Referer": "https://mirrors.lolinet.com/firmware/moto/"
+      }
+    },
+      function (error, response, body) {
+        var msg = "🔍 <b>Firmwares for " + keyword + " </b>: \n";
+
         if (body && body.search && body.search.length > 0) {
 
           body.search.sort(function (a, b) {
@@ -49,19 +69,14 @@ class MotorolaController extends TelegramBaseController {
               return -1;
             return 0;
           });
-          var kb = {
-            inline_keyboard: []
-          };
-          var files = [];
-          var allfiles = []
+
+          var allfiles = 0
           for (var i = 0; i < body.search.length; i++) {
-            if (body.search[i].href.indexOf("/" + keyword + "/") !== -1 &&
-              body.search[i].href.indexOf(".zip") !== -1 && !allfiles.includes(body.search[i].href.split("/")[body.search[i].href.split("/").length - 1])) {
-              allfiles.push(body.search[i].href.split("/")[body.search[i].href.split("/").length - 1])
-              msg += "<a href='https://mirrors.lolinet.com" + body.search[i].href + "'>" + body.search[i].href.split("/")[body.search[i].href.split("/").length - 1] + "</a> \n"
-              if (allfiles.length > 8)
-                break;;
-            }
+            var channel = body.search[i].href.split("/")[body.search[i].href.split("/").length - 2]
+            msg += channel + " <a href='https://mirrors.lolinet.com" + body.search[i].href + "'>" + body.search[i].href.split("/")[body.search[i].href.split("/").length - 1] + "</a> \n\n"
+            allfiles = allfiles + 1;
+            if (allfiles > 10)
+              break;
           }
 
           $.sendMessage(msg, {
