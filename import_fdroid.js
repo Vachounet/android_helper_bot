@@ -1,6 +1,6 @@
 const fs = require('fs');
 var mongojs = require('mongojs')
-const config = require('config')
+const config = require('./config')
 var db = mongojs(config.db.name || process.env.DBNAME)
 var col = db.collection('fdroid')
 
