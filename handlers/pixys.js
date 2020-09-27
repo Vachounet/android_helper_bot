@@ -42,7 +42,7 @@ class PixysController extends TelegramBaseController {
     get config() {
         return {
             commands: [{
-                command: "/pixy",
+                command: "/pixys",
                 handler: "pixysBuildHandler",
                 help: "Get PixyOS builds"
             }],
