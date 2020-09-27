@@ -206,7 +206,7 @@ class OtherwiseController extends TelegramBaseController {
             kb.inline_keyboard.push(
                 [{
                     text: "Click here to get it through PM",
-                    callback_data: "mega|" + url.split("#")[1]
+                    callback_data: "mega|" + url.split("/file/")[1]
                 }]);
 
             $.sendMessage("*Generate download link* ", {
