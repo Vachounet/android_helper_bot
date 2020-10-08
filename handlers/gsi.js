@@ -118,7 +118,7 @@ class GSIController extends TelegramBaseController {
                             kb.inline_keyboard.push(
                                 [{
                                     text: body.items[i].href.split("/")[body.items[i].href.split("/").length - 1],
-                                    url: "https://build.lolinet.com" + body.items[i].href
+                                    url: "https://mirrors.lolinet.com" + body.items[i].href
                                 }]);
                             foundEntries = foundEntries + 1;
                             if (foundEntries === 6) {
