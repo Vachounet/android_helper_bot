@@ -24,7 +24,7 @@ function getDevices() {
         });
 }
 
-getDevices();
+//getDevices();
 
 class XDAController extends TelegramBaseController {
 
@@ -685,51 +685,8 @@ class XDAController extends TelegramBaseController {
 
     get config() {
         return {
-            commands: [{
-                    command: "/xda device",
-                    handler: "xdaDeviceHandler",
-                    help: "Search for device forums on XDA"
-                },
-                {
-                    command: "/xda user",
-                    handler: "xdaUserHandler",
-                    help: "Search for a profile on XDA"
-                },
-                {
-                    command: "/xda browse",
-                    handler: "xdaBrowseHandler",
-                    help: "Browse forums on XDA from TG"
-                },
-                {
-                    command: "/xda forum",
-                    handler: "xdaSearchHandler",
-                    help: "Search for forums"
-                },
-                {
-                    command: "/xda news",
-                    handler: "xdaNewsHandler",
-                    help: "Get latests news from XDA"
-                },
-                {
-                    command: "/devdb",
-                    handler: "devDBHandler",
-                    help: "Search for devDB threads"
-                },
-                {
-                    command: "/xda follow",
-                    handler: "xdaFollowHandler",
-                    help: "Get notified on new posts for a given thread"
-                },
-                {
-                    command: "/xda thread",
-                    handler: "xdaThreadHandler",
-                    help: "Search for threads"
-                },
-                {
-                    command: "/xda portal",
-                    handler: "xdaPortalHandler",
-                    help: "Get portal posts"
-                }
+            commands: [
+
             ],
             type: config.commands_type.XDA
         }
