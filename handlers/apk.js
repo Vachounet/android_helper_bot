@@ -25,7 +25,7 @@ class ApkToolController extends TelegramBaseController {
       parse_mode: "markdown",
       reply_to_message_id: $.message.messageId
     })
-    var download_task = spawn('aria2c --auto-file-renaming=false -q -j 16 -x 16 -s 16 -c -d ' + apkPath + ' ' + '"' + $.command.arguments[0] + '"', {
+    var download_task = spawn('aria2c --allow-overwrite=true --auto-file-renaming=false -q -j 16 -x 16 -s 16 -d ' + apkPath + ' ' + '"' + $.command.arguments[0] + '"', {
       shell: true
     });
 
