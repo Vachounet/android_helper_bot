@@ -19,7 +19,12 @@ class GPlayController extends TelegramBaseController {
 
         var appId = BotUtils.getUrlParameter($.command.arguments[0], 'id') || $.command.arguments[0]
 
-        exec('gplaycli -tu "http://auroraoss.com:8080" -d "'+appId+'" -f ' + __dirname + "/../apks/", async function callback(error, stdout, stderr) {
+        var cmd = 'gplaycli -tu "http://auroraoss.com:8080"  -d "'+appId+'" -f ' + __dirname + "/../apks/";
+        if ($.command.arguments[1]) {
+            cmd += " -dc " + $.command.arguments[1]
+        }
+
+        exec(cmd, async function callback(error, stdout, stderr) {
             if (!fs.existsSync(__dirname + "/../apks/" + appId + ".apk")) {
                 $.sendMessage("Dowload file failed", {
                     parse_mode: "markdown",
