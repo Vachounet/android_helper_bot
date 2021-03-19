@@ -26,12 +26,13 @@ class FDroidController extends TelegramBaseController {
             })
 
             pattern += '.*$'
+
             fdroidCol.aggregate({
                 "$match": {
-                    $or: [{
-                        "descrition": new RegExp(pattern, 'gi')
+                    "$or": [{
+                        "localized.en-US.descrition": new RegExp(pattern, 'gi')
                     }, {
-                        "name": new RegExp(pattern, 'gi')
+                        "localized.en-US.name": new RegExp(pattern, 'gi')
                     }, {
                         "packageName ": new RegExp(pattern, 'gi')
                     }]
@@ -40,17 +41,15 @@ class FDroidController extends TelegramBaseController {
                 addedOn: -1
             }, async function (err, docs) {
                 if (docs && docs.length > 0) {
-                    console.log(docs[0])
                     var msg = ""
                     var t = 0
                     for (var i = 0; i < docs.length; i++) {
-
-                        msg += "[" + docs[i].name + "](https://mirror.cyberbits.eu/fdroid/repo/" + docs[i].packageName + "_" + docs[i].suggestedVersionCode + ".apk)"
+                        msg += "[" + docs[i].localized["en-US"].name + "](https://mirror.cyberbits.eu/fdroid/repo/" + docs[i].packageName + "_" + docs[i].suggestedVersionCode + ".apk) - " + docs[i].localized["en-US"].summary
                         if (docs[i].authorName) {
                             t++;
                             msg += " by " + docs[i].authorName
                         }
-                        msg += "\n"
+                        msg += "\n\n"
                         if (t > 5)
                             break;
                     }
