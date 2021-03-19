@@ -76,7 +76,7 @@ class DumpController extends TelegramBaseController {
         }
     }
 
-    get config() {
+    /*get config() {
         return {
             commands: [{
                 command: "/dump",
@@ -85,7 +85,7 @@ class DumpController extends TelegramBaseController {
             }],
             type: config.commands_type.ROMS
         }
-    }
+    }*/
 }
 
 module.exports = DumpController;
