@@ -29,6 +29,7 @@ class CallbacksController extends TelegramBaseCallbackQueryController {
     handleMega($, params) {
 
         exec(__dirname + "/../megadown -q 'https://mega.nz/file/" + params[1] + "'", function callback(error, stdout, stderr) {
+            try {
             var json = JSON.parse(stdout);
             var kb = {
                 inline_keyboard: []
@@ -38,6 +39,10 @@ class CallbacksController extends TelegramBaseCallbackQueryController {
                 parse_mode: "html",
                 reply_markup: JSON.stringify(kb)
             });
+        }
+        catch (e) {
+            console.log(e)
+        }
 
         });
     }
