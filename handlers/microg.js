@@ -61,7 +61,7 @@ class MicroGController extends TelegramBaseController {
         return {
             commands: [{
                 command: "/microg",
-                handler: "syberiaBuildHandler",
+                handler: "microgHandler",
                 help: "Get latest microG packages"
             }],
             type: config.commands_type.TTOLS
